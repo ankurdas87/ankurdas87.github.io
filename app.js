@@ -12,28 +12,38 @@ const categoryEl=document.querySelector('#category');
 if(categoryEl&&cat)categoryEl.value=cat;
 function showResult(selector,html,error=false){const r=document.querySelector(selector);if(!r)return;r.hidden=false;r.innerHTML=html;if(error)r.style.borderColor='#d9534f';}
 
-// Public Help Desk submission
- document.querySelector('#helpForm')?.addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(!supabaseClient){showResult('#formResult','Supabase could not be loaded. Please refresh and try again.',true);return;}
-  const f=new FormData(e.target);
-  const payload={student_name:String(f.get('name')||'').trim(),email:String(f.get('email')||'').trim(),whatsapp:String(f.get('whatsapp')||'').trim(),category:String(f.get('category')||'').trim(),subject:String(f.get('subject')||'').trim(),description:String(f.get('message')||'').trim(),priority:String(f.get('priority')||'Normal').trim(),status:'Received'};
-  const {data,error}=await supabaseClient.from('help_requests').insert(payload).select('request_id').single();
-  if(error){console.error(error);showResult('#formResult','<b>Unable to submit the request.</b><br>'+esc(error.message),true);return;}
-  showResult('#formResult','<b>Request submitted successfully.</b><br>Your Request ID is <strong>'+esc(data?.request_id||'Request ID unavailable')+'</strong>.<br>Keep this ID to check the status.');e.target.reset();
- });
+// Public Help Desk submission through the restricted database function.
+document.querySelector('#helpForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(!supabaseClient){showResult('#formResult','Supabase could not be loaded. Please refresh and try again.',true);return;}
+ const f=new FormData(e.target);
+ const args={
+  p_student_name:String(f.get('name')||'').trim(),
+  p_email:String(f.get('email')||'').trim(),
+  p_whatsapp:String(f.get('whatsapp')||'').trim(),
+  p_category:String(f.get('category')||'').trim(),
+  p_subject:String(f.get('subject')||'').trim(),
+  p_description:String(f.get('message')||'').trim(),
+  p_priority:String(f.get('priority')||'Normal').trim()
+ };
+ const {data,error}=await supabaseClient.rpc('submit_help_request',args);
+ if(error){console.error(error);showResult('#formResult','<b>Unable to submit the request.</b><br>'+esc(error.message),true);return;}
+ const id=Array.isArray(data)?data[0]:data;
+ showResult('#formResult','<b>Request submitted successfully.</b><br>Your Request ID is <strong>'+esc(id||'Request ID unavailable')+'</strong>.<br>Keep this ID to check the status.');
+ e.target.reset();
+});
 
-// Public tracking through the restricted database function
- document.querySelector('#trackForm')?.addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(!supabaseClient){showResult('#trackResult','Supabase could not be loaded. Please refresh and try again.',true);return;}
-  const id=String(new FormData(e.target).get('requestId')||'').trim().toUpperCase();
-  const {data,error}=await supabaseClient.rpc('track_help_request',{p_request_id:id});
-  if(error){console.error(error);showResult('#trackResult','<b>Unable to check this request.</b><br>'+esc(error.message),true);return;}
-  const req=Array.isArray(data)?data[0]:data;
-  if(!req){showResult('#trackResult','No request was found for <strong>'+esc(id)+'</strong>.');return;}
-  showResult('#trackResult','<b>'+esc(req.request_id)+'</b><br>Category: '+esc(req.category)+'<br>Subject: '+esc(req.subject)+'<br>Priority: <strong>'+esc(req.priority)+'</strong><br>Status: <strong>'+esc(req.status)+'</strong><br>Submitted: '+new Date(req.created_at).toLocaleString()+(req.updated_at?' <br>Last updated: '+new Date(req.updated_at).toLocaleString():'') );
- });
+// Public tracking through the restricted database function.
+document.querySelector('#trackForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();
+ if(!supabaseClient){showResult('#trackResult','Supabase could not be loaded. Please refresh and try again.',true);return;}
+ const id=String(new FormData(e.target).get('requestId')||'').trim().toUpperCase();
+ const {data,error}=await supabaseClient.rpc('track_help_request',{p_request_id:id});
+ if(error){console.error(error);showResult('#trackResult','<b>Unable to check this request.</b><br>'+esc(error.message),true);return;}
+ const req=Array.isArray(data)?data[0]:data;
+ if(!req){showResult('#trackResult','No request was found for <strong>'+esc(id)+'</strong>.');return;}
+ showResult('#trackResult','<b>'+esc(req.request_id)+'</b><br>Category: '+esc(req.category)+'<br>Subject: '+esc(req.subject)+'<br>Priority: <strong>'+esc(req.priority)+'</strong><br>Status: <strong>'+esc(req.status)+'</strong><br>Submitted: '+new Date(req.created_at).toLocaleString()+(req.updated_at?' <br>Last updated: '+new Date(req.updated_at).toLocaleString():'') );
+});
 
 async function renderAdmin(){
  const list=document.querySelector('#adminList');if(!list||!supabaseClient)return;
@@ -52,12 +62,7 @@ async function initAdmin(){
  const login=document.querySelector('#adminLogin');const panel=document.querySelector('#adminPanel');if(!login&&!panel)return;
  if(!supabaseClient)return;
  const {data:{session}}=await supabaseClient.auth.getSession();
- const apply=async s=>{
-  const allowed=!!s&&s.user?.id===ADMIN_UID;
-  if(login)login.hidden=allowed;
-  if(panel)panel.hidden=!allowed;
-  if(allowed)await renderAdmin();
- };
+ const apply=async s=>{const allowed=!!s&&s.user?.id===ADMIN_UID;if(login)login.hidden=allowed;if(panel)panel.hidden=!allowed;if(allowed)await renderAdmin();};
  await apply(session);
  document.querySelector('#adminLoginForm')?.addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.target);const {data,error}=await supabaseClient.auth.signInWithPassword({email:String(f.get('email')).trim(),password:String(f.get('password'))});if(error){showResult('#loginResult','<b>Sign in failed.</b><br>'+esc(error.message),true);return;}if(data.user?.id!==ADMIN_UID){await supabaseClient.auth.signOut();showResult('#loginResult','This account is not authorized for the admin dashboard.',true);return;}showResult('#loginResult','Signed in successfully.');await apply(data.session);});
  document.querySelector('#adminLogout')?.addEventListener('click',async()=>{await supabaseClient.auth.signOut();location.reload();});
