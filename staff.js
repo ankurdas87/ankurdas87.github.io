@@ -9,24 +9,35 @@ $('#showStaffLogin')?.addEventListener('click',()=>{login.hidden=false;reg.hidde
 $('#showStaffRegister')?.addEventListener('click',()=>{login.hidden=true;reg.hidden=false;otpBox.hidden=true;});
 
 function renderProfile(p){
- const box=$('#staffProfile');
- box.replaceChildren();
+ const box=$('#staffProfile'); box.replaceChildren();
  [['Staff Username',p.username],['Designation',p.designation],['Email',p.email],['Phone',p.phone]].forEach(([label,value])=>{
-  const row=document.createElement('p');
-  const strong=document.createElement('b');
-  strong.textContent=label+': ';
-  row.append(strong,document.createTextNode(value||''));
-  box.appendChild(row);
+  const row=document.createElement('p'),strong=document.createElement('b');
+  strong.textContent=label+': '; row.append(strong,document.createTextNode(value||'')); box.appendChild(row);
  });
 }
 
+async function getOwnProfile(userId){
+ const {data,error}=await sb.from('staff_profiles').select('first_name,last_name,designation,email,phone,username,account_status').eq('id',userId).maybeSingle();
+ return {profile:data,error};
+}
+
 async function showStaffPanel(){
- const {data:{user}}=await sb.auth.getUser(); if(!user)return;
- const {data:p,error}=await sb.from('staff_profiles').select('first_name,last_name,designation,email,phone,username,account_status').eq('id',user.id).maybeSingle();
- if(error||!p||p.account_status!=='active'){await sb.auth.signOut();return;}
+ const {data:{user}}=await sb.auth.getUser(); if(!user)return false;
+ const {profile:p,error}=await getOwnProfile(user.id);
+ if(error||!p||p.account_status!=='active'){await sb.auth.signOut();return false;}
  $('#staffAuth').hidden=true; $('#staffPanel').hidden=false;
- $('#staffWelcome').textContent='Welcome, '+p.first_name+' '+p.last_name;
- renderProfile(p);
+ $('#staffWelcome').textContent='Welcome, '+p.first_name+' '+p.last_name; renderProfile(p); return true;
+}
+
+async function showConfirmedUsername(){
+ const {data:{session}}=await sb.auth.getSession(); if(!session?.user)return false;
+ const {profile:p,error}=await getOwnProfile(session.user.id);
+ if(error||!p?.username)return false;
+ $('#staffPanel').hidden=true; $('#staffAuth').hidden=false; login.hidden=false; reg.hidden=true; otpBox.hidden=true;
+ result('#staffLoginResult','Email confirmed successfully. Your Staff Username is '+p.username+'. Save this username and use it with your password to sign in.');
+ await sb.auth.signOut();
+ if(location.hash||location.search) history.replaceState({},document.title,location.pathname);
+ return true;
 }
 
 reg?.addEventListener('submit',async e=>{
@@ -34,22 +45,21 @@ reg?.addEventListener('submit',async e=>{
  if(p!==c){result('#staffRegisterResult','Passwords do not match.',true);return;}
  result('#staffRegisterResult','Creating your staff account...');
  const email=String(f.get('email')).trim().toLowerCase();
- const {data,error}=await sb.auth.signUp({email,password:p,options:{data:{role:'staff',first_name:String(f.get('first_name')).trim(),last_name:String(f.get('last_name')).trim(),designation:String(f.get('designation')).trim(),phone:String(f.get('phone')).trim()}}});
+ const {data,error}=await sb.auth.signUp({email,password:p,options:{emailRedirectTo:location.origin+location.pathname,data:{role:'staff',first_name:String(f.get('first_name')).trim(),last_name:String(f.get('last_name')).trim(),designation:String(f.get('designation')).trim(),phone:String(f.get('phone')).trim()}}});
  if(error){result('#staffRegisterResult',error.message,true);return;}
  if(!data.user){result('#staffRegisterResult','Account could not be created.',true);return;}
  const {data:profile}=await sb.from('staff_profiles').select('username').eq('id',data.user.id).maybeSingle();
- result('#staffRegisterResult',profile?.username?'Account created. Your Staff Username is '+profile.username+'. Please check your email if confirmation is required.':'Account created. Please check your email to complete registration.');
+ result('#staffRegisterResult',profile?.username?'Account created. Your Staff Username is '+profile.username+'. Please confirm your email before signing in.':'Account created. Check your email and click Confirm Email Address. After confirmation, this page will show your Staff Username.');
 });
 
 login?.addEventListener('submit',async e=>{
- e.preventDefault(); const f=new FormData(e.target); const username=String(f.get('username')).trim(); const password=String(f.get('password'));
+ e.preventDefault(); const f=new FormData(e.target),username=String(f.get('username')).trim(),password=String(f.get('password'));
  result('#staffLoginResult','Checking your staff credentials...');
  const {data:email,error:lookupError}=await sb.rpc('get_staff_login_email',{p_username:username});
  if(lookupError||!email){result('#staffLoginResult','Invalid staff username or password.',true);return;}
  const {error:passwordError}=await sb.auth.signInWithPassword({email,password});
  if(passwordError){result('#staffLoginResult','Invalid staff username or password.',true);return;}
- await sb.auth.signOut();
- pendingEmail=email;
+ await sb.auth.signOut(); pendingEmail=email;
  const {error:otpError}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
  if(otpError){pendingEmail='';result('#staffLoginResult','Password accepted, but the email verification code could not be sent: '+otpError.message,true);return;}
  login.hidden=true; reg.hidden=true; otpBox.hidden=false;
@@ -65,5 +75,9 @@ $('#staffOtpForm')?.addEventListener('submit',async e=>{
 });
 
 $('#staffLogout')?.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
-(async()=>{const {data:{session}}=await sb.auth.getSession();if(session)await showStaffPanel();})();
+(async()=>{
+ const isConfirmationReturn=location.hash.includes('access_token')||location.hash.includes('type=signup')||location.search.includes('code=');
+ if(isConfirmationReturn&&await showConfirmedUsername())return;
+ const {data:{session}}=await sb.auth.getSession(); if(session)await showStaffPanel();
+})();
 })();
