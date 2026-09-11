@@ -1,6 +1,6 @@
 (()=>{
-if(!window.supabase||typeof SUPABASE_URL==='undefined')return;
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+if(!window.supabase||typeof SUPABASE_URL==='undefined'||typeof SUPABASE_KEY==='undefined')return;
+const sb=(typeof supabaseClient!=='undefined'&&supabaseClient)?supabaseClient:window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const $=s=>document.querySelector(s);
 let pendingEmail='';
 const result=(s,msg,bad=false)=>{const e=$(s);if(!e)return;e.hidden=false;e.textContent=msg;e.style.borderColor=bad?'#d9534f':'';};
@@ -8,13 +8,25 @@ const login=$('#staffLoginForm'),reg=$('#staffRegisterForm'),otpBox=$('#staffOtp
 $('#showStaffLogin')?.addEventListener('click',()=>{login.hidden=false;reg.hidden=true;otpBox.hidden=true;});
 $('#showStaffRegister')?.addEventListener('click',()=>{login.hidden=true;reg.hidden=false;otpBox.hidden=true;});
 
+function renderProfile(p){
+ const box=$('#staffProfile');
+ box.replaceChildren();
+ [['Staff Username',p.username],['Designation',p.designation],['Email',p.email],['Phone',p.phone]].forEach(([label,value])=>{
+  const row=document.createElement('p');
+  const strong=document.createElement('b');
+  strong.textContent=label+': ';
+  row.append(strong,document.createTextNode(value||''));
+  box.appendChild(row);
+ });
+}
+
 async function showStaffPanel(){
  const {data:{user}}=await sb.auth.getUser(); if(!user)return;
  const {data:p,error}=await sb.from('staff_profiles').select('first_name,last_name,designation,email,phone,username,account_status').eq('id',user.id).maybeSingle();
  if(error||!p||p.account_status!=='active'){await sb.auth.signOut();return;}
  $('#staffAuth').hidden=true; $('#staffPanel').hidden=false;
  $('#staffWelcome').textContent='Welcome, '+p.first_name+' '+p.last_name;
- $('#staffProfile').innerHTML='<p><b>Staff Username:</b> '+p.username+'</p><p><b>Designation:</b> '+p.designation+'</p><p><b>Email:</b> '+p.email+'</p><p><b>Phone:</b> '+p.phone+'</p>';
+ renderProfile(p);
 }
 
 reg?.addEventListener('submit',async e=>{
@@ -36,11 +48,10 @@ login?.addEventListener('submit',async e=>{
  if(lookupError||!email){result('#staffLoginResult','Invalid staff username or password.',true);return;}
  const {error:passwordError}=await sb.auth.signInWithPassword({email,password});
  if(passwordError){result('#staffLoginResult','Invalid staff username or password.',true);return;}
- // Do not leave the password-created session active while waiting for the second verification step.
  await sb.auth.signOut();
  pendingEmail=email;
  const {error:otpError}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
- if(otpError){result('#staffLoginResult','Password accepted, but the email verification code could not be sent: '+otpError.message,true);return;}
+ if(otpError){pendingEmail='';result('#staffLoginResult','Password accepted, but the email verification code could not be sent: '+otpError.message,true);return;}
  login.hidden=true; reg.hidden=true; otpBox.hidden=false;
  result('#staffOtpResult','Password verified. A verification code has been sent to your registered email.');
 });
