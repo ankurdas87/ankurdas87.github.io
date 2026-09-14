@@ -1,1 +1,115 @@
-(()=>{const reg=document.querySelector('#staffRegisterForm');if(!reg)return;const step=n=>{reg.querySelectorAll('.signup-step').forEach(x=>x.hidden=Number(x.dataset.step)!==n);reg.querySelectorAll('.progress-item').forEach(x=>x.classList.toggle('active',Number(x.dataset.progress)<=n));};const valid=names=>{for(const name of names){const x=reg.elements[name];if(!x.checkValidity()){x.reportValidity();return false;}}return true;};document.addEventListener('click',e=>{const b=e.target.closest('.password-eye');if(!b)return;const x=b.parentElement.querySelector('input');if(!x)return;x.type=x.type==='password'?'text':'password';b.textContent=x.type==='password'?'Show':'Hide';b.setAttribute('aria-label',x.type==='password'?'Show password':'Hide password');});document.querySelector('#registerNext1')?.addEventListener('click',()=>{if(valid(['first_name','last_name','designation','email','phone']))step(2);});document.querySelector('#registerNext2')?.addEventListener('click',()=>{if(!valid(['password','confirm_password']))return;const p=reg.elements.password,c=reg.elements.confirm_password;if(p.value!==c.value){c.setCustomValidity('Passwords do not match.');c.reportValidity();c.setCustomValidity('');return;}const f=new FormData(reg),box=document.querySelector('#registerReview');box.replaceChildren();[['First Name',f.get('first_name')],['Last Name',f.get('last_name')],['Designation',f.get('designation')],['Official Email',f.get('email')],['Phone Number',f.get('phone')],['Password','Hidden for security']].forEach(([label,value])=>{const d=document.createElement('div'),s=document.createElement('span'),b=document.createElement('strong');d.className='review-item';s.textContent=label;b.textContent=String(value);d.append(s,b);box.appendChild(d);});step(3);});reg.querySelectorAll('[data-prev]').forEach(b=>b.addEventListener('click',()=>step(Number(b.dataset.prev))));})();
+(()=>{
+  'use strict';
+
+  function initStaffSignupUI(){
+    const reg=document.getElementById('staffRegisterForm');
+    if(!reg)return;
+
+    const steps=[...reg.querySelectorAll('.signup-step')];
+    const progress=[...reg.querySelectorAll('.progress-item')];
+
+    function showStep(n){
+      steps.forEach(el=>{
+        const active=Number(el.dataset.step)===n;
+        el.hidden=!active;
+        el.style.display=active?'block':'none';
+      });
+      progress.forEach(el=>el.classList.toggle('active',Number(el.dataset.progress)<=n));
+      reg.dataset.currentStep=String(n);
+    }
+
+    function validate(names){
+      for(const name of names){
+        const field=reg.elements.namedItem(name);
+        if(!field)continue;
+        if(!field.checkValidity()){
+          field.reportValidity();
+          field.focus();
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function buildReview(){
+      const f=new FormData(reg);
+      const box=document.getElementById('registerReview');
+      if(!box)return;
+      box.replaceChildren();
+      [
+        ['First Name',f.get('first_name')],
+        ['Last Name',f.get('last_name')],
+        ['Designation',f.get('designation')],
+        ['Official Email',f.get('email')],
+        ['Phone Number',f.get('phone')],
+        ['Password','Hidden for security']
+      ].forEach(([label,value])=>{
+        const item=document.createElement('div');
+        const caption=document.createElement('span');
+        const text=document.createElement('strong');
+        item.className='review-item';
+        caption.textContent=label;
+        text.textContent=String(value??'');
+        item.append(caption,text);
+        box.appendChild(item);
+      });
+    }
+
+    const next1=document.getElementById('registerNext1');
+    const next2=document.getElementById('registerNext2');
+
+    if(next1){
+      next1.onclick=(e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(validate(['first_name','last_name','designation','email','phone']))showStep(2);
+      };
+    }
+
+    if(next2){
+      next2.onclick=(e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if(!validate(['password','confirm_password']))return;
+        const p=reg.elements.namedItem('password');
+        const c=reg.elements.namedItem('confirm_password');
+        if(p&&c&&p.value!==c.value){
+          c.setCustomValidity('Passwords do not match.');
+          c.reportValidity();
+          c.setCustomValidity('');
+          c.focus();
+          return;
+        }
+        buildReview();
+        showStep(3);
+      };
+    }
+
+    reg.querySelectorAll('[data-prev]').forEach(btn=>{
+      btn.onclick=(e)=>{
+        e.preventDefault();
+        showStep(Number(btn.dataset.prev));
+      };
+    });
+
+    document.querySelectorAll('.password-eye').forEach(btn=>{
+      btn.onclick=(e)=>{
+        e.preventDefault();
+        const input=btn.parentElement?.querySelector('input');
+        if(!input)return;
+        const showing=input.type==='text';
+        input.type=showing?'password':'text';
+        btn.textContent=showing?'Show':'Hide';
+        btn.setAttribute('aria-label',showing?'Show password':'Hide password');
+      };
+    });
+
+    showStep(1);
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',initStaffSignupUI,{once:true});
+  }else{
+    initStaffSignupUI();
+  }
+})();
