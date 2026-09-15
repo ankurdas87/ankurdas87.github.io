@@ -107,9 +107,22 @@
     showStep(1);
   }
 
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',initStaffSignupUI,{once:true});
-  }else{
+  function cleanDashboardPlaceholderLabels(){
+    document.querySelectorAll('.dash-view[data-view="documents"] .document-grid button').forEach(btn=>{
+      if(btn.textContent.includes('Upload · Phase 2'))btn.textContent='Upload';
+    });
+    const edit=document.querySelector('.dash-view[data-view="profile"] .profile-card-head .outline-action');
+    if(edit&&edit.textContent.includes('Phase 2'))edit.textContent='Edit Profile';
+  }
+
+  function init(){
     initStaffSignupUI();
+    cleanDashboardPlaceholderLabels();
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',init,{once:true});
+  }else{
+    init();
   }
 })();
