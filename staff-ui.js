@@ -115,9 +115,105 @@
     if(edit&&edit.textContent.includes('Phase 2'))edit.textContent='Edit Profile';
   }
 
+  function getClient(){
+    if(!window.supabase||typeof SUPABASE_URL==='undefined'||typeof SUPABASE_KEY==='undefined')return null;
+    if(typeof supabaseClient!=='undefined'&&supabaseClient)return supabaseClient;
+    if(!window.__blcStaffUiClient)window.__blcStaffUiClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    return window.__blcStaffUiClient;
+  }
+
+  function safeFileName(name){
+    const dot=name.lastIndexOf('.');
+    const ext=dot>=0?name.slice(dot).toLowerCase():'';
+    const base=(dot>=0?name.slice(0,dot):name).replace(/[^a-zA-Z0-9._-]+/g,'-').replace(/^-+|-+$/g,'').slice(0,80)||'cv';
+    return base+ext;
+  }
+
+  function setCvButton(button,label,disabled=false){
+    if(!button)return;
+    button.textContent=label;
+    button.disabled=disabled;
+  }
+
+  async function refreshCvState(sb,button){
+    const {data:{user}}=await sb.auth.getUser();
+    if(!user)return;
+    const {data,error}=await sb.from('staff_documents').select('id,original_file_name,file_path').eq('staff_id',user.id).eq('document_type','cv').maybeSingle();
+    if(error){setCvButton(button,'Upload');return;}
+    if(data){
+      button.dataset.uploaded='true';
+      setCvButton(button,'Replace');
+      const card=button.closest('article');
+      const p=card?.querySelector('p');
+      if(p)p.textContent=(data.original_file_name||'CV / Resume')+' · Uploaded securely';
+    }else{
+      delete button.dataset.uploaded;
+      setCvButton(button,'Upload');
+    }
+  }
+
+  function initCvUpload(){
+    const documentsView=document.querySelector('.dash-view[data-view="documents"]');
+    const button=documentsView?.querySelector('.document-grid article:first-child button');
+    if(!button)return;
+
+    button.disabled=false;
+    const input=document.createElement('input');
+    input.type='file';
+    input.accept='application/pdf,image/jpeg,image/png';
+    input.hidden=true;
+    input.setAttribute('aria-label','Choose CV or Resume');
+    documentsView.appendChild(input);
+
+    const sb=getClient();
+    if(!sb){setCvButton(button,'Upload',true);return;}
+
+    refreshCvState(sb,button);
+
+    button.addEventListener('click',()=>input.click());
+    input.addEventListener('change',async()=>{
+      const file=input.files?.[0];
+      if(!file)return;
+      if(!['application/pdf','image/jpeg','image/png'].includes(file.type)){
+        alert('Please choose a PDF, JPG or PNG file.');input.value='';return;
+      }
+      if(file.size>10485760){
+        alert('The file must be 10 MB or smaller.');input.value='';return;
+      }
+
+      setCvButton(button,'Uploading…',true);
+      const {data:{user},error:userError}=await sb.auth.getUser();
+      if(userError||!user){alert('Your staff session has expired. Please sign in again.');setCvButton(button,'Upload');input.value='';return;}
+
+      const {data:oldRecord}=await sb.from('staff_documents').select('id,file_path').eq('staff_id',user.id).eq('document_type','cv').maybeSingle();
+      const filePath=`${user.id}/cv/${Date.now()}-${safeFileName(file.name)}`;
+      const {error:uploadError}=await sb.storage.from('staff-documents').upload(filePath,file,{upsert:false,contentType:file.type});
+      if(uploadError){alert('CV upload failed: '+uploadError.message);setCvButton(button,oldRecord?'Replace':'Upload');input.value='';return;}
+
+      let dbError;
+      if(oldRecord){
+        ({error:dbError}=await sb.from('staff_documents').update({document_title:'CV / Resume',file_path:filePath,original_file_name:file.name,file_size:file.size,mime_type:file.type,updated_at:new Date().toISOString()}).eq('id',oldRecord.id));
+      }else{
+        ({error:dbError}=await sb.from('staff_documents').insert({staff_id:user.id,document_type:'cv',document_title:'CV / Resume',file_path:filePath,original_file_name:file.name,file_size:file.size,mime_type:file.type}));
+      }
+
+      if(dbError){
+        await sb.storage.from('staff-documents').remove([filePath]);
+        alert('The file could not be saved to your staff record: '+dbError.message);
+        setCvButton(button,oldRecord?'Replace':'Upload');input.value='';return;
+      }
+
+      if(oldRecord?.file_path&&oldRecord.file_path!==filePath)await sb.storage.from('staff-documents').remove([oldRecord.file_path]);
+      await refreshCvState(sb,button);
+      input.value='';
+      alert(oldRecord?'CV / Resume replaced successfully.':'CV / Resume uploaded successfully.');
+    });
+  }
+
   function init(){
     initStaffSignupUI();
     cleanDashboardPlaceholderLabels();
+    initCvUpload();
   }
 
   if(document.readyState==='loading'){
