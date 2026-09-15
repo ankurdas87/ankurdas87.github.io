@@ -1,18 +1,27 @@
-/* Keep the approved Staff Create Account cover isolated from dashboard styles.
-   The stored cover asset is a wide composite; on desktop only its campus portion
-   should be visible inside the left 45% panel. */
+/* Protect the approved Staff Create Account layout from dashboard styles.
+   staff-signup-cover.png is a wide composite. On desktop, the campus/photo
+   occupies the left portion of that source image. We render the source at
+   300% of the visible cover width so the signup-form portion begins outside
+   the clipped left panel. */
 @media (min-width:901px){
+  body.register-mode .signup-cover{
+    position:relative!important;
+    overflow:hidden!important;
+  }
   body.register-mode .signup-cover>img:first-child{
     position:absolute!important;
     top:0!important;
-    bottom:0!important;
     left:0!important;
     right:auto!important;
-    width:210%!important;
+    bottom:auto!important;
+    width:300%!important;
     height:100%!important;
     max-width:none!important;
     object-fit:fill!important;
     object-position:left center!important;
     transform:none!important;
+  }
+  body.register-mode .signup-cover blockquote{
+    display:none!important;
   }
 }
