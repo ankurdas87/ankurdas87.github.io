@@ -28,4 +28,5 @@ sb.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'){hideAuth();s
 /* Isolated dashboard modules. Authentication markup/design stays untouched. */
 if(!document.querySelector('script[data-blc-qualifications]')){const q=document.createElement('script');q.src='staff-qualifications.js';q.defer=true;q.dataset.blcQualifications='1';document.head.appendChild(q);}
 if(!document.querySelector('script[data-blc-profile-editor]')){const p=document.createElement('script');p.src='staff-profile-editor.js';p.defer=true;p.dataset.blcProfileEditor='1';document.head.appendChild(p);}
+if(!document.querySelector('script[data-blc-notes]')){const n=document.createElement('script');n.src='staff-notes.js';n.defer=true;n.dataset.blcNotes='1';document.head.appendChild(n);}
 })();
