@@ -25,4 +25,6 @@ reset?.addEventListener('submit',async e=>{e.preventDefault();const f=new FormDa
 $('#staffLogout')?.addEventListener('click',async()=>{await sb.auth.signOut();location.reload();});
 sb.auth.onAuthStateChange((event)=>{if(event==='PASSWORD_RECOVERY'){hideAuth();setRegisterMode(false);reset.hidden=false;if(tabs)tabs.hidden=true;$('#staffAuth').hidden=false;$('#staffPanel').hidden=true;}});
 (async()=>{const recoveryReturn=location.hash.includes('type=recovery');if(recoveryReturn){hideAuth();setRegisterMode(false);reset.hidden=false;if(tabs)tabs.hidden=true;return;}const isConfirmationReturn=location.hash.includes('type=signup')||(!recoveryReturn&&(location.hash.includes('access_token')||location.search.includes('code=')));if(isConfirmationReturn&&await showConfirmedUsername())return;const {data:{session}}=await sb.auth.getSession();if(session)await showStaffPanel();})();
+/* Load the isolated Qualifications module without changing authentication markup or design. */
+if(!document.querySelector('script[data-blc-qualifications]')){const q=document.createElement('script');q.src='staff-qualifications.js';q.defer=true;q.dataset.blcQualifications='1';document.head.appendChild(q);}
 })();
