@@ -33,4 +33,5 @@ if(!document.querySelector('script[data-blc-note-navigation]')){const v=document
 if(!document.querySelector('script[data-blc-notes]')){const n=document.createElement('script');n.src='staff-notes.js';n.defer=true;n.dataset.blcNotes='1';document.head.appendChild(n);}
 if(!document.querySelector('script[data-blc-note-register]')){const r=document.createElement('script');r.src='staff-note-register.js';r.defer=true;r.dataset.blcNoteRegister='1';document.head.appendChild(r);}
 if(!document.querySelector('script[data-blc-green-note-editor]')){const g=document.createElement('script');g.src='staff-green-note-editor.js';g.defer=true;g.dataset.blcGreenNoteEditor='1';document.head.appendChild(g);}
+if(!document.querySelector('script[data-blc-send-note]')){const s=document.createElement('script');s.src='staff-send-note.js?v=1';s.defer=true;s.dataset.blcSendNote='1';document.head.appendChild(s);}
 })();
