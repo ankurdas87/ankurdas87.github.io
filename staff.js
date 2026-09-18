@@ -34,5 +34,5 @@ if(!document.querySelector('script[data-blc-notes]')){const n=document.createEle
 if(!document.querySelector('script[data-blc-note-register]')){const r=document.createElement('script');r.src='staff-note-register.js';r.defer=true;r.dataset.blcNoteRegister='1';document.head.appendChild(r);}
 if(!document.querySelector('script[data-blc-green-note-editor]')){const g=document.createElement('script');g.src='staff-green-note-editor.js';g.defer=true;g.dataset.blcGreenNoteEditor='1';document.head.appendChild(g);}
 if(!document.querySelector('script[data-blc-send-note]')){const s=document.createElement('script');s.src='staff-send-note.js?v=2';s.defer=true;s.dataset.blcSendNote='1';document.head.appendChild(s);}
-if(!document.querySelector('script[data-blc-note-correspondence]')){const x=document.createElement('script');x.src='staff-note-correspondence.js?v=7';x.defer=true;x.dataset.blcNoteCorrespondence='1';document.head.appendChild(x);}
+if(!document.querySelector('script[data-blc-note-correspondence]')){const x=document.createElement('script');x.src='staff-note-correspondence.js?v=8';x.defer=true;x.dataset.blcNoteCorrespondence='1';document.head.appendChild(x);}
 })();
