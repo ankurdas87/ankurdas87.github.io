@@ -34,3 +34,37 @@
     display:none!important;
   }
 }
+
+
+/* Login viewport fit: keep Create Account fully visible and allow safe scroll on shorter screens. */
+body.staff-page:not(.register-mode) #staffAuth>.staff-auth-side{
+  overflow-y:auto!important;
+  scrollbar-width:thin;
+}
+body.staff-page:not(.register-mode) .staff-auth{
+  margin:auto!important;
+  padding:18px 0 24px!important;
+}
+body.staff-page:not(.register-mode) .staff-brand{
+  flex:0 0 auto;
+  margin-bottom:8px!important;
+}
+body.staff-page:not(.register-mode) .staff-brand img{
+  width:86px!important;
+  height:86px!important;
+}
+body.staff-page:not(.register-mode) .staff-brand small{margin-top:8px!important}
+body.staff-page:not(.register-mode) .staff-auth .sub{margin-bottom:20px!important}
+body.staff-page:not(.register-mode) .staff-auth label{margin-top:14px!important}
+body.staff-page:not(.register-mode) .staff-or{margin:22px 0!important}
+body.staff-page:not(.register-mode) .staff-signup p{margin-bottom:12px!important}
+body.staff-page:not(.register-mode) .staff-secure{margin-top:18px!important}
+@media (max-height:760px) and (min-width:901px){
+  body.staff-page:not(.register-mode) #staffAuth>.staff-auth-side{padding-top:16px!important;padding-bottom:16px!important}
+  body.staff-page:not(.register-mode) .staff-brand img{width:68px!important;height:68px!important}
+  body.staff-page:not(.register-mode) .staff-brand small{font-size:12px!important}
+  body.staff-page:not(.register-mode) .staff-auth h1{font-size:27px!important}
+  body.staff-page:not(.register-mode) .staff-auth input,
+  body.staff-page:not(.register-mode) .staff-primary,
+  body.staff-page:not(.register-mode) .staff-secondary{height:48px!important}
+}
