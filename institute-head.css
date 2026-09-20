@@ -130,3 +130,16 @@
 .ref-executive-credit em{font:600 6px "DM Sans";font-style:normal;letter-spacing:.22em;color:#b38c49}
 @keyframes refCreditGold{0%{background-position:180% 50%}100%{background-position:-50% 50%}}
 @media(max-width:700px){.ref-brand{min-width:0!important}.ref-brand>div{width:auto!important;min-width:0!important}.ref-brand strong.ref-gold-wordmark{width:auto!important;max-width:none!important}.ref-executive-credit{gap:9px}.ref-executive-credit>i{display:none}.ref-executive-credit>span,.ref-executive-credit small,.ref-executive-credit em{width:100%}}
+
+/* Stable Executive masthead + horizontal overflow safety */
+.refdash{display:block!important;min-width:1180px!important}
+.ref-head{position:relative!important;width:100%!important;height:74px!important;min-height:74px!important;display:grid!important;grid-template-columns:1fr 1fr 1fr!important;align-items:center!important;padding:0 24px!important;overflow:visible!important}
+.ref-brand{display:flex!important;align-items:center!important;min-width:0!important;height:auto!important;overflow:visible!important}
+.ref-brand img{display:block!important;width:50px!important;height:50px!important;min-width:50px!important;object-fit:cover!important}
+.ref-brand>div{display:grid!important;gap:2px!important;width:auto!important;min-width:0!important;height:auto!important;margin-left:13px!important;overflow:visible!important}
+.ref-brand strong.ref-gold-wordmark{display:block!important;position:static!important;width:auto!important;max-width:none!important;min-height:0!important;height:auto!important;line-height:1.15!important;white-space:nowrap!important;margin:0!important}
+.ref-nav{position:relative!important;width:100%!important;height:54px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:thin;scrollbar-color:#b98c3d #06131d}
+.ref-nav::-webkit-scrollbar{height:4px}.ref-nav::-webkit-scrollbar-track{background:#06131d}.ref-nav::-webkit-scrollbar-thumb{background:#b98c3d;border-radius:8px}
+.ref-nav button{flex:0 0 auto!important;min-width:145px!important}
+.ref-main{width:100%!important;max-width:none!important;margin:0!important}
+.ih-panel.ih-dashboard{overflow:auto!important}
