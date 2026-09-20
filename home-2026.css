@@ -93,3 +93,8 @@ body.home-page .workspace-grid article>span,body.home-page .quick>a small,body.h
 body.home-page .portal-invite .invite-copy>a{background:#d6b36d!important;color:#071527!important}
 body.home-page .portal-invite .invite-copy>a b{color:#071527!important}
 @media(max-width:800px){body.home-page::before{opacity:.66!important}body.home-page .hero-no{font-size:84px!important;right:20px!important;top:40px!important}.home-hero{min-height:auto!important}}
+
+
+/* Campus slideshow CTA contrast fix */
+body.home-page .campus-cinema .campus-cinema-copy>a{background:#f5f0e6!important;color:#071527!important;border:1px solid #f5f0e6!important;font-weight:700!important}
+body.home-page .campus-cinema .campus-cinema-copy>a:hover{background:#d6b36d!important;color:#071527!important;border-color:#d6b36d!important}
