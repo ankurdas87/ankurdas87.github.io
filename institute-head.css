@@ -219,3 +219,8 @@
 .ref-main .ih-view[data-view="dashboard"] .ref-hero{height:534px!important;min-height:534px!important}
 .ref-main .ih-view[data-view="profile"] .ref-profile{padding-top:122px!important}
 .ref-main .ih-view[data-view="profile"] .ref-profile-photo{width:264px!important;height:264px!important;margin:0 auto 26px!important;transform:translateY(0)!important}
+/* PROFILE PORTRAIT HARD FIX: offset the actual photo element below sticky nav, independent of parent padding */
+.ref-main .ih-view[data-view="profile"].active{padding-top:0!important;overflow:visible!important}
+.ref-main .ih-view[data-view="profile"] .ref-profile{padding-top:0!important;overflow:visible!important}
+.ref-main .ih-view[data-view="profile"] .ref-profile-photo{position:relative!important;top:86px!important;z-index:2!important;margin:0 auto 110px!important;width:264px!important;height:264px!important;box-sizing:border-box!important;overflow:hidden!important}
+.ref-main .ih-view[data-view="profile"] .ref-profile-photo img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transform:none!important;border-radius:50%!important}
