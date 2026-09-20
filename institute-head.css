@@ -113,3 +113,20 @@
 .ref-brand small,.ref-brand span{white-space:nowrap!important}
 .ref-brand strong.ref-gold-wordmark{display:block!important;position:relative!important;inset:auto!important;margin:2px 0!important;padding:0!important;white-space:nowrap!important;overflow:visible!important;width:auto!important;max-width:none!important;font-size:16px!important;line-height:20px!important}
 .ref-main{position:relative!important;z-index:1!important}
+
+/* FINAL masthead visibility: dashboard shell is fixed, so reserve the header explicitly */
+.refdash{display:grid!important;grid-template-rows:74px 54px auto auto!important;min-height:100vh!important}
+.ref-head{grid-row:1!important;position:relative!important;top:auto!important;left:auto!important;right:auto!important;width:100%!important;height:74px!important;min-height:74px!important;overflow:visible!important;padding:0 24px!important;box-sizing:border-box!important}
+.ref-brand{position:relative!important;display:flex!important;align-items:center!important;align-self:stretch!important;min-width:390px!important;height:74px!important;margin:0!important;padding:0!important;overflow:visible!important}
+.ref-brand img{display:block!important;width:50px!important;height:50px!important;min-width:50px!important;max-width:50px!important;margin:0!important;object-fit:contain!important;transform:none!important}
+.ref-brand>div{position:relative!important;display:grid!important;grid-template-rows:auto auto auto!important;align-content:center!important;gap:2px!important;width:310px!important;min-width:310px!important;height:74px!important;margin-left:13px!important;overflow:visible!important}
+.ref-brand small,.ref-brand span{display:block!important;position:static!important;white-space:nowrap!important;line-height:1.2!important;margin:0!important;padding:0!important;transform:none!important}
+.ref-brand strong.ref-gold-wordmark{display:block!important;position:static!important;white-space:nowrap!important;width:310px!important;max-width:310px!important;height:auto!important;min-height:20px!important;margin:2px 0!important;padding:0!important;overflow:visible!important;clip:auto!important;clip-path:none!important;transform:none!important;line-height:20px!important}
+.ref-nav{grid-row:2!important;position:relative!important;top:auto!important}
+.ref-main{grid-row:3!important;position:relative!important;margin:0!important}
+.ref-executive-credit{grid-row:4!important;min-height:64px;display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid rgba(211,164,77,.32);background:linear-gradient(180deg,#04131e,#020b12);text-align:center}
+.ref-executive-credit>span{font:600 6px "DM Sans";letter-spacing:.22em;color:#78868d}.ref-executive-credit>i{width:38px;height:1px;background:linear-gradient(90deg,transparent,#d4a64e,transparent)}
+.ref-executive-credit small{font:500 7px "DM Sans";letter-spacing:.12em;color:#8e999e}.ref-executive-credit strong{font:400 10px "Libre Baskerville";background:linear-gradient(100deg,#8c641f,#d7aa52,#fff0b4,#c79335,#efd58c,#8c641f);background-size:230% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:refCreditGold 4.5s linear infinite}
+.ref-executive-credit em{font:600 6px "DM Sans";font-style:normal;letter-spacing:.22em;color:#b38c49}
+@keyframes refCreditGold{0%{background-position:180% 50%}100%{background-position:-50% 50%}}
+@media(max-width:700px){.ref-brand{min-width:0!important}.ref-brand>div{width:auto!important;min-width:0!important}.ref-brand strong.ref-gold-wordmark{width:auto!important;max-width:none!important}.ref-executive-credit{gap:9px}.ref-executive-credit>i{display:none}.ref-executive-credit>span,.ref-executive-credit small,.ref-executive-credit em{width:100%}}
