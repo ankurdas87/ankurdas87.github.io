@@ -40,3 +40,12 @@ body.home-page main>section:first-child{background:linear-gradient(90deg,rgba(7,
 body.home-page .institutional-portal-section,body.home-page [class*="portal-section"]{background-color:rgba(7,19,34,.90)!important}
 @media(max-width:800px){body.home-page::before{background-position:62% top}body.home-page main>section{backdrop-filter:none;-webkit-backdrop-filter:none}}
 @media(prefers-reduced-motion:reduce){body.home-page::before{transform:none}}
+
+
+/* Refined legal-art background treatment */
+body.home-page::before{background-image:url("assets/blc-law-home-bg.png")!important;background-position:center top!important;background-size:cover!important;opacity:.30!important;filter:saturate(.72) contrast(1.05) brightness(.72)!important}
+body.home-page::after{background:linear-gradient(180deg,rgba(7,19,34,.74) 0%,rgba(7,19,34,.58) 18%,rgba(244,241,233,.96) 42%,rgba(244,241,233,.985) 72%,rgba(7,19,34,.91) 100%)!important}
+body.home-page main>section{background:#f4f1e9!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.home-page main>section:first-child{background:linear-gradient(90deg,rgba(6,18,33,.94) 0%,rgba(6,18,33,.86) 48%,rgba(6,18,33,.63) 100%)!important}
+body.home-page .campus-cinema,body.home-page .principal-section,body.home-page [class*="principal"],body.home-page .cream{background:#f4f1e9!important}
+body.home-page .institutional-portal-section,body.home-page [class*="portal-section"]{background:#071527!important}
