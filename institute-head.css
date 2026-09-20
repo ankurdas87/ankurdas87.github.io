@@ -158,3 +158,17 @@
 .ref-nav{position:sticky!important;top:86px!important;z-index:999!important;width:100%!important;height:58px!important;min-height:58px!important;margin:0!important;background:#04141f!important;border-bottom:1px solid rgba(211,164,77,.3)!important;overflow-x:auto!important;overflow-y:hidden!important}
 .ref-main{position:relative!important;z-index:1!important;width:100%!important;margin:0!important;padding-top:0!important}
 @media(max-width:1180px){.refdash{min-width:1180px!important}.ref-head{grid-template-columns:380px 430px 370px!important}}
+
+/* FINAL targeted fix: keep Principal identity/photo fully below the sticky masthead */
+.ref-view[data-view="dashboard"].active,
+.ref-view[data-view="profile"].active{scroll-margin-top:144px!important}
+.ref-view[data-view="dashboard"] .ref-hero{margin-top:0!important;padding-top:38px!important;min-height:360px!important;overflow:visible!important}
+.ref-view[data-view="dashboard"] .ref-hero-copy,
+.ref-view[data-view="dashboard"] .ref-portrait-wrap,
+.ref-view[data-view="dashboard"] .ref-pillars{position:relative!important;top:auto!important;transform:none!important}
+.ref-view[data-view="dashboard"] .ref-portrait-wrap{align-self:start!important}
+.ref-view[data-view="profile"]{padding-top:42px!important;overflow:visible!important}
+.ref-view[data-view="profile"] .ih-profile-stage,
+.ref-view[data-view="profile"] .ih-profile-portrait,
+.ref-view[data-view="profile"] .profile-portrait,
+.ref-view[data-view="profile"] .principal-profile-photo{margin-top:0!important;top:auto!important;transform:none!important}
