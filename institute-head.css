@@ -172,3 +172,11 @@
 .ref-view[data-view="profile"] .ih-profile-portrait,
 .ref-view[data-view="profile"] .profile-portrait,
 .ref-view[data-view="profile"] .principal-profile-photo{margin-top:0!important;top:auto!important;transform:none!important}
+
+/* Principal dashboard correction — preserve the supplied portrait instead of over-cropping it */
+.ref-photo img,.ref-profile-photo img{object-fit:cover!important;object-position:50% 50%!important;transform:scale(1)!important;transform-origin:center!important}
+.ref-profile-photo{overflow:hidden!important}
+.ref-profile-photo img{display:block!important;width:100%!important;height:100%!important}
+/* Single unified executive copyright */
+.ref-executive-credit>span,.ref-executive-credit small,.ref-executive-credit strong,.ref-executive-credit em{font-family:"DM Sans",sans-serif!important;font-size:7px!important;font-weight:600!important;line-height:1.45!important;letter-spacing:.12em!important}
+.ref-executive-credit strong{font-size:7px!important;font-weight:600!important}
