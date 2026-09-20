@@ -196,3 +196,12 @@
 .ref-main .ih-view[data-view="dashboard"] .ref-photo>span{display:block!important;white-space:nowrap!important}
 .ref-main .ih-view[data-view="dashboard"] .ref-values{align-self:center!important;overflow:visible!important}
 @media(max-width:1180px){.ref-main .ih-view[data-view="dashboard"] .ref-hero{grid-template-columns:390px 330px 390px!important;padding-left:35px!important;padding-right:35px!important}.ref-main .ih-view[data-view="dashboard"] .ref-welcome h1{font-size:39px!important}}
+/* 2026-09-21 screenshot-verified correction: the sticky nav visually covers ~64px of hero content.
+   Move ONLY the three Principal hero columns below it and give that section matching room. */
+.ref-main .ih-view[data-view="dashboard"] .ref-hero{height:474px!important;min-height:474px!important;padding-top:28px!important;padding-bottom:26px!important}
+.ref-main .ih-view[data-view="dashboard"] .ref-hero>.ref-welcome,
+.ref-main .ih-view[data-view="dashboard"] .ref-hero>.ref-photo,
+.ref-main .ih-view[data-view="dashboard"] .ref-hero>.ref-values{transform:translateY(64px)!important}
+.ref-main .ih-view[data-view="dashboard"] .ref-welcome h1{max-width:560px!important;white-space:normal!important;overflow:visible!important}
+.ref-main .ih-view[data-view="dashboard"] .ref-photo>div{width:286px!important;height:286px!important;overflow:hidden!important}
+.ref-main .ih-view[data-view="dashboard"] .ref-photo>div>img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;transform:none!important}
