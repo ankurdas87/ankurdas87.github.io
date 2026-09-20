@@ -214,3 +214,8 @@
 .ref-main .ih-view[data-view="profile"] .ref-profile{padding-top:82px!important;overflow:visible!important}
 .ref-main .ih-view[data-view="profile"] .ref-profile-photo{box-sizing:border-box!important;width:264px!important;height:264px!important;margin:0 auto 24px!important;padding:7px!important;border-radius:50%!important;overflow:hidden!important;transform:none!important}
 .ref-main .ih-view[data-view="profile"] .ref-profile-photo>img{display:block!important;width:100%!important;height:100%!important;max-width:none!important;margin:0!important;border-radius:50%!important;object-fit:cover!important;object-position:center!important;transform:none!important}
+/* 2026-09-21 portrait clearance: move ONLY portrait blocks down so both gold circles are fully visible */
+.ref-main .ih-view[data-view="dashboard"] .ref-hero>.ref-photo{transform:translateY(112px)!important}
+.ref-main .ih-view[data-view="dashboard"] .ref-hero{height:534px!important;min-height:534px!important}
+.ref-main .ih-view[data-view="profile"] .ref-profile{padding-top:122px!important}
+.ref-main .ih-view[data-view="profile"] .ref-profile-photo{width:264px!important;height:264px!important;margin:0 auto 26px!important;transform:translateY(0)!important}
