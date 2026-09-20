@@ -49,3 +49,19 @@ body.home-page main>section{background:#f4f1e9!important;backdrop-filter:none!im
 body.home-page main>section:first-child{background:linear-gradient(90deg,rgba(6,18,33,.94) 0%,rgba(6,18,33,.86) 48%,rgba(6,18,33,.63) 100%)!important}
 body.home-page .campus-cinema,body.home-page .principal-section,body.home-page [class*="principal"],body.home-page .cream{background:#f4f1e9!important}
 body.home-page .institutional-portal-section,body.home-page [class*="portal-section"]{background:#071527!important}
+
+
+/* Immersive homepage: legal artwork is the page surface, not a boxed backdrop */
+body.home-page{background:#071527!important}
+body.home-page::before{opacity:.44!important;filter:saturate(.68) contrast(1.04) brightness(.62)!important;background-attachment:fixed!important}
+body.home-page::after{background:linear-gradient(180deg,rgba(5,17,31,.62),rgba(7,21,39,.48) 42%,rgba(7,21,39,.62) 78%,rgba(5,16,29,.82))!important}
+body.home-page main>section:not(.campus-cinema){background:transparent!important;box-shadow:none!important}
+body.home-page main>section:not(.campus-cinema),body.home-page main>section:not(.campus-cinema) p,body.home-page main>section:not(.campus-cinema) h1,body.home-page main>section:not(.campus-cinema) h2,body.home-page main>section:not(.campus-cinema) h3,body.home-page main>section:not(.campus-cinema) h4,body.home-page main>section:not(.campus-cinema) strong{color:#f3efe5}
+body.home-page main>section:not(.campus-cinema) .kicker,body.home-page main>section:not(.campus-cinema) small,body.home-page main>section:not(.campus-cinema) [class*="eyebrow"]{color:#c7a766!important}
+body.home-page main>section:not(.campus-cinema) [class*="card"],body.home-page main>section:not(.campus-cinema) [class*="panel"],body.home-page main>section:not(.campus-cinema) [class*="tile"],body.home-page main>section:not(.campus-cinema) [class*="quick"] a{background:rgba(7,21,39,.20)!important;border-color:rgba(218,193,142,.24)!important;box-shadow:none!important;backdrop-filter:blur(2px)}
+body.home-page main>section:not(.campus-cinema) [class*="principal"]{background:transparent!important}
+body.home-page main>section:not(.campus-cinema) [class*="principal"] img{box-shadow:0 24px 60px rgba(0,0,0,.28)}
+body.home-page .campus-cinema{background:#071527!important}
+body.home-page .campus-cinema *{color:inherit}
+body.home-page footer{background:rgba(5,16,29,.88)!important;color:#d7dce2!important;border-top:1px solid rgba(218,193,142,.18)}
+@media(max-width:800px){body.home-page::before{background-attachment:scroll!important;opacity:.36!important}body.home-page main>section:not(.campus-cinema) [class*="card"],body.home-page main>section:not(.campus-cinema) [class*="panel"]{background:rgba(7,21,39,.30)!important}}
