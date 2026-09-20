@@ -43,3 +43,22 @@
 .px-bottom{display:grid;grid-template-columns:2fr .9fr;gap:15px;margin-top:14px}.px-actions,.px-mission{min-height:72px;border:1px solid rgba(106,139,153,.24);border-radius:7px;background:#061722;display:flex;align-items:center;gap:16px;padding:12px 22px}.px-actions strong{font:400 14px "Libre Baskerville";margin-right:auto}.px-actions button{padding:11px 22px;border:1px solid rgba(106,139,153,.24);border-radius:5px;background:#05141e;color:#c9cecf;font:500 8px "DM Sans";cursor:pointer}.px-mission{border-color:rgba(211,166,81,.55);background:linear-gradient(100deg,rgba(194,143,55,.24),rgba(29,30,25,.8));color:#d8ad60}.px-mission>span{display:grid;gap:4px}.px-mission b{font:400 10px "Libre Baskerville"}.px-mission small{font:400 8px "DM Sans"}.px-mission i{margin-left:auto}
 .px-page-title{text-align:center;padding:55px 0 25px}.px-page-title small,.px-placeholder>small{font:600 8px "DM Sans";letter-spacing:.25em;color:#cda04f}.px-page-title h1,.px-placeholder h1{font:400 48px "Libre Baskerville";margin:12px}.px-profile{text-align:center;max-width:900px;margin:auto;padding-bottom:60px}.px-profile-circle{width:245px;height:245px;margin:0 auto 25px;border-radius:50%;padding:8px;border:2px solid #d7a850;overflow:hidden}.px-profile h2{font:400 38px "Libre Baskerville";margin:0 0 9px}.px-profile>span{font:600 8px "DM Sans";letter-spacing:.25em;color:#d1a34f}.px-profile>p{color:#87939a;font:10px "DM Sans"}.px-profile-info{margin-top:38px;border-top:1px solid rgba(255,255,255,.08)}.px-profile-info div{display:grid;grid-template-columns:180px 1fr;text-align:left;padding:18px;border-bottom:1px solid rgba(255,255,255,.08)}.px-profile-info small{font:600 7px "DM Sans";letter-spacing:.18em;color:#64737d}.px-profile-info b{font:500 10px "DM Sans";color:#d3cec4}.px-placeholder{padding:80px 20px}.px-placeholder p{font:11px "DM Sans";color:#79868e}
 @media(max-width:1050px){.px-header{grid-template-columns:1fr auto}.px-office{display:none}.px-hero{grid-template-columns:1fr}.px-welcome{text-align:center}.px-welcome i{margin:20px auto}.px-values{grid-template-columns:1fr 1fr}.px-stats{grid-template-columns:1fr 1fr}.px-content{grid-template-columns:1fr}.px-bottom{grid-template-columns:1fr}.px-nav{overflow:auto}.px-nav button:last-child{margin-left:0}}@media(max-width:620px){.px-brand div{display:none}.px-head-right>div{display:none}.px-nav button{padding:0 14px}.px-nav button span{display:none}.px-main{padding:0 12px 25px}.px-hero{padding:28px 14px}.px-portrait>div{width:205px;height:205px}.px-values,.px-stats{grid-template-columns:1fr}.px-actions{overflow:auto}.px-actions strong{white-space:nowrap}.px-profile-info div{grid-template-columns:1fr;gap:7px}}
+
+/* Executive dashboard viewport-fit correction */
+@media (min-width:1051px){
+  .px-header{height:76px;padding:0 22px}
+  .px-brand img{width:48px;height:48px}.px-brand strong{font-size:16px}
+  .px-office strong{font-size:18px}
+  .px-nav{height:54px}.px-nav button{height:40px;padding:0 20px}
+  .px-main{max-width:none;width:100%;padding:0 20px 22px}
+  .px-hero{min-height:300px;height:300px;grid-template-columns:minmax(0,1fr) 350px minmax(0,1fr);padding:14px 42px;gap:24px}
+  .px-welcome h1{font-size:clamp(30px,2.65vw,44px)}
+  .px-welcome small{font-size:15px}.px-welcome blockquote{font-size:14px}
+  .px-portrait>div{width:225px;height:225px}
+  .px-portrait>span{margin-top:12px}
+  .px-values article{padding:9px 13px}.px-values b{width:34px;height:34px;font-size:17px}
+  .px-stats{gap:12px;padding:11px 0}.px-stats button{min-height:82px;padding:12px 16px;grid-template-columns:46px 1fr auto}
+  .px-stats>button>b{width:42px;height:42px;font-size:18px}.px-stats strong{font-size:22px}
+  .px-content{gap:12px}.px-content>article{min-height:220px}.px-content header{height:46px}.px-empty{height:170px}
+  .px-bottom{margin-top:11px;gap:12px}.px-actions,.px-mission{min-height:62px}
+}
