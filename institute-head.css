@@ -143,3 +143,18 @@
 .ref-nav button{flex:0 0 auto!important;min-width:145px!important}
 .ref-main{width:100%!important;max-width:none!important;margin:0!important}
 .ih-panel.ih-dashboard{overflow:auto!important}
+
+/* FINAL FIX: masthead is sticky inside dashboard scroller, never above the viewport */
+.ih-panel.ih-dashboard{position:fixed!important;inset:0!important;overflow:auto!important;padding:0!important;scroll-padding-top:128px!important}
+.refdash{display:block!important;position:relative!important;min-width:1180px!important;min-height:100%!important;padding-top:0!important;margin:0!important}
+.ref-head{position:sticky!important;top:0!important;z-index:1000!important;display:grid!important;grid-template-columns:minmax(380px,1fr) minmax(430px,1fr) minmax(380px,1fr)!important;align-items:center!important;width:100%!important;height:86px!important;min-height:86px!important;margin:0!important;padding:0 24px!important;box-sizing:border-box!important;background:#03111b!important;border-bottom:1px solid rgba(211,164,77,.48)!important;overflow:visible!important}
+.ref-brand{display:flex!important;align-items:center!important;gap:14px!important;width:auto!important;min-width:360px!important;height:86px!important;margin:0!important;padding:0!important;overflow:visible!important}
+.ref-brand img{position:static!important;display:block!important;flex:0 0 58px!important;width:58px!important;height:58px!important;min-width:58px!important;max-width:58px!important;margin:0!important;padding:0!important;border-radius:50%!important;object-fit:contain!important;transform:none!important}
+.ref-brand>div{position:static!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:3px!important;width:auto!important;min-width:285px!important;height:auto!important;margin:0!important;padding:0!important;overflow:visible!important}
+.ref-brand small{position:static!important;display:block!important;margin:0!important;padding:0!important;font:600 6px/1.2 "DM Sans"!important;letter-spacing:.24em!important;color:#d0a14e!important;white-space:nowrap!important}
+.ref-brand strong.ref-gold-wordmark{position:static!important;display:block!important;width:auto!important;min-width:285px!important;max-width:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important;overflow:visible!important;white-space:nowrap!important;font:400 17px/1.15 "Libre Baskerville"!important;transform:none!important}
+.ref-brand span{position:static!important;display:block!important;margin:0!important;padding:0!important;font:500 5px/1.2 "DM Sans"!important;letter-spacing:.22em!important;color:#7f898f!important;white-space:nowrap!important}
+.ref-office{display:grid!important;align-self:center!important}.ref-meta{display:flex!important;align-self:center!important}
+.ref-nav{position:sticky!important;top:86px!important;z-index:999!important;width:100%!important;height:58px!important;min-height:58px!important;margin:0!important;background:#04141f!important;border-bottom:1px solid rgba(211,164,77,.3)!important;overflow-x:auto!important;overflow-y:hidden!important}
+.ref-main{position:relative!important;z-index:1!important;width:100%!important;margin:0!important;padding-top:0!important}
+@media(max-width:1180px){.refdash{min-width:1180px!important}.ref-head{grid-template-columns:380px 430px 370px!important}}
