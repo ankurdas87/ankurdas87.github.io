@@ -98,3 +98,22 @@ body.home-page .portal-invite .invite-copy>a b{color:#071527!important}
 /* Campus slideshow CTA contrast fix */
 body.home-page .campus-cinema .campus-cinema-copy>a{background:#f5f0e6!important;color:#071527!important;border:1px solid #f5f0e6!important;font-weight:700!important}
 body.home-page .campus-cinema .campus-cinema-copy>a:hover{background:#d6b36d!important;color:#071527!important;border-color:#d6b36d!important}
+
+
+/* Cinematic homepage entrance */
+.cinematic-intro{position:relative;height:calc(100svh - 84px);min-height:620px;overflow:hidden;background:#030914;color:#f6f0e5;isolation:isolate}
+.cinematic-intro-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;background:#030914}
+.cinematic-intro-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,8,16,.08) 0%,rgba(2,8,16,.03) 46%,rgba(2,8,16,.58) 100%);pointer-events:none}
+.cinematic-intro-title{position:absolute;left:50%;bottom:11%;transform:translate(-50%,22px);width:min(92%,1100px);text-align:center;opacity:0;transition:opacity 1.4s ease,transform 1.5s cubic-bezier(.2,.75,.2,1);text-shadow:0 3px 28px rgba(0,0,0,.48)}
+.cinematic-intro-title span{display:block;margin-bottom:12px;font:600 11px/1.2 "DM Sans",sans-serif;letter-spacing:.32em;color:#d7b873}
+.cinematic-intro-title h1{margin:0;font:400 clamp(34px,5.4vw,82px)/1.04 "Libre Baskerville",serif;letter-spacing:.055em;color:#f8f3e9}
+.cinematic-intro-title i{display:block;width:0;height:1px;margin:20px auto 0;background:linear-gradient(90deg,transparent,#d8b66e,transparent);transition:width 1.6s ease .35s}
+.cinematic-intro.intro-reveal .cinematic-intro-title{opacity:1;transform:translate(-50%,0)}
+.cinematic-intro.intro-reveal .cinematic-intro-title i{width:min(420px,48vw)}
+.cinematic-intro-scroll{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);display:flex;align-items:center;gap:11px;text-decoration:none;color:#f4eee3;font:600 9px/1 "DM Sans",sans-serif;letter-spacing:.24em;opacity:0;transition:opacity 1s ease .75s}
+.cinematic-intro.intro-reveal .cinematic-intro-scroll{opacity:.86}
+.cinematic-intro-scroll b{font-size:15px;font-weight:400;animation:introDown 1.8s ease-in-out infinite}
+@keyframes introDown{0%,100%{transform:translateY(-2px)}50%{transform:translateY(4px)}}
+#homeStory{scroll-margin-top:84px;height:0}
+@media(max-width:800px){.cinematic-intro{height:calc(100svh - 72px);min-height:560px}.cinematic-intro-video{object-position:center center}.cinematic-intro-title{bottom:13%;width:88%}.cinematic-intro-title span{font-size:9px;letter-spacing:.22em}.cinematic-intro-title h1{font-size:clamp(30px,9vw,48px);line-height:1.12;letter-spacing:.025em}.cinematic-intro-scroll{bottom:20px;white-space:nowrap}}
+@media(prefers-reduced-motion:reduce){.cinematic-intro-title,.cinematic-intro-title i,.cinematic-intro-scroll{transition:none}.cinematic-intro-scroll b{animation:none}}
