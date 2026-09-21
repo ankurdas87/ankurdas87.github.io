@@ -716,55 +716,273 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:118px 20px 48px!important}
 }
 
-
-/* CORRESPONDENCE GEOMETRY — FINAL SINGLE SOURCE OF TRUTH
-   Header/nav clearance is structural and never depends on which Notes panel is open. */
-.ref-main .ih-view.ih-correspondence-home{
-  box-sizing:border-box!important;
-  padding:100px 0 0!important;
-  overflow:visible!important;
-}
+/* STEP 1 definitive fix: sticky nav overlaps the first 100px of ref-main in the live viewport.
+   Move only the Correspondence intro below that overlap without shifting the workspace body. */
 .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
-  box-sizing:border-box!important;
-  width:100%!important;
-  min-height:calc(100vh - 144px)!important;
   padding:42px 54px 64px!important;
 }
 .ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
   position:relative!important;
-  top:0!important;
-  width:min(1320px,100%)!important;
-  margin:0 auto!important;
+  top:100px!important;
+  z-index:2!important;
 }
 .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
   position:relative!important;
-  top:0!important;
-  width:min(1320px,100%)!important;
-  margin:23px auto 0!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{
-  position:relative!important;
-  top:0!important;
-  margin:54px auto 0!important;
-  overflow:visible!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-notes-actions,
-.ref-main .ih-view.ih-correspondence-home .ih-notes-section-marker,
-.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
-  position:relative!important;
-  top:0!important;
-  margin-top:0!important;
-  z-index:10!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-yellow-note-workspace,
-.ref-main .ih-view.ih-correspondence-home .ih-green-note-workspace,
-.ref-main .ih-view.ih-correspondence-home .ih-all-notes-register{
-  position:relative!important;
-  top:0!important;
-  z-index:1!important;
+  top:100px!important;
+  margin-bottom:100px!important;
 }
 @media(max-width:760px){
- .ref-main .ih-view.ih-correspondence-home{padding-top:100px!important}
- .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
- .ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{margin-top:42px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro,
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{top:100px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{margin-bottom:100px!important}
 }
+
+/* =========================================================
+   INSTITUTE HEAD NOTES — STEP 2
+   Executive navigation shell only. No note editor/data yet.
+   ========================================================= */
+.ih-correspondence-console{
+ box-sizing:border-box!important;width:min(1320px,100%)!important;margin:46px auto 28px!important;
+ border:1px solid rgba(194,151,73,.20)!important;
+ background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008))!important;
+ box-shadow:0 28px 75px rgba(0,0,0,.16)!important
+}
+.ih-correspondence-console-head{
+ display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:28px!important;
+ padding:28px 32px 24px!important;border-bottom:1px solid rgba(194,151,73,.15)!important
+}
+.ih-correspondence-console-head small{
+ display:block!important;margin-bottom:8px!important;font:600 7px/1 "DM Sans",sans-serif!important;
+ letter-spacing:.28em!important;color:#b98e42!important
+}
+.ih-correspondence-console-head h2{
+ margin:0!important;font:400 25px/1.15 "Libre Baskerville",serif!important;color:#eee9df!important
+}
+.ih-correspondence-console-head p{
+ margin:9px 0 0!important;font:400 10px/1.6 "DM Sans",sans-serif!important;color:#788b94!important
+}
+.ih-correspondence-console-head>span{
+ flex:0 0 auto!important;padding:8px 11px!important;border:1px solid rgba(194,151,73,.22)!important;
+ font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#ad8a4c!important
+}
+.ih-notes-actions{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;
+ padding:0!important;margin:0!important;background:rgba(1,11,17,.18)!important
+}
+.ih-notes-actions button{
+ appearance:none!important;-webkit-appearance:none!important;min-width:0!important;height:92px!important;
+ display:flex!important;align-items:center!important;gap:13px!important;padding:0 20px!important;
+ border:0!important;border-right:1px solid rgba(255,255,255,.055)!important;border-bottom:2px solid transparent!important;
+ background:transparent!important;color:#7d8c94!important;text-align:left!important;cursor:pointer!important;
+ transition:background .18s ease,color .18s ease,border-color .18s ease!important
+}
+.ih-notes-actions button:last-child{border-right:0!important}
+.ih-notes-actions button:hover{background:rgba(194,151,73,.035)!important;color:#d9d4ca!important}
+.ih-notes-actions button.active{
+ background:linear-gradient(180deg,rgba(194,151,73,.09),rgba(194,151,73,.025))!important;
+ border-bottom-color:#c69b4d!important;color:#eee9df!important
+}
+.ih-notes-actions button>b{
+ flex:0 0 auto!important;font:500 8px/1 "DM Sans",sans-serif!important;letter-spacing:.08em!important;
+ color:#9b7739!important
+}
+.ih-notes-actions button>span{display:grid!important;gap:5px!important;min-width:0!important}
+.ih-notes-actions button strong{
+ font:500 10px/1 "DM Sans",sans-serif!important;letter-spacing:.09em!important;color:inherit!important;white-space:nowrap!important
+}
+.ih-notes-actions button em{
+ font:400 8px/1 "DM Sans",sans-serif!important;font-style:normal!important;color:#60727b!important;white-space:nowrap!important
+}
+.ih-notes-section-marker{
+ min-height:42px!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;
+ padding:0 24px!important;border-top:1px solid rgba(255,255,255,.035)!important
+}
+.ih-notes-section-marker span{font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#596a72!important}
+.ih-notes-section-marker strong{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.13em!important;color:#c49a4e!important}
+@media(max-width:1050px){
+ .ih-notes-actions{grid-template-columns:repeat(3,1fr)!important}
+ .ih-notes-actions button{border-bottom:1px solid rgba(255,255,255,.055)!important}
+ .ih-notes-actions button.active{border-bottom:2px solid #c69b4d!important}
+}
+
+/* INSTITUTE HEAD NOTES — STEP 3: Yellow Note working draft */
+.ih-yellow-note-workspace{margin:0!important;padding:0!important;border-top:1px solid rgba(194,151,73,.18)!important;background:#071923!important}
+.ih-yellow-note-workspace[hidden]{display:none!important}
+.ih-yellow-note-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:24px!important;padding:26px 32px 22px!important;border-bottom:1px solid rgba(255,255,255,.055)!important;background:linear-gradient(90deg,rgba(191,147,58,.09),transparent 48%)!important}
+.ih-yellow-note-head small{display:block!important;margin-bottom:6px!important;font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.28em!important;color:#c79b48!important}
+.ih-yellow-note-head h3{margin:0!important;font:400 23px/1.15 "Libre Baskerville",serif!important;color:#eee9df!important}
+.ih-yellow-note-head p{margin:7px 0 0!important;font:400 9px/1.5 "DM Sans",sans-serif!important;color:#73858e!important}
+.ih-yellow-note-head>span{padding:8px 11px!important;border:1px solid rgba(202,158,73,.25)!important;font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.18em!important;color:#c59a4b!important}
+.ih-yellow-note-meta{display:grid!important;grid-template-columns:280px 1fr!important;gap:18px!important;padding:24px 32px 18px!important}
+.ih-yellow-note-meta label{display:grid!important;gap:8px!important}.ih-yellow-note-meta label>span{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.17em!important;text-transform:uppercase!important;color:#8d9aa0!important}
+.ih-yellow-note-meta input,.ih-yellow-note-meta select{box-sizing:border-box!important;width:100%!important;height:42px!important;padding:0 13px!important;border:1px solid rgba(255,255,255,.09)!important;border-radius:0!important;outline:none!important;background:#06141d!important;color:#dcd8d0!important;font:400 10px "DM Sans",sans-serif!important}
+.ih-yellow-note-meta input:focus,.ih-yellow-note-meta select:focus{border-color:rgba(199,155,72,.55)!important}
+.ih-yellow-editor-block{margin:0 32px 18px!important;border:1px solid rgba(255,255,255,.085)!important;background:#06141d!important}
+.ih-yellow-toolbar{height:42px!important;display:flex!important;align-items:center!important;gap:3px!important;padding:0 10px!important;border-bottom:1px solid rgba(255,255,255,.07)!important;background:#081a24!important}
+.ih-yellow-toolbar button{min-width:30px!important;height:27px!important;padding:0 8px!important;border:1px solid transparent!important;background:transparent!important;color:#8d9ba2!important;font:500 8px "DM Sans",sans-serif!important;cursor:pointer!important}
+.ih-yellow-toolbar button:hover{border-color:rgba(194,151,73,.22)!important;color:#d8b05f!important}.ih-yellow-toolbar>i{width:1px!important;height:17px!important;margin:0 5px!important;background:rgba(255,255,255,.08)!important}
+.ih-yellow-editor{box-sizing:border-box!important;min-height:220px!important;padding:20px!important;outline:none!important;color:#d7d5cf!important;font:400 11px/1.75 "DM Sans",sans-serif!important}
+.ih-yellow-editor:empty:before{content:attr(data-placeholder);color:#4e626c!important;pointer-events:none!important}
+.ih-yellow-attachments{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;margin:0 32px!important;padding:16px 18px!important;border:1px solid rgba(255,255,255,.065)!important;background:rgba(255,255,255,.012)!important}
+.ih-yellow-attachments small{display:block!important;font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#78623c!important}.ih-yellow-attachments strong{display:block!important;margin-top:5px!important;font:500 10px "DM Sans",sans-serif!important;color:#cfcac1!important}.ih-yellow-attachments p{margin:4px 0 0!important;font:400 8px "DM Sans",sans-serif!important;color:#61737c!important}
+.ih-yellow-attachments label{padding:9px 13px!important;border:1px solid rgba(194,151,73,.28)!important;color:#c69b4d!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.1em!important;cursor:pointer!important}
+.ih-yellow-file-list{margin:10px 32px 0!important;padding:10px 14px!important;border-left:2px solid #b88d3e!important;background:rgba(184,141,62,.045)!important;font:400 8px/1.7 "DM Sans",sans-serif!important;color:#85949b!important}
+.ih-yellow-note-foot{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:22px 32px 26px!important}.ih-yellow-note-foot p{margin:0!important;font:500 7px "DM Sans",sans-serif!important;letter-spacing:.11em!important;text-transform:uppercase!important;color:#6f8088!important}.ih-yellow-note-foot p b{display:inline-block!important;width:5px!important;height:5px!important;margin-right:8px!important;border-radius:50%!important;background:#9b7535!important}
+.ih-yellow-note-foot>div{display:flex!important;gap:8px!important}.ih-yellow-note-foot button{height:36px!important;padding:0 17px!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.12em!important;cursor:pointer!important}.ih-yellow-cancel{border:1px solid rgba(255,255,255,.09)!important;background:transparent!important;color:#87969d!important}.ih-yellow-save{border:1px solid #c79b48!important;background:#c79b48!important;color:#07131b!important}
+@media(max-width:900px){.ih-yellow-note-meta{grid-template-columns:1fr!important}.ih-yellow-note-head{align-items:flex-start!important;flex-direction:column!important}}
+
+/* STEP 3 refinement — paper identity + immediate gold interaction feedback */
+.ih-yellow-note-workspace{
+ background:#e6d486!important;color:#211d12!important;
+ border-top:1px solid #b9973e!important
+}
+.ih-yellow-note-head{
+ background:linear-gradient(90deg,#d7c06e,#eadb9a 48%,#e3d184)!important;
+ border-bottom:1px solid rgba(84,65,20,.25)!important
+}
+.ih-yellow-note-head h3{color:#201b10!important}.ih-yellow-note-head p{color:#665a36!important}
+.ih-yellow-note-head small{color:#70520f!important}.ih-yellow-note-head>span{border-color:rgba(91,67,13,.36)!important;color:#674b0b!important;background:rgba(255,255,255,.13)!important}
+.ih-yellow-note-meta label>span{color:#62562f!important}
+.ih-yellow-note-meta input,.ih-yellow-note-meta select{
+ background:#efe2a6!important;color:#2b2516!important;border-color:rgba(83,66,25,.28)!important
+}
+.ih-yellow-note-meta input::placeholder{color:#827653!important}
+.ih-yellow-editor-block{background:#f0e3aa!important;border-color:rgba(83,66,25,.30)!important}
+.ih-yellow-toolbar{background:#d8c476!important;border-bottom-color:rgba(83,66,25,.22)!important}
+.ih-yellow-toolbar button{color:#54471f!important}.ih-yellow-toolbar button:hover{color:#211a08!important;border-color:rgba(83,66,25,.30)!important;background:rgba(255,255,255,.16)!important}
+.ih-yellow-toolbar>i{background:rgba(71,55,17,.22)!important}
+.ih-yellow-editor{background:#f3e8b7!important;color:#292314!important}
+.ih-yellow-editor:empty:before{color:#8a7c51!important}
+.ih-yellow-attachments{background:#dfcd84!important;border-color:rgba(83,66,25,.25)!important}
+.ih-yellow-attachments small{color:#725617!important}.ih-yellow-attachments strong{color:#292315!important}.ih-yellow-attachments p{color:#6e623e!important}
+.ih-yellow-attachments label{border-color:#8c6919!important;color:#513b09!important;background:rgba(255,255,255,.14)!important}
+.ih-yellow-file-list{color:#514727!important;background:rgba(255,255,255,.17)!important;border-left-color:#8d6815!important}
+.ih-yellow-note-foot p{color:#615632!important}.ih-yellow-note-foot p b{background:#80601a!important}
+.ih-yellow-cancel{border-color:rgba(70,55,20,.30)!important;color:#514725!important;background:rgba(255,255,255,.10)!important}
+.ih-yellow-save{border-color:#9d7419!important;background:#a87c1d!important;color:#fff8e2!important}
+.ih-yellow-note-workspace .ih-click-gold{
+ box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;
+ border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;
+ transform:translateY(-1px)!important
+}
+
+/* STEP 3 final polish — Save Draft rests neutral; gold is click feedback only */
+.ih-yellow-save{
+  border:1px solid rgba(111,82,15,.48)!important;
+  background:rgba(255,255,255,.10)!important;
+  color:#513b09!important;
+}
+.ih-yellow-save:hover{
+  border-color:#8c6919!important;
+  background:rgba(255,255,255,.18)!important;
+  color:#332504!important;
+}
+.ih-yellow-save.ih-click-gold{
+  box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;
+  border-color:#d4a84d!important;
+  background:#d4a84d!important;
+  color:#07131b!important;
+}
+
+/* STEP 4 — Green Note official working interface */
+.ih-green-note-workspace{margin:0!important;padding:0!important;background:#b9d4ad!important;color:#172317!important;border-top:1px solid #6f9667!important}.ih-green-note-workspace[hidden]{display:none!important}
+.ih-green-note-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:24px!important;padding:26px 32px 22px!important;background:linear-gradient(90deg,#9fc396,#c9dfbe 48%,#b4d0a8)!important;border-bottom:1px solid rgba(37,73,36,.28)!important}
+.ih-green-note-head small{display:block!important;margin-bottom:6px!important;font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.28em!important;color:#315e31!important}.ih-green-note-head h3{margin:0!important;font:400 23px/1.15 "Libre Baskerville",serif!important;color:#172317!important}.ih-green-note-head p{margin:7px 0 0!important;font:400 9px/1.5 "DM Sans",sans-serif!important;color:#466547!important}.ih-green-note-head>span{padding:8px 11px!important;border:1px solid rgba(38,76,38,.38)!important;font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.18em!important;color:#294f2a!important;background:rgba(255,255,255,.14)!important}
+.ih-green-note-meta{display:grid!important;grid-template-columns:280px 1fr!important;gap:18px!important;padding:24px 32px 18px!important}.ih-green-note-meta label{display:grid!important;gap:8px!important}.ih-green-note-meta label>span{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.17em!important;text-transform:uppercase!important;color:#385839!important}.ih-green-note-meta input,.ih-green-note-meta select{box-sizing:border-box!important;width:100%!important;height:42px!important;padding:0 13px!important;border:1px solid rgba(39,72,38,.3)!important;outline:none!important;background:#d6e7ce!important;color:#1d2d1d!important;font:400 10px "DM Sans",sans-serif!important}
+.ih-green-editor-block{margin:0 32px 18px!important;border:1px solid rgba(39,72,38,.3)!important;background:#dbead4!important}.ih-green-toolbar{height:42px!important;display:flex!important;align-items:center!important;gap:3px!important;padding:0 10px!important;border-bottom:1px solid rgba(39,72,38,.22)!important;background:#aacaa1!important}.ih-green-toolbar button{min-width:30px!important;height:27px!important;padding:0 8px!important;border:1px solid transparent!important;background:transparent!important;color:#29482a!important;font:500 8px "DM Sans",sans-serif!important;cursor:pointer!important}.ih-green-toolbar>i{width:1px!important;height:17px!important;margin:0 5px!important;background:rgba(35,70,35,.22)!important}.ih-green-editor{box-sizing:border-box!important;min-height:220px!important;padding:20px!important;outline:none!important;background:#deedd8!important;color:#1c2a1c!important;font:400 11px/1.75 "DM Sans",sans-serif!important}.ih-green-editor:empty:before{content:attr(data-placeholder);color:#708770!important}
+.ih-green-attachments{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;margin:0 32px!important;padding:16px 18px!important;border:1px solid rgba(39,72,38,.26)!important;background:#aecba5!important}.ih-green-attachments small{display:block!important;font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#365b36!important}.ih-green-attachments strong{display:block!important;margin-top:5px!important;font:500 10px "DM Sans",sans-serif!important;color:#1c2b1c!important}.ih-green-attachments p{margin:4px 0 0!important;font:400 8px "DM Sans",sans-serif!important;color:#4d694e!important}.ih-green-attachments label{padding:9px 13px!important;border:1px solid #557d54!important;color:#254a26!important;background:rgba(255,255,255,.14)!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.1em!important;cursor:pointer!important}
+.ih-green-file-list{margin:10px 32px 0!important;padding:10px 14px!important;border-left:2px solid #4d784d!important;background:rgba(255,255,255,.17)!important;font:400 8px/1.7 "DM Sans",sans-serif!important;color:#385538!important}.ih-green-note-foot{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:22px 32px 26px!important}.ih-green-note-foot p{margin:0!important;font:500 7px "DM Sans",sans-serif!important;letter-spacing:.11em!important;text-transform:uppercase!important;color:#385638!important}.ih-green-note-foot p b{display:inline-block!important;width:5px!important;height:5px!important;margin-right:8px!important;border-radius:50%!important;background:#527a51!important}.ih-green-note-foot>div{display:flex!important;gap:8px!important}.ih-green-note-foot button{height:36px!important;padding:0 17px!important;border:1px solid rgba(45,76,44,.38)!important;background:rgba(255,255,255,.10)!important;color:#274827!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.12em!important;cursor:pointer!important}
+.ih-green-note-workspace .ih-click-gold{box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;transform:translateY(-1px)!important}
+@media(max-width:900px){.ih-green-note-meta{grid-template-columns:1fr!important}.ih-green-note-head{align-items:flex-start!important;flex-direction:column!important}}
+
+/* STEP 4 correction — both note types belong under Create Note */
+.ih-note-type-switch{display:grid!important;grid-template-columns:1fr 1fr!important;margin:0!important;border-top:1px solid rgba(255,255,255,.04)!important;border-bottom:1px solid rgba(194,151,73,.18)!important;background:#06151e!important}
+.ih-note-type-switch[hidden]{display:none!important}.ih-note-type-switch button{height:64px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;border:0!important;border-right:1px solid rgba(255,255,255,.055)!important;background:transparent!important;color:#71838c!important;cursor:pointer!important}.ih-note-type-switch button:last-child{border-right:0!important}.ih-note-type-switch button>span{width:8px!important;height:8px!important;border-radius:50%!important;background:#bda64b!important}.ih-note-type-switch button[data-note-type="green"]>span{background:#6f9e68!important}.ih-note-type-switch strong{font:600 9px "DM Sans",sans-serif!important;letter-spacing:.09em!important}.ih-note-type-switch em{font:400 7px "DM Sans",sans-serif!important;font-style:normal!important;letter-spacing:.12em!important;color:#52666f!important}.ih-note-type-switch button.active{background:rgba(194,151,73,.06)!important;color:#eee9df!important;box-shadow:inset 0 -2px #c69b4d!important}
+.ih-green-esign{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;margin:0 18px 18px auto!important;width:min(430px,calc(100% - 36px))!important;padding:13px 14px!important;border:1px solid rgba(47,82,46,.32)!important;background:rgba(255,255,255,.16)!important}.ih-green-esign small{display:block!important;font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.17em!important;color:#365f36!important}.ih-green-esign strong{display:block!important;margin-top:5px!important;font:600 9px "DM Sans",sans-serif!important;color:#1e321f!important}.ih-green-esign p{margin:4px 0 0!important;font:400 7px/1.45 "DM Sans",sans-serif!important;color:#567057!important}.ih-green-esign button{flex:0 0 auto!important;height:34px!important;padding:0 12px!important;border:1px solid #527b51!important;background:transparent!important;color:#284c29!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.08em!important;cursor:pointer!important}
+
+/* Green-note tab visibility correction: keep portal action rails above sticky chrome */
+.ih-correspondence-console{overflow:visible!important}
+.ih-notes-actions{position:relative!important;z-index:8!important}
+.ih-notes-section-marker{position:relative!important;z-index:8!important}
+.ih-note-type-switch{position:relative!important;z-index:8!important}
+.ih-green-note-workspace,.ih-yellow-note-workspace{position:relative!important;z-index:1!important}
+
+/* STEP 4 FINAL — Notes action rail stays below the portal nav while editing either note type */
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])){
+  padding-top:108px!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-correspondence-stage{
+  padding-top:42px!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-correspondence-console{
+  margin-top:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions{
+  position:sticky!important;
+  top:0!important;
+  z-index:30!important;
+  background:#071923!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-section-marker{
+  background:#081b25!important;
+  z-index:29!important;
+}
+
+/* STEP 4 visual lock — match Green Note action-rail vertical clearance to Yellow Note */
+.ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
+  margin-top:24px!important;
+}
+
+/* STEP 5 — Yellow Draft register and reopen cycle */
+.ih-all-notes-register{padding:28px 32px 34px!important;background:#091a23!important;border-top:1px solid rgba(194,151,73,.18)!important}.ih-all-notes-register[hidden]{display:none!important}.ih-register-head{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:20px!important;padding-bottom:18px!important;border-bottom:1px solid rgba(255,255,255,.07)!important}.ih-register-head small{display:block!important;font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.22em!important;color:#b58b3d!important}.ih-register-head h3{margin:6px 0 0!important;font:400 22px/1.2 "Libre Baskerville",serif!important;color:#eee8db!important}.ih-register-head p{margin:6px 0 0!important;font:400 8px/1.5 "DM Sans",sans-serif!important;color:#70838c!important}.ih-register-head>span{font:600 6px "DM Sans",sans-serif!important;letter-spacing:.17em!important;color:#c79a48!important}.ih-register-empty{padding:42px 20px!important;text-align:center!important;border-bottom:1px solid rgba(255,255,255,.05)!important}.ih-register-empty strong{font:500 11px "Libre Baskerville",serif!important;color:#d9d5ca!important}.ih-register-empty p{margin:7px 0 0!important;font:400 8px "DM Sans",sans-serif!important;color:#62757e!important}.ih-register-list{display:grid!important}.ih-register-row{display:grid!important;grid-template-columns:100px 145px 1fr 145px 95px!important;align-items:center!important;gap:14px!important;padding:16px 10px!important;border-bottom:1px solid rgba(255,255,255,.06)!important;color:#d9dedf!important}.ih-register-row>span{font:500 7px "DM Sans",sans-serif!important;letter-spacing:.08em!important;color:#81939b!important}.ih-register-row .ih-note-id{color:#c89b49!important}.ih-register-row strong{font:500 9px "DM Sans",sans-serif!important;color:#e8e5dc!important}.ih-register-row button{height:30px!important;border:1px solid rgba(194,151,73,.42)!important;background:transparent!important;color:#c99b48!important;font:600 6px "DM Sans",sans-serif!important;letter-spacing:.12em!important;cursor:pointer!important}.ih-register-row button:hover{background:rgba(194,151,73,.09)!important}
+@media(max-width:900px){.ih-register-row{grid-template-columns:1fr 1fr!important}.ih-register-row strong{grid-column:1/-1!important}}
+
+/* STEP 6 — Green Note number visible from the beginning */
+.ih-green-note-number{display:flex!important;align-items:center!important;gap:14px!important;margin:22px 32px 0!important;padding:13px 16px!important;border:1px solid rgba(42,79,41,.30)!important;background:rgba(255,255,255,.16)!important}.ih-green-note-number small{font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.18em!important;color:#365f36!important}.ih-green-note-number strong{font:600 11px/1 "DM Sans",sans-serif!important;letter-spacing:.08em!important;color:#173918!important}.ih-green-note-number span{margin-left:auto!important;font:500 6px/1.4 "DM Sans",sans-serif!important;letter-spacing:.08em!important;color:#557055!important;text-align:right!important}
+@media(max-width:760px){.ih-green-note-number{align-items:flex-start!important;flex-direction:column!important}.ih-green-note-number span{margin-left:0!important;text-align:left!important}}
+
+/* LAYOUT LOCK — Correspondence header and Notes rail keep permanent clearance below portal sticky chrome.
+   Do not couple geometry to Yellow/Green content visibility. */
+.ref-main .ih-view.ih-correspondence-home{
+  padding-top:100px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  padding:42px 54px 64px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro,
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
+  top:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
+  margin-bottom:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{
+  margin-top:54px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
+  position:relative!important;
+  top:auto!important;
+  margin-top:0!important;
+  z-index:8!important;
+  box-shadow:none!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-section-marker{
+  position:relative!important;
+  top:auto!important;
+  z-index:8!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
+  position:relative!important;
+  top:auto!important;
+  z-index:8!important;
+}
+@media(max-width:760px){
+  .ref-main .ih-view.ih-correspondence-home{padding-top:100px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{margin-top:42px!important}
+}
+
+/* STEP 7 — Green entries in All Notes */
+.ih-register-row-green{background:rgba(101,151,95,.045)!important}.ih-register-row-green .ih-note-id{font-weight:700!important;color:#8db187!important}.ih-green-note-meta select:disabled{opacity:.78!important;cursor:not-allowed!important}
