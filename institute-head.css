@@ -367,3 +367,78 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   42%{clip-path:inset(0 40% 0 38%);transform:translateX(0)}
   72%,100%{clip-path:inset(0 0 0 100%);transform:translateX(18%)}
 }
+
+/* INSTITUTE HEAD COPYRIGHT v3 — rebuilt as one aligned typographic system */
+.ref-executive-credit.ref-credit-v3{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-height:74px!important;
+  padding:0 28px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#03111b!important;
+  border-top:1px solid rgba(211,164,77,.32)!important;
+  overflow:hidden!important;
+}
+.ref-credit-v3 .ref-credit-line{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:20px!important;
+  white-space:nowrap!important;
+  font-family:"DM Sans",Arial,sans-serif!important;
+  font-size:7px!important;
+  font-weight:600!important;
+  line-height:1!important;
+  letter-spacing:.17em!important;
+  text-transform:uppercase!important;
+  color:#78909b!important;
+}
+.ref-credit-v3 .ref-credit-line>span,
+.ref-credit-v3 .ref-credit-signature{
+  position:relative!important;
+  top:auto!important;
+  bottom:auto!important;
+  margin:0!important;
+  padding:0!important;
+  display:inline-block!important;
+  vertical-align:middle!important;
+  font:inherit!important;
+  font-size:inherit!important;
+  font-weight:inherit!important;
+  line-height:inherit!important;
+  letter-spacing:inherit!important;
+  text-transform:inherit!important;
+}
+.ref-credit-v3 .ref-credit-line>i{
+  display:block!important;
+  flex:0 0 42px!important;
+  width:42px!important;
+  height:1px!important;
+  margin:0!important;
+  background:linear-gradient(90deg,transparent,#b88836,transparent)!important;
+  opacity:.72!important;
+}
+.ref-credit-v3 .ref-credit-signature{
+  isolation:isolate!important;
+  color:#c99a40!important;
+  -webkit-text-fill-color:transparent!important;
+  background:linear-gradient(105deg,#a87325 0%,#d6a84e 26%,#fff2b8 44%,#d39d38 57%,#f3d783 72%,#a87325 100%)!important;
+  background-size:280% 100%!important;
+  background-position:180% 50%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  animation:refCreditV3Shimmer 3.2s cubic-bezier(.4,0,.2,1) infinite!important;
+  filter:drop-shadow(0 0 4px rgba(214,168,78,.16))!important;
+}
+@keyframes refCreditV3Shimmer{
+  0%,14%{background-position:180% 50%;filter:drop-shadow(0 0 2px rgba(214,168,78,.08))}
+  48%{filter:drop-shadow(0 0 6px rgba(255,224,145,.30))}
+  78%,100%{background-position:-80% 50%;filter:drop-shadow(0 0 2px rgba(214,168,78,.08))}
+}
+@media(max-width:760px){
+ .ref-executive-credit.ref-credit-v3{padding:20px 16px!important}
+ .ref-credit-v3 .ref-credit-line{gap:10px!important;font-size:6.5px!important;letter-spacing:.12em!important;flex-wrap:wrap!important;white-space:normal!important}
+ .ref-credit-v3 .ref-credit-line>i{flex-basis:22px!important;width:22px!important}
+}
