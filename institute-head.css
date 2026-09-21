@@ -1028,3 +1028,23 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 }
 .ref-main .ih-view.ih-correspondence-home{padding-top:100px!important}
 .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding-top:42px!important}
+
+/* NOTES CRITICAL NAV LOCK v6
+   Sticky keeps its original layout space, so it cannot cover the Yellow/Green selector.
+   144px = 86px Executive header + 58px portal navigation. */
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
+ position:sticky!important;
+ top:144px!important;
+ z-index:900!important;
+ width:100%!important;
+ margin:0!important;
+ transform:none!important;
+ background:#071923!important;
+ box-shadow:0 8px 18px rgba(0,0,0,.22)!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
+ position:relative!important;
+ top:auto!important;
+ z-index:8!important;
+ margin:0!important;
+}
