@@ -1,0 +1,23 @@
+/* Institute Head Notes & Correspondence — executive wrapper around the shared BLC note system */
+.ih-notes-view{padding:0!important;background:#eef1f3!important;min-height:calc(100vh - 144px)!important;color:#16202a!important}
+.ih-notes-shell{min-height:100%;padding:36px 42px 58px}
+.ih-notes-head{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;margin:0 auto 20px;max-width:1380px}
+.ih-notes-head small{display:block;margin-bottom:8px;font:700 8px/1.2 "DM Sans",sans-serif;letter-spacing:.2em;color:#9b732d}
+.ih-notes-head h1{margin:0;font:400 31px/1.15 "Libre Baskerville",serif;color:#12202a}
+.ih-notes-head p{margin:9px 0 0;color:#71808a;font-size:12px}
+.ih-note-new{height:40px;border:1px solid #b98c3d;border-radius:9px;background:#071923;color:#e6c982;padding:0 16px;font:700 10px/1 "DM Sans",sans-serif;letter-spacing:.08em;cursor:pointer}
+.ih-note-tabs{max-width:1380px;margin:0 auto 22px;padding:7px;display:flex;align-items:center;gap:6px;background:#071923;border:1px solid rgba(185,140,61,.26);border-radius:13px;overflow-x:auto}
+.ih-note-tabs button{height:39px;flex:0 0 auto;border:0;border-radius:8px;background:transparent;color:#8f9da5;padding:0 15px;font:650 10px/1 "DM Sans",sans-serif;letter-spacing:.08em;cursor:pointer;transition:.2s ease}
+.ih-note-tabs button.active,.ih-note-tabs button:hover{background:rgba(185,140,61,.13);color:#e3c47c}
+.ih-note-tabs button span{margin-left:5px}
+.ih-note-stage{max-width:1380px;margin:0 auto}
+.ih-note-pane{display:none}.ih-note-pane.active{display:block}
+.ih-notes-adapt{max-width:none!important;margin:0!important}
+.ih-notes-adapt .notes-heading>div>span,.ih-notes-adapt .note-register-head>div>span,.ih-notes-adapt .send-note-head>span,.ih-notes-adapt .correspondence-head>div>span{color:#997128!important}
+.ih-notes-adapt .note-save,.ih-notes-adapt .note-register-new,.ih-notes-adapt .send-note-submit{background:linear-gradient(90deg,#7b5a22,#b88a39)!important;color:#fff!important}
+.ih-notes-adapt .note-type-switch button.active{background:#071923!important;color:#e6c982!important;border-color:#071923!important}
+.ih-notes-adapt .note-sheet.green{border-top-color:#3f7657!important}
+.ih-notes-adapt .saved-note-card.green{border-left-color:#4d7e62!important}
+.ih-notes-adapt .saved-note-card.yellow{border-left-color:#c3a33d!important}
+.ih-notes-adapt .correspondence-card.unread{border-left-color:#b98c3d!important}
+@media(max-width:850px){.ih-notes-shell{padding:24px 18px 45px}.ih-notes-head{align-items:flex-start;flex-direction:column}.ih-note-tabs{justify-content:flex-start}.ih-note-tabs button{padding:0 11px}}
