@@ -317,3 +317,53 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 @media (prefers-reduced-motion:reduce){
   .ref-executive-credit small strong::after{animation:ihNameSweep 2.8s ease-in-out infinite!important}
 }
+
+/* CREDIT ANIMATION v2 — visible moving shine, independent of background-clip animation */
+.ref-executive-credit .ih-credit-name{
+  position:relative!important;
+  display:inline-block!important;
+  overflow:hidden!important;
+  vertical-align:baseline!important;
+  font-family:"DM Sans",Arial,sans-serif!important;
+  font-size:7px!important;
+  font-weight:500!important;
+  line-height:1.4!important;
+  letter-spacing:.12em!important;
+  color:#c99b43!important;
+  -webkit-text-fill-color:#c99b43!important;
+  background:none!important;
+  animation:none!important;
+}
+.ref-executive-credit .ih-credit-name>span{
+  display:inline!important;
+  font:inherit!important;
+  font-size:inherit!important;
+  font-weight:inherit!important;
+  line-height:inherit!important;
+  letter-spacing:inherit!important;
+  color:#c99b43!important;
+  -webkit-text-fill-color:#c99b43!important;
+}
+.ref-executive-credit .ih-credit-name>b{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  z-index:3!important;
+  overflow:hidden!important;
+  font:inherit!important;
+  font-size:inherit!important;
+  font-weight:inherit!important;
+  line-height:inherit!important;
+  letter-spacing:inherit!important;
+  white-space:nowrap!important;
+  color:#fff2bd!important;
+  -webkit-text-fill-color:#fff2bd!important;
+  clip-path:inset(0 100% 0 0);
+  animation:ihCreditClipSweep 2.6s ease-in-out infinite!important;
+  pointer-events:none!important;
+}
+@keyframes ihCreditClipSweep{
+  0%,12%{clip-path:inset(0 100% 0 0);transform:translateX(-18%)}
+  42%{clip-path:inset(0 40% 0 38%);transform:translateX(0)}
+  72%,100%{clip-path:inset(0 0 0 100%);transform:translateX(18%)}
+}
