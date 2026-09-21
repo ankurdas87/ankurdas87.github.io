@@ -679,3 +679,26 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 @media(max-width:760px){
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding-top:46px!important}
 }
+
+/* STEP 1 FINAL — Correspondence content starts below the 86px + 58px sticky chrome */
+.ref-main .ih-view.ih-correspondence-home.active{
+  display:block!important;
+  position:relative!important;
+  margin:0!important;
+  padding:0!important;
+  scroll-margin-top:144px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-height:calc(100vh - 144px)!important;
+  margin:0!important;
+  padding:42px 54px 64px!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+  margin:0 auto!important;
+  padding-top:0!important;
+  transform:none!important;
+}
