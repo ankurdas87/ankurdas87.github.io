@@ -1048,3 +1048,14 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
  z-index:8!important;
  margin:0!important;
 }
+
+/* CREATE NOTE QUICK NAV — independent structural navigation, not affected by old action-rail offsets. */
+.ih-create-action-dock{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;position:relative!important;top:auto!important;left:auto!important;transform:none!important;z-index:25;background:#071923;border-top:1px solid rgba(194,151,73,.18);border-bottom:1px solid rgba(194,151,73,.22)}
+.ih-create-action-dock[hidden]{display:none!important}
+.ih-create-action-dock button{min-height:92px;padding:18px 22px;border:0;border-right:1px solid rgba(255,255,255,.07);background:transparent;color:#d6a84f;text-align:left;display:flex;gap:16px;align-items:center;cursor:pointer}
+.ih-create-action-dock button:last-child{border-right:0}.ih-create-action-dock button.active{background:rgba(194,151,73,.08);box-shadow:inset 0 -2px #d6a84f}
+.ih-create-action-dock b{font-size:12px}.ih-create-action-dock span{display:grid;gap:5px}.ih-create-action-dock strong{font-size:13px;letter-spacing:.04em}.ih-create-action-dock em{font-style:normal;font-size:9px;letter-spacing:.28em;color:#668292}
+.ih-note-type-switch{position:relative!important;top:auto!important;margin-top:0!important}
+.ih-note-save-toast{position:fixed;right:28px;bottom:28px;z-index:12000;min-width:310px;padding:18px 22px;background:#0b2029;border:1px solid rgba(214,168,79,.65);box-shadow:0 16px 38px rgba(0,0,0,.42);color:#f2d17d;display:grid;gap:5px}
+.ih-note-save-toast[hidden]{display:none!important}.ih-note-save-toast strong{font-size:13px;letter-spacing:.05em}.ih-note-save-toast span{font-size:10px;letter-spacing:.12em;color:#9bb0ba}
+@media(max-width:760px){.ih-create-action-dock{overflow-x:auto;grid-template-columns:repeat(5,minmax(155px,1fr))}.ih-create-action-dock button{min-height:78px;padding:14px}.ih-note-save-toast{left:16px;right:16px;bottom:16px;min-width:0}}
