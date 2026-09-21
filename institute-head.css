@@ -1068,3 +1068,17 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-correspondence-console:not(:has(#ihNoteTypeSwitch:not([hidden]))) .ih-create-action-dock{
  display:none!important;
 }
+
+/* NOTES LIFECYCLE v9 — register spacing, Yellow->Green action, locked Green view */
+.ih-register-row-green{grid-template-columns:minmax(245px,1.45fr) 130px minmax(220px,2fr) minmax(190px,1.15fr) 105px!important}
+.ih-register-row-yellow{grid-template-columns:130px 150px minmax(220px,2fr) minmax(150px,1fr) 105px!important}
+.ih-register-row-green .ih-note-id{white-space:nowrap!important;overflow:visible!important;letter-spacing:.03em!important}
+.ih-register-row-green>span:nth-child(2){white-space:nowrap!important}
+.ih-yellow-convert{height:38px!important;padding:0 16px!important;border:1px solid rgba(50,104,50,.48)!important;background:rgba(72,123,66,.10)!important;color:#315c31!important;font:700 7px "DM Sans",sans-serif!important;letter-spacing:.12em!important;cursor:pointer!important}
+.ih-yellow-convert:hover{background:rgba(72,123,66,.18)!important}
+.ih-green-readonly .ih-green-toolbar{opacity:.46!important;pointer-events:none!important}
+.ih-green-readonly .ih-green-editor{background:rgba(255,255,255,.20)!important;cursor:default!important}
+.ih-green-readonly .ih-green-note-meta input,.ih-green-readonly .ih-green-note-meta select{cursor:default!important;opacity:.88!important}
+.ih-green-readonly .ih-green-attachments label[for="ihGreenFiles"]{display:none!important}
+.ih-green-readonly #ihGreenEsign{opacity:.45!important;cursor:not-allowed!important}
+@media(max-width:900px){.ih-register-row-green,.ih-register-row-yellow{grid-template-columns:1fr 1fr!important}.ih-register-row-green .ih-note-id{white-space:normal!important}.ih-register-row-green strong,.ih-register-row-yellow strong{grid-column:1/-1!important}}
