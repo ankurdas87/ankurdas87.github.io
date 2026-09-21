@@ -1,0 +1,47 @@
+/* Unified minimal back control for institutional pages */
+.blc-back-arrow{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:2147483647;
+  width:30px;
+  height:30px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(188,151,75,.42);
+  border-radius:50%;
+  background:rgba(5,18,28,.82);
+  color:#d7aa55;
+  text-decoration:none!important;
+  box-shadow:0 6px 18px rgba(0,0,0,.16);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.blc-back-arrow span{
+  display:block;
+  font-family:Arial,sans-serif;
+  font-size:17px;
+  line-height:1;
+  transform:translateY(-1px);
+}
+.blc-back-arrow:hover{
+  transform:translateX(-1px);
+  border-color:rgba(215,170,85,.78);
+  background:rgba(7,25,37,.96);
+}
+.blc-back-arrow:focus-visible{
+  outline:2px solid rgba(215,170,85,.7);
+  outline-offset:2px;
+}
+/* Reserve the tiny top-left corner so the control never covers branding or navigation. */
+body.has-blc-back .site-head{padding-left:max(58px,5.5vw)!important}
+body.has-blc-back #staffPanel .dash-brand{padding-left:46px!important}
+body.has-blc-back .ref-head{padding-left:58px!important}
+body.has-blc-back .executive-head{padding-left:max(58px,5.5vw)!important}
+@media(max-width:620px){
+  .blc-back-arrow{top:8px;left:8px;width:28px;height:28px}
+  body.has-blc-back .site-head{padding-left:48px!important}
+  body.has-blc-back #staffPanel .dash-brand{padding-left:40px!important}
+  body.has-blc-back .ref-head{padding-left:50px!important}
+}
