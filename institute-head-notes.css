@@ -1,37 +1,67 @@
-/* Institute Head Notes & Correspondence — native Executive Portal layout.
-   Shared Staff Notes styles provide note controls only; this file owns all portal geometry. */
-.ref-main .ih-view[data-view="notes"]{background:#eef1f3!important;color:#16202a!important}
-.ref-main .ih-view[data-view="notes"].active{display:block!important;position:relative!important;overflow:visible!important;padding:0!important}
-.ih-notes-shell{box-sizing:border-box!important;width:100%!important;min-height:calc(100vh - 144px)!important;padding:34px 42px 64px!important}
-.ih-notes-head{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:28px!important;width:100%!important;max-width:1380px!important;margin:0 auto 22px!important}
-.ih-notes-head-left{display:flex!important;align-items:flex-start!important;gap:14px!important;min-width:0!important}
-.ih-notes-head small{display:block;margin:0 0 7px;font:700 8px/1.2 "DM Sans",sans-serif;letter-spacing:.2em;color:#9b732d}
-.ih-notes-head h1{margin:0;font:400 31px/1.15 "Libre Baskerville",serif;color:#12202a}
-.ih-notes-head p{margin:8px 0 0;color:#71808a;font-size:12px}
-.ih-notes-back{flex:0 0 38px!important;width:38px!important;height:38px!important;display:grid!important;place-items:center!important;margin:0!important;padding:0!important;border:1px solid rgba(155,113,40,.38)!important;border-radius:50%!important;background:#fff!important;color:#8c651f!important;font:500 18px/1 "DM Sans",sans-serif!important;cursor:pointer!important;box-shadow:0 6px 18px rgba(23,33,42,.06)!important}
-.ih-notes-back:hover{background:#071923!important;color:#e6c982!important;border-color:#b98c3d!important}
-.ih-note-new{height:40px;border:1px solid #b98c3d;border-radius:9px;background:#071923;color:#e6c982;padding:0 16px;font:700 10px/1 "DM Sans",sans-serif;letter-spacing:.08em;cursor:pointer}
-.ih-note-home-actions{box-sizing:border-box!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;width:100%!important;max-width:1380px!important;margin:0 auto 22px!important}
+/* ==========================================================
+   BLC EXECUTIVE NOTES — INSTITUTE HEAD ONLY
+   Fresh presentation layer. No Staff Portal geometry is reused.
+   ========================================================== */
+.ih-view[data-view="notes"]{background:#edf1f3!important;color:#13222b!important;overflow:visible!important}
+.ih-view[data-view="notes"].active{display:block!important;padding:0!important}
+.ih-notes-shell{box-sizing:border-box;width:100%;min-height:calc(100vh - 144px);padding:34px 42px 64px}
+.ih-notes-head,.ih-note-stage,.ih-note-home-actions{width:100%;max-width:1360px;margin-left:auto;margin-right:auto}
+.ih-notes-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.ih-notes-head-left{display:flex;align-items:flex-start;gap:14px;min-width:0}
+.ih-notes-head small,.ihx-pagebar small{display:block;margin:0 0 7px;font:700 8px/1.2 "DM Sans",sans-serif;letter-spacing:.22em;color:#9a712a}
+.ih-notes-head h1{margin:0;font:400 31px/1.12 "Libre Baskerville",serif;color:#10222d}
+.ih-notes-head p,.ihx-pagebar p{margin:8px 0 0;font:400 12px/1.5 "DM Sans",sans-serif;color:#6f7e87}
+.ih-notes-back{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;padding:0;border:1px solid #d9c69d;border-radius:50%;background:#fff;color:#8c651f;font-size:18px;cursor:pointer}
+.ih-note-new{height:40px;padding:0 17px;border:1px solid #b88a38;border-radius:9px;background:#071a24;color:#e2c47d;font:700 10px/1 "DM Sans",sans-serif;letter-spacing:.08em;cursor:pointer}
+.ih-note-home-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
 .ih-note-home-actions[hidden]{display:none!important}
-.ih-note-home-actions button{min-height:64px!important;display:flex!important;align-items:center!important;gap:11px!important;padding:10px 13px!important;border:1px solid #dfe4e8!important;border-radius:11px!important;background:#fff!important;color:#1b2730!important;text-align:left!important;cursor:pointer!important;box-shadow:0 5px 16px rgba(18,32,42,.035)!important}
-.ih-note-home-actions button:hover{border-color:#caa456!important;transform:translateY(-1px)!important}
-.ih-note-home-actions b{display:grid!important;place-items:center!important;flex:0 0 30px!important;width:30px!important;height:30px!important;border-radius:8px!important;background:#071923!important;color:#d7ad59!important;font-size:14px!important}
-.ih-note-home-actions span{display:grid!important;gap:3px!important}.ih-note-home-actions strong{font:700 11px/1.1 "DM Sans",sans-serif!important}.ih-note-home-actions small{font:500 9px/1.2 "DM Sans",sans-serif!important;color:#7b8790!important}
-.ih-note-stage{box-sizing:border-box!important;width:100%!important;max-width:1380px!important;margin:0 auto!important}
-.ih-note-pane{display:none!important;position:relative!important;width:100%!important;margin:0!important;padding:0!important;overflow:visible!important}
-.ih-note-pane.active{display:block!important}
-.ih-note-subback{display:inline-flex!important;align-items:center!important;gap:7px!important;height:34px!important;margin:0 0 16px!important;padding:0 12px!important;border:1px solid #d8dde1!important;border-radius:999px!important;background:#fff!important;color:#5e6870!important;font:700 9px/1 "DM Sans",sans-serif!important;letter-spacing:.06em!important;cursor:pointer!important}
-.ih-note-subback:hover{border-color:#b98c3d!important;color:#8c651f!important}
-.ih-notes-adapt{box-sizing:border-box!important;width:100%!important;max-width:100%!important;margin:0!important}
-/* Critical: controls stay in normal document flow above the sheet. */
-.ih-notes-adapt .notes-heading{position:static!important;margin:0 0 18px!important}
-.ih-notes-adapt .note-toolbar{position:static!important;display:grid!important;grid-template-columns:minmax(280px,.9fr) minmax(380px,1.25fr)!important;gap:14px!important;width:100%!important;margin:0 0 18px!important;transform:none!important}
-.ih-notes-adapt .note-control{position:static!important;min-height:72px!important;box-sizing:border-box!important}
-.ih-notes-adapt .note-sheet{position:static!important;width:100%!important;margin:0!important;transform:none!important}
-.ih-notes-adapt .note-editor{min-height:330px!important}
-.ih-notes-adapt .notes-heading>div>span,.ih-notes-adapt .note-register-head>div>span,.ih-notes-adapt .send-note-head>span,.ih-notes-adapt .correspondence-head>div>span{color:#997128!important}
-.ih-notes-adapt .note-save,.ih-notes-adapt .note-register-new,.ih-notes-adapt .send-note-submit{background:linear-gradient(90deg,#7b5a22,#b88a39)!important;color:#fff!important}
-.ih-notes-adapt .note-type-switch button.active{background:#071923!important;color:#e6c982!important;border-color:#071923!important}
-.ih-notes-adapt .note-sheet.green{border-top-color:#3f7657!important}.ih-notes-adapt .saved-note-card.green{border-left-color:#4d7e62!important}.ih-notes-adapt .saved-note-card.yellow{border-left-color:#c3a33d!important}.ih-notes-adapt .correspondence-card.unread{border-left-color:#b98c3d!important}
-@media(max-width:1050px){.ih-note-home-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ih-notes-adapt .note-toolbar{grid-template-columns:1fr!important}}
-@media(max-width:760px){.ih-notes-shell{padding:24px 18px 48px!important}.ih-notes-head{align-items:flex-start!important;flex-direction:column!important}.ih-note-home-actions{grid-template-columns:1fr!important}.ih-notes-head-left{width:100%!important}}
+.ih-note-home-actions button{display:flex;align-items:center;gap:11px;min-height:64px;padding:11px 13px;border:1px solid #dce2e5;border-radius:11px;background:#fff;text-align:left;color:#15252e;cursor:pointer}
+.ih-note-home-actions b{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:8px;background:#071a24;color:#d5ab58}
+.ih-note-home-actions span{display:grid;gap:3px}.ih-note-home-actions strong{font:700 11px/1.15 "DM Sans",sans-serif}.ih-note-home-actions small{font:500 9px/1.25 "DM Sans",sans-serif;color:#7a8790}
+.ih-note-pane{display:none;width:100%;position:relative}.ih-note-pane.active{display:block}
+.ihx-pagebar{display:flex;align-items:flex-start;gap:14px;margin:0 0 20px}
+.ihx-pagebar h2{margin:0;font:400 25px/1.15 "Libre Baskerville",serif;color:#10222d}
+.ihx-back{flex:0 0 auto;height:34px;margin-top:1px;padding:0 12px;border:1px solid #d7dde0;border-radius:999px;background:#fff;color:#596872;font:700 9px/1 "DM Sans",sans-serif;letter-spacing:.05em;cursor:pointer}
+.ihx-back:hover{border-color:#b88a38;color:#8a641f}
+.ihx-create{width:100%;margin:0}
+.ihx-controls{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(340px,1.15fr);gap:14px;width:100%;margin:0 0 16px}
+.ihx-control-card{box-sizing:border-box;min-height:82px;padding:15px 16px;border:1px solid #dce2e5;border-radius:12px;background:#fff;box-shadow:0 5px 18px rgba(13,32,43,.035)}
+.ihx-control-card>label{display:block;margin:0 0 9px;font:700 8px/1 "DM Sans",sans-serif;letter-spacing:.16em;color:#65747d}
+.ihx-type-switch{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ihx-type-switch button{height:35px;border:1px solid #dce1e4;border-radius:8px;background:#f7f8f9;color:#46545c;font:700 10px/1 "DM Sans",sans-serif;cursor:pointer}
+.ihx-type-switch button.active{background:#071a24;color:#e1c176;border-color:#071a24}
+.ihx-control-card select{box-sizing:border-box;width:100%;height:35px;padding:0 34px 0 11px;border:1px solid #dce1e4;border-radius:8px;background:#f8f9fa;color:#24343d;font:600 10px/1 "DM Sans",sans-serif}
+.ihx-sheet{width:100%;margin:0;border:1px solid transparent;border-radius:17px;overflow:hidden;box-shadow:0 16px 38px rgba(14,31,41,.08)}
+.ihx-sheet.yellow{background:#efe091;border-color:#d9c56a}.ihx-sheet.green{background:#d9eadc;border-color:#9fc2a8}
+.ihx-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:88px;padding:18px 28px;border-bottom:1px solid rgba(37,49,45,.14)}
+.ihx-sheet-head small,.ihx-reference small{display:block;margin-bottom:6px;font:700 8px/1 "DM Sans",sans-serif;letter-spacing:.15em;color:#385160}
+.ihx-sheet-head h3{margin:0;font:700 17px/1.2 "DM Sans",sans-serif;color:#10222d}
+.ihx-reference{text-align:right}.ihx-reference strong{display:block;font:700 10px/1.3 "DM Sans",sans-serif;letter-spacing:.03em;color:#775600}
+.ihx-sheet.green .ihx-reference strong{color:#2c6342}
+.ihx-sheet-body{padding:24px 28px 26px}
+.ihx-label{display:block;margin:0 0 8px;font:700 8px/1 "DM Sans",sans-serif;letter-spacing:.16em;color:#385160}
+.ihx-subject{box-sizing:border-box;width:100%;height:42px;padding:0 0 9px;border:0;border-bottom:1px solid rgba(43,55,50,.24);outline:0;background:transparent;color:#16252e;font:600 17px/1.2 "DM Sans",sans-serif}
+.ihx-subject::placeholder{color:rgba(40,53,49,.42)}
+.ihx-details-label{margin-top:20px}
+.ihx-editor-box{overflow:hidden;border:1px solid rgba(39,52,47,.17);border-radius:12px;background:rgba(255,255,255,.27)}
+.ihx-richbar{display:flex;align-items:center;gap:5px;min-height:48px;padding:0 12px;border-bottom:1px solid rgba(39,52,47,.14);background:rgba(255,255,255,.22)}
+.ihx-richbar button{height:30px;padding:0 10px;border:0;border-radius:6px;background:transparent;color:#14252e;font:650 10px/1 "DM Sans",sans-serif;cursor:pointer}.ihx-richbar button:hover{background:rgba(255,255,255,.55)}
+.ihx-divider{width:1px;height:20px;margin:0 4px;background:rgba(39,52,47,.16)}
+.ihx-size{display:flex;align-items:center;gap:6px;color:#a87928;font:700 10px/1 "DM Sans",sans-serif}.ihx-size select{height:28px;border:0;background:transparent;color:#16252e;font-weight:700}
+.ihx-editor{box-sizing:border-box;min-height:330px;padding:18px 18px 26px;outline:0;color:#18272f;font:400 14px/1.65 "DM Sans",sans-serif}
+.ihx-editor:empty:before{content:attr(data-placeholder);color:rgba(49,61,56,.45);pointer-events:none}
+.ihx-attachment,.ihx-signature{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:16px;padding:14px 16px;border:1px solid rgba(39,52,47,.15);border-radius:10px;background:rgba(255,255,255,.22)}
+.ihx-attachment>div,.ihx-signature>div{display:grid;gap:3px}.ihx-attachment strong,.ihx-signature strong{font:700 10px/1.2 "DM Sans",sans-serif;color:#172831}.ihx-attachment small,.ihx-signature small{font:500 9px/1.3 "DM Sans",sans-serif;color:#63736f}.ihx-attachment span{font:600 9px/1.2 "DM Sans",sans-serif;color:#8a6829}
+.ihx-file{height:32px;display:flex;align-items:center;padding:0 11px;border:1px solid rgba(39,52,47,.2);border-radius:7px;background:rgba(255,255,255,.45);font:700 9px/1 "DM Sans",sans-serif;cursor:pointer}
+.ihx-signature>span{font:700 8px/1 "DM Sans",sans-serif;letter-spacing:.15em;color:#9a712a}
+.ihx-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:66px;padding:10px 28px;border-top:1px solid rgba(39,52,47,.14);background:rgba(255,255,255,.18)}
+.ihx-actions>span{font:600 9px/1.3 "DM Sans",sans-serif;color:#53645f}.ihx-actions>span.bad{color:#9a3636}.ihx-actions>span.good{color:#376c4a}.ihx-actions>div{display:flex;gap:8px}
+.ihx-actions button{height:34px;padding:0 13px;border-radius:7px;font:700 9px/1 "DM Sans",sans-serif;cursor:pointer}.ihx-clear{border:1px solid rgba(39,52,47,.2);background:transparent;color:#4f5e59}.ihx-convert{border:1px solid #5b8768;background:#eaf3ec;color:#315d40}.ihx-save{border:1px solid #8e6828;background:#071a24;color:#e2c47d}
+.ih-note-subback{height:34px;margin:0 0 16px;padding:0 12px;border:1px solid #d7dde0;border-radius:999px;background:#fff;color:#596872;font:700 9px/1 "DM Sans",sans-serif;cursor:pointer}
+/* Legacy list/send/inbox markup gets local neutral geometry only; no Staff styles loaded. */
+.note-register,.send-note-wrap,.correspondence{box-sizing:border-box;width:100%;padding:22px;border:1px solid #dce2e5;border-radius:14px;background:#fff}
+.note-register-head,.send-note-head,.correspondence-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}.note-register-head span,.send-note-head>span,.correspondence-head span{font:700 8px/1 "DM Sans",sans-serif;letter-spacing:.16em;color:#9a712a}.note-register-head h2,.send-note-head h2,.correspondence-head h2{margin:6px 0;font:400 23px/1.2 "Libre Baskerville",serif}.note-register-head p,.send-note-head p,.correspondence-head p{margin:0;color:#738089;font-size:11px}
+.note-register-new,.send-note-submit{height:36px;padding:0 13px;border:1px solid #b88a38;border-radius:8px;background:#071a24;color:#e2c47d;cursor:pointer}.note-register-tools,.correspondence-tools{display:flex;gap:10px;margin-bottom:14px}.note-register-search,.correspondence-search{display:flex;align-items:center;gap:8px;flex:1;height:40px;padding:0 12px;border:1px solid #dce2e5;border-radius:9px}.note-register-search input,.correspondence-search input{width:100%;border:0;outline:0}.note-register-tools select{min-width:210px;border:1px solid #dce2e5;border-radius:9px;padding:0 10px}.note-register-summary,.correspondence-summary{display:flex;gap:8px;margin-bottom:14px}.note-register-summary span,.correspondence-summary span{padding:6px 10px;border:1px solid #e1e5e7;border-radius:999px;font:650 9px/1 "DM Sans",sans-serif}.note-register-list,.correspondence-list{display:grid;gap:9px}.saved-note-card,.correspondence-card{display:flex;gap:13px;padding:14px;border:1px solid #e0e5e7;border-radius:10px}.saved-note-card.yellow{border-left:3px solid #c2a13d}.saved-note-card.green{border-left:3px solid #568067}.saved-note-mark,.correspondence-mark{font:800 8px/1 "DM Sans",sans-serif;letter-spacing:.08em;color:#8b6a2b}.saved-note-main,.correspondence-main{flex:1}.saved-note-meta,.correspondence-meta{display:flex;gap:9px;align-items:center;font-size:9px}.saved-note-main h3,.correspondence-main h3{margin:7px 0 5px;font-size:13px}.saved-note-main p,.correspondence-main p{margin:3px 0;font-size:9px;color:#6d7b83}.saved-note-actions button{height:30px;border:1px solid #d8dee1;border-radius:7px;background:#fff;cursor:pointer}.note-register-empty,.correspondence-empty{padding:45px;text-align:center;border:1px dashed #d8dee1;border-radius:10px}.note-register-empty strong,.note-register-empty span,.correspondence-empty strong,.correspondence-empty span{display:block;margin:5px}
+.send-note-card{border:1px solid #dce2e5;border-radius:12px;overflow:hidden}.send-note-strip{display:flex;justify-content:space-between;gap:20px;padding:14px 16px;background:#071a24;color:#fff}.send-note-strip div{display:grid;gap:3px}.send-note-strip strong{font-size:10px}.send-note-strip small{font-size:8px;color:#aab6bb}.send-note-form{padding:18px}.send-step{margin:14px 0 9px;font:700 9px/1 "DM Sans",sans-serif;letter-spacing:.12em;color:#8d6928}.send-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.send-field{display:grid;gap:6px}.send-field.full{grid-column:1/-1}.send-field label{font-size:8px;font-weight:700}.send-field input,.send-field select,.send-field textarea,#ihSendNote{box-sizing:border-box;width:100%;min-height:38px;padding:9px 10px;border:1px solid #dce2e5;border-radius:8px;background:#fff}.send-note-preview{display:none;margin-top:12px;padding:14px;border:1px solid #dce2e5;border-radius:9px}.send-note-preview.visible{display:block}.send-preview-top{display:flex;gap:30px}.send-preview-top div{display:grid}.send-preview-subject{margin-top:10px}.send-note-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+@media(max-width:1000px){.ih-note-home-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.ihx-controls{grid-template-columns:1fr}}
+@media(max-width:720px){.ih-notes-shell{padding:24px 16px 48px}.ih-notes-head{align-items:flex-start;flex-direction:column}.ih-note-home-actions{grid-template-columns:1fr}.ihx-sheet-head,.ihx-actions,.ihx-attachment,.ihx-signature{align-items:flex-start;flex-direction:column}.ihx-reference{text-align:left}.ihx-sheet-body{padding:20px 16px}.ihx-richbar{overflow-x:auto}.send-grid{grid-template-columns:1fr}.send-field.full{grid-column:auto}}
