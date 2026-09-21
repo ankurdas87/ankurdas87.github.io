@@ -48,7 +48,7 @@ const goAll=(message)=>{freshYellow();freshGreen();renderAll();nav.querySelector
 const createLockedGreen=(src,sourceYellowId=null)=>{const meta=nextNo(src.category),now=new Date().toISOString(),record={id:'GN-'+Date.now(),type:'green',status:'locked',creatorUsername:'BLC@Principal',category:src.category,subject:src.subject.trim(),body:src.body,year:meta.year,sequence:meta.sequence,noteNo:meta.noteNo,sourceYellowId:sourceYellowId||null,convertedFromYellow:!!sourceYellowId,createdAt:now,updatedAt:now,lockedAt:now};const rows=read(GKEY);rows.push(record);write(GKEY,rows);return record};
 const validate=(cat,sub,ed,state)=>{const body=ed?.innerHTML.trim()||'';if(!cat?.value||!sub?.value.trim()||!body){if(state)state.innerHTML='<b></b>Category, subject and note text are required';return null}return{category:cat.value,subject:sub.value.trim(),body}};
 gCat?.addEventListener('change',previewGreen);
-nav.addEventListener('click',e=>{const b=e.target.closest('[data-note-section]');if(!b)return;dock.hidden=b.dataset.noteSection!=='create';if(b.dataset.noteSection==='all')requestAnimationFrame(renderAll);if(b.dataset.noteSection==='create'&&!openingGreenView){freshYellow();freshGreen()}});
+nav.addEventListener('click',e=>{const b=e.target.closest('[data-note-section]');if(!b)return;const section=b.dataset.noteSection;reg.hidden=section!=='all';dock.hidden=section!=='create';if(section==='all')requestAnimationFrame(renderAll);if(section==='create'&&!openingGreenView){freshYellow();freshGreen()}});
 dock.addEventListener('click',e=>{const b=e.target.closest('[data-note-jump]');if(b)nav.querySelector('[data-note-section="'+b.dataset.noteJump+'"]')?.click()});
 sw.addEventListener('click',e=>{const b=e.target.closest('[data-note-type]');if(!b)return;if(b.dataset.noteType==='green'&&!openingGreenView)freshGreen();if(b.dataset.noteType==='yellow')freshYellow()});
 ySave.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const v=validate(yCat,ySub,yEd,yState);if(!v)return;const rows=read(YKEY),now=new Date().toISOString();let d=yellowEditingId?rows.find(x=>x.id===yellowEditingId):null;if(d){d.category=v.category;d.subject=v.subject;d.body=v.body;d.updatedAt=now}else{d={id:'YD-'+Date.now(),type:'yellow',status:'draft',...v,createdAt:now,updatedAt:now};rows.push(d)}write(YKEY,rows);localStorage.removeItem('blc_ih_yellow_draft');goAll('Yellow Note saved successfully')},true);
@@ -58,5 +58,5 @@ list.addEventListener('click',e=>{const y=e.target.closest('[data-open-yellow]')
 document.getElementById('ihYellowCancel')?.addEventListener('click',()=>{freshYellow();requestAnimationFrame(renderAll)});
 document.getElementById('ihGreenCancel')?.addEventListener('click',()=>{freshGreen();requestAnimationFrame(renderAll)});
 const obs=new MutationObserver(()=>{if(!reg.hidden)requestAnimationFrame(renderAll)});obs.observe(reg,{attributes:true,attributeFilter:['hidden']});
-freshYellow();freshGreen();renderAll();
+freshYellow();freshGreen();renderAll();const initialSection=nav.querySelector('[data-note-section].active')?.dataset.noteSection||'all';reg.hidden=initialSection!=='all';dock.hidden=initialSection!=='create';
 })();
