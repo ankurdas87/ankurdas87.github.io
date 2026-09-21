@@ -121,3 +121,27 @@
  .ih-register-row-green,.ih-register-row-yellow{grid-template-columns:1fr 1fr!important}
  .ih-register-row strong{grid-column:1/-1!important}
 }
+
+/* Final geometry guard: neutralise legacy sticky Notes-rail rules from institute-head.css. */
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions,
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions,
+.ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
+  position:relative!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  margin:0!important;
+  z-index:8!important;
+  box-shadow:none!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-create-action-dock,
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
+  position:relative!important;
+  top:auto!important;
+  left:auto!important;
+  right:auto!important;
+  transform:none!important;
+  margin:0!important;
+  z-index:8!important;
+}
