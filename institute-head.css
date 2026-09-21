@@ -866,3 +866,21 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
  border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;
  transform:translateY(-1px)!important
 }
+
+/* STEP 3 final polish — Save Draft rests neutral; gold is click feedback only */
+.ih-yellow-save{
+  border:1px solid rgba(111,82,15,.48)!important;
+  background:rgba(255,255,255,.10)!important;
+  color:#513b09!important;
+}
+.ih-yellow-save:hover{
+  border-color:#8c6919!important;
+  background:rgba(255,255,255,.18)!important;
+  color:#332504!important;
+}
+.ih-yellow-save.ih-click-gold{
+  box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;
+  border-color:#d4a84d!important;
+  background:#d4a84d!important;
+  color:#07131b!important;
+}
