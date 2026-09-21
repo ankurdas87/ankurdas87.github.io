@@ -638,3 +638,27 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
  .ref-credit-v5 .ref-credit-v5-line{gap:9px!important;padding:9px 13px!important;font-size:6.25px!important;letter-spacing:.12em!important;white-space:normal!important;flex-wrap:wrap!important}
  .ref-credit-v5 .ref-credit-v5-line>i{flex-basis:18px!important;width:18px!important}
 }
+
+/* =========================================================
+   INSTITUTE HEAD NOTES — STEP 1 ONLY
+   Fresh landing workspace. No Staff Notes CSS or functions.
+   ========================================================= */
+.ref-main .ih-view.ih-correspondence-home{box-sizing:border-box!important;width:100%!important;min-height:calc(100vh - 144px)!important;margin:0!important;padding:0!important;background:#061620!important;overflow:visible!important}
+.ref-main .ih-view.ih-correspondence-home.active{display:block!important}
+.ih-correspondence-stage{box-sizing:border-box!important;width:100%!important;min-height:calc(100vh - 144px)!important;padding:44px 54px 64px!important;background:radial-gradient(circle at 50% 18%,rgba(34,73,88,.22),transparent 34%),linear-gradient(180deg,#071923 0%,#06151f 100%)!important;color:#eee9df!important}
+.ih-correspondence-intro{box-sizing:border-box!important;width:min(1320px,100%)!important;margin:0 auto!important;display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:30px!important;padding:0 0 27px!important;border-bottom:1px solid rgba(194,151,73,.22)!important}
+.ih-correspondence-intro small{display:block!important;margin:0 0 10px!important;font:600 8px/1 "DM Sans",sans-serif!important;letter-spacing:.28em!important;color:#c49a4e!important}
+.ih-correspondence-intro h1{margin:0!important;font:400 38px/1.08 "Libre Baskerville",serif!important;letter-spacing:-.025em!important;color:#f0ebe2!important}
+.ih-correspondence-intro p{max-width:650px!important;margin:11px 0 0!important;font:400 12px/1.65 "DM Sans",sans-serif!important;color:#8c9aa2!important}
+.ih-correspondence-seal{flex:0 0 auto!important;margin-bottom:2px!important;padding:9px 13px!important;border:1px solid rgba(194,151,73,.32)!important;border-radius:999px!important;font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#c8a45f!important;background:rgba(194,151,73,.04)!important}
+.ih-correspondence-rule{width:min(1320px,100%)!important;margin:23px auto 0!important;display:flex!important;align-items:center!important;gap:15px!important;color:#697b84!important}
+.ih-correspondence-rule i{height:1px!important;flex:1!important;background:linear-gradient(90deg,transparent,rgba(194,151,73,.24))!important}.ih-correspondence-rule i:last-child{background:linear-gradient(90deg,rgba(194,151,73,.24),transparent)!important}
+.ih-correspondence-rule span{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.22em!important;white-space:nowrap!important}
+.ih-correspondence-welcome{box-sizing:border-box!important;width:min(760px,100%)!important;margin:82px auto 30px!important;padding:48px 54px!important;text-align:center!important;border:1px solid rgba(194,151,73,.18)!important;background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008))!important;box-shadow:0 30px 80px rgba(0,0,0,.18)!important}
+.ih-correspondence-monogram{display:grid!important;place-items:center!important;width:58px!important;height:58px!important;margin:0 auto 24px!important;border:1px solid rgba(205,166,91,.6)!important;border-radius:50%!important;font:400 24px/1 "Libre Baskerville",serif!important;color:#d5ae63!important;box-shadow:0 0 0 6px rgba(205,166,91,.025)!important}
+.ih-correspondence-welcome>small{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.3em!important;color:#b58c43!important}
+.ih-correspondence-welcome h2{margin:12px 0 12px!important;font:400 28px/1.15 "Libre Baskerville",serif!important;color:#eee9df!important}
+.ih-correspondence-welcome p{max-width:570px!important;margin:0 auto!important;font:400 11px/1.75 "DM Sans",sans-serif!important;color:#7f8e96!important}
+.ih-correspondence-status{display:inline-flex!important;align-items:center!important;gap:8px!important;margin-top:25px!important;padding:8px 12px!important;border-top:1px solid rgba(255,255,255,.06)!important;font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#88979e!important}
+.ih-correspondence-status b{width:5px!important;height:5px!important;border-radius:50%!important;background:#c69b4d!important;box-shadow:0 0 9px rgba(198,155,77,.55)!important}
+@media(max-width:760px){.ih-correspondence-stage{padding:30px 20px 48px!important}.ih-correspondence-intro{align-items:flex-start!important;flex-direction:column!important}.ih-correspondence-intro h1{font-size:31px!important}.ih-correspondence-welcome{margin-top:48px!important;padding:38px 24px!important}}
