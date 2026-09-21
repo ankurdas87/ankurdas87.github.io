@@ -240,3 +240,28 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ref-executive-credit small{font-weight:500!important}
 .ref-executive-credit strong{font-weight:500!important;background:none!important;color:inherit!important;animation:none!important}
 @media(max-width:1320px){.ref-meta .ref-portal-back{padding:0 10px}.ref-meta>span,.ref-meta>small{display:none!important}}
+
+/* Institute Head exclusive premium credit — uniform typography across the complete sentence */
+.ref-executive-credit>span,
+.ref-executive-credit small,
+.ref-executive-credit small strong,
+.ref-executive-credit em{
+  font-family:"DM Sans",Arial,sans-serif!important;
+  font-size:7px!important;
+  font-weight:500!important;
+  line-height:1.4!important;
+  letter-spacing:.12em!important;
+  font-style:normal!important;
+}
+.ref-executive-credit small strong{
+  display:inline!important;
+  background:linear-gradient(100deg,#8c641f,#d7aa52,#fff0b4,#c79335,#efd58c,#8c641f)!important;
+  background-size:230% 100%!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  color:transparent!important;
+  animation:refCreditGold 4.5s linear infinite!important;
+}
+.ref-executive-credit>span{color:#78868d!important}
+.ref-executive-credit small{color:#8e999e!important}
+.ref-executive-credit em{color:#b38c49!important}
