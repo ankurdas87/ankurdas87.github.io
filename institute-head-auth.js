@@ -35,3 +35,15 @@
 
 /* NOTES VIEWPORT RESET v6 — run after panel visibility/layout settles. */
 (()=>{const panel=document.getElementById('ihPanel'),nav=document.querySelector('.ih-notes-actions'),sw=document.getElementById('ihNoteTypeSwitch');if(!panel||!nav||!sw)return;const reset=()=>{const go=()=>{panel.scrollTop=0;panel.scrollLeft=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,60);setTimeout(go,180)};nav.addEventListener('click',e=>{if(e.target.closest('[data-note-section]'))reset()});sw.addEventListener('click',e=>{if(e.target.closest('[data-note-type]'))reset()})})();
+
+/* CREATE NOTE NAV + SAVE COMPLETION — authoritative post-save UX.
+   Uses the existing save handlers, then clears through existing Cancel logic and returns to All Notes. */
+(()=>{const nav=document.querySelector('.ih-notes-actions'),dock=document.getElementById('ihCreateActionDock'),toast=document.getElementById('ihNoteSaveToast'),sw=document.getElementById('ihNoteTypeSwitch');if(!nav||!dock||!toast||!sw)return;
+ const showDock=section=>{dock.hidden=section!=='create'};
+ nav.addEventListener('click',e=>{const b=e.target.closest('[data-note-section]');if(b)showDock(b.dataset.noteSection)});
+ dock.addEventListener('click',e=>{const b=e.target.closest('[data-note-jump]');if(!b)return;nav.querySelector('[data-note-section="'+b.dataset.noteJump+'"]')?.click()});
+ const success=(kind)=>{toast.querySelector('strong').textContent='✓ '+kind+' saved successfully';toast.hidden=false;setTimeout(()=>{toast.hidden=true;const cancel=document.getElementById(kind==='Green Note'?'ihGreenCancel':'ihYellowCancel');cancel?.click();const files=document.getElementById(kind==='Green Note'?'ihGreenFiles':'ihYellowFiles'),fl=document.getElementById(kind==='Green Note'?'ihGreenFileList':'ihYellowFileList');if(files)files.value='';if(fl){fl.textContent='';fl.hidden=true}nav.querySelector('[data-note-section="all"]')?.click()},950)};
+ document.getElementById('ihYellowSave')?.addEventListener('click',()=>{const cat=document.getElementById('ihYellowCategory'),sub=document.getElementById('ihYellowSubject'),ed=document.getElementById('ihYellowEditor');if(cat?.value&&sub?.value.trim()&&ed?.innerHTML.trim())success('Yellow Note')});
+ document.getElementById('ihGreenSave')?.addEventListener('click',()=>{const cat=document.getElementById('ihGreenCategory'),sub=document.getElementById('ihGreenSubject'),ed=document.getElementById('ihGreenEditor');if(cat?.value&&sub?.value.trim()&&ed?.innerHTML.trim())success('Green Note')});
+ showDock(!sw.hidden?'create':'all');
+})();
