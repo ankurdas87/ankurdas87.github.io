@@ -18,3 +18,6 @@
 
 /* Preserve Notes navigation when switching Yellow/Green; return the module scroller to the action rail. */
 (()=>{const sw=document.getElementById('ihNoteTypeSwitch'),panel=document.getElementById('ihPanel');if(!sw)return;sw.addEventListener('click',e=>{if(!e.target.closest('[data-note-type]'))return;requestAnimationFrame(()=>{if(panel)panel.scrollTop=Math.min(panel.scrollTop,100);});});})();
+
+/* STEP 4 FINAL — entering Create Note always exposes the full action rail first */
+(()=>{const nav=document.querySelector('.ih-notes-actions'),panel=document.getElementById('ihPanel');if(!nav)return;nav.addEventListener('click',e=>{const b=e.target.closest('[data-note-section]');if(!b||b.dataset.noteSection!=='create')return;requestAnimationFrame(()=>{if(panel)panel.scrollTop=0;});});})();
