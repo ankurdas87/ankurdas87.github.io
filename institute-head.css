@@ -737,3 +737,71 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{top:100px!important}
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{margin-bottom:100px!important}
 }
+
+/* =========================================================
+   INSTITUTE HEAD NOTES — STEP 2
+   Executive navigation shell only. No note editor/data yet.
+   ========================================================= */
+.ih-correspondence-console{
+ box-sizing:border-box!important;width:min(1320px,100%)!important;margin:46px auto 28px!important;
+ border:1px solid rgba(194,151,73,.20)!important;
+ background:linear-gradient(145deg,rgba(255,255,255,.025),rgba(255,255,255,.008))!important;
+ box-shadow:0 28px 75px rgba(0,0,0,.16)!important
+}
+.ih-correspondence-console-head{
+ display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:28px!important;
+ padding:28px 32px 24px!important;border-bottom:1px solid rgba(194,151,73,.15)!important
+}
+.ih-correspondence-console-head small{
+ display:block!important;margin-bottom:8px!important;font:600 7px/1 "DM Sans",sans-serif!important;
+ letter-spacing:.28em!important;color:#b98e42!important
+}
+.ih-correspondence-console-head h2{
+ margin:0!important;font:400 25px/1.15 "Libre Baskerville",serif!important;color:#eee9df!important
+}
+.ih-correspondence-console-head p{
+ margin:9px 0 0!important;font:400 10px/1.6 "DM Sans",sans-serif!important;color:#788b94!important
+}
+.ih-correspondence-console-head>span{
+ flex:0 0 auto!important;padding:8px 11px!important;border:1px solid rgba(194,151,73,.22)!important;
+ font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#ad8a4c!important
+}
+.ih-notes-actions{
+ display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;width:100%!important;
+ padding:0!important;margin:0!important;background:rgba(1,11,17,.18)!important
+}
+.ih-notes-actions button{
+ appearance:none!important;-webkit-appearance:none!important;min-width:0!important;height:92px!important;
+ display:flex!important;align-items:center!important;gap:13px!important;padding:0 20px!important;
+ border:0!important;border-right:1px solid rgba(255,255,255,.055)!important;border-bottom:2px solid transparent!important;
+ background:transparent!important;color:#7d8c94!important;text-align:left!important;cursor:pointer!important;
+ transition:background .18s ease,color .18s ease,border-color .18s ease!important
+}
+.ih-notes-actions button:last-child{border-right:0!important}
+.ih-notes-actions button:hover{background:rgba(194,151,73,.035)!important;color:#d9d4ca!important}
+.ih-notes-actions button.active{
+ background:linear-gradient(180deg,rgba(194,151,73,.09),rgba(194,151,73,.025))!important;
+ border-bottom-color:#c69b4d!important;color:#eee9df!important
+}
+.ih-notes-actions button>b{
+ flex:0 0 auto!important;font:500 8px/1 "DM Sans",sans-serif!important;letter-spacing:.08em!important;
+ color:#9b7739!important
+}
+.ih-notes-actions button>span{display:grid!important;gap:5px!important;min-width:0!important}
+.ih-notes-actions button strong{
+ font:500 10px/1 "DM Sans",sans-serif!important;letter-spacing:.09em!important;color:inherit!important;white-space:nowrap!important
+}
+.ih-notes-actions button em{
+ font:400 8px/1 "DM Sans",sans-serif!important;font-style:normal!important;color:#60727b!important;white-space:nowrap!important
+}
+.ih-notes-section-marker{
+ min-height:42px!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:10px!important;
+ padding:0 24px!important;border-top:1px solid rgba(255,255,255,.035)!important
+}
+.ih-notes-section-marker span{font:600 6px/1 "DM Sans",sans-serif!important;letter-spacing:.2em!important;color:#596a72!important}
+.ih-notes-section-marker strong{font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.13em!important;color:#c49a4e!important}
+@media(max-width:1050px){
+ .ih-notes-actions{grid-template-columns:repeat(3,1fr)!important}
+ .ih-notes-actions button{border-bottom:1px solid rgba(255,255,255,.055)!important}
+ .ih-notes-actions button.active{border-bottom:2px solid #c69b4d!important}
+}
