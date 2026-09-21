@@ -942,3 +942,44 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 /* STEP 6 — Green Note number visible from the beginning */
 .ih-green-note-number{display:flex!important;align-items:center!important;gap:14px!important;margin:22px 32px 0!important;padding:13px 16px!important;border:1px solid rgba(42,79,41,.30)!important;background:rgba(255,255,255,.16)!important}.ih-green-note-number small{font:700 6px/1 "DM Sans",sans-serif!important;letter-spacing:.18em!important;color:#365f36!important}.ih-green-note-number strong{font:600 11px/1 "DM Sans",sans-serif!important;letter-spacing:.08em!important;color:#173918!important}.ih-green-note-number span{margin-left:auto!important;font:500 6px/1.4 "DM Sans",sans-serif!important;letter-spacing:.08em!important;color:#557055!important;text-align:right!important}
 @media(max-width:760px){.ih-green-note-number{align-items:flex-start!important;flex-direction:column!important}.ih-green-note-number span{margin-left:0!important;text-align:left!important}}
+
+/* LAYOUT LOCK — Correspondence header and Notes rail keep permanent clearance below portal sticky chrome.
+   Do not couple geometry to Yellow/Green content visibility. */
+.ref-main .ih-view.ih-correspondence-home{
+  padding-top:100px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  padding:42px 54px 64px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro,
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
+  top:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
+  margin-bottom:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{
+  margin-top:54px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
+  position:relative!important;
+  top:auto!important;
+  margin-top:0!important;
+  z-index:8!important;
+  box-shadow:none!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-section-marker{
+  position:relative!important;
+  top:auto!important;
+  z-index:8!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
+  position:relative!important;
+  top:auto!important;
+  z-index:8!important;
+}
+@media(max-width:760px){
+  .ref-main .ih-view.ih-correspondence-home{padding-top:100px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{margin-top:42px!important}
+}
