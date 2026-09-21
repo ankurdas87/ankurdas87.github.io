@@ -662,3 +662,20 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-correspondence-status{display:inline-flex!important;align-items:center!important;gap:8px!important;margin-top:25px!important;padding:8px 12px!important;border-top:1px solid rgba(255,255,255,.06)!important;font:600 7px/1 "DM Sans",sans-serif!important;letter-spacing:.14em!important;text-transform:uppercase!important;color:#88979e!important}
 .ih-correspondence-status b{width:5px!important;height:5px!important;border-radius:50%!important;background:#c69b4d!important;box-shadow:0 0 9px rgba(198,155,77,.55)!important}
 @media(max-width:760px){.ih-correspondence-stage{padding:30px 20px 48px!important}.ih-correspondence-intro{align-items:flex-start!important;flex-direction:column!important}.ih-correspondence-intro h1{font-size:31px!important}.ih-correspondence-welcome{margin-top:48px!important;padding:38px 24px!important}}
+
+/* Notes Step 1 heading visibility correction */
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  padding-top:68px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+  position:relative!important;
+  top:auto!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro>div{
+  padding-top:4px!important;
+}
+@media(max-width:760px){
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding-top:46px!important}
+}
