@@ -1002,3 +1002,34 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ref-main .ih-view.ih-correspondence-home .ih-notes-actions button.active{
   background:rgba(194,151,73,.07)!important;
 }
+
+/* GREEN NOTE ACTION BAR — FINAL VISIBILITY FIX
+   When Create Note is open, pin the actual five-button rail inside the visible portal viewport.
+   This deliberately overrides earlier :has()/offset rules only for the action rail. */
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions,
+.ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
+ position:fixed!important;
+ top:162px!important;
+ left:50%!important;
+ transform:translateX(-50%)!important;
+ width:calc(100vw - 100px)!important;
+ max-width:1620px!important;
+ height:86px!important;
+ margin:0!important;
+ display:grid!important;
+ grid-template-columns:repeat(5,minmax(0,1fr))!important;
+ z-index:9999!important;
+ background:#071923!important;
+ border:1px solid rgba(194,151,73,.20)!important;
+ box-shadow:0 12px 28px rgba(0,0,0,.38)!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-section-marker{
+ margin-top:86px!important;
+}
+@media(max-width:760px){
+ .ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions,
+ .ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
+  left:12px!important;right:12px!important;transform:none!important;width:auto!important;
+  overflow-x:auto!important;grid-template-columns:repeat(5,minmax(150px,1fr))!important;
+ }
+}
