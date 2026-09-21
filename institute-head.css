@@ -1059,3 +1059,12 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-note-save-toast{position:fixed;right:28px;bottom:28px;z-index:12000;min-width:310px;padding:18px 22px;background:#0b2029;border:1px solid rgba(214,168,79,.65);box-shadow:0 16px 38px rgba(0,0,0,.42);color:#f2d17d;display:grid;gap:5px}
 .ih-note-save-toast[hidden]{display:none!important}.ih-note-save-toast strong{font-size:13px;letter-spacing:.05em}.ih-note-save-toast span{font-size:10px;letter-spacing:.12em;color:#9bb0ba}
 @media(max-width:760px){.ih-create-action-dock{overflow-x:auto;grid-template-columns:repeat(5,minmax(155px,1fr))}.ih-create-action-dock button{min-height:78px;padding:14px}.ih-note-save-toast{left:16px;right:16px;bottom:16px;min-width:0}}
+
+/* v8 ROOT FIX — show the five-action dock whenever the real Yellow/Green selector is open.
+   This does not depend on JS timing and prevents the dock from silently remaining hidden. */
+.ih-correspondence-console:has(#ihNoteTypeSwitch:not([hidden])) .ih-create-action-dock{
+ display:grid!important;
+}
+.ih-correspondence-console:not(:has(#ihNoteTypeSwitch:not([hidden]))) .ih-create-action-dock{
+ display:none!important;
+}
