@@ -983,3 +983,6 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-console{margin-top:42px!important}
 }
+
+/* STEP 7 — Green entries in All Notes */
+.ih-register-row-green{background:rgba(101,151,95,.045)!important}.ih-register-row-green .ih-note-id{font-weight:700!important;color:#8db187!important}.ih-green-note-meta select:disabled{opacity:.78!important;cursor:not-allowed!important}
