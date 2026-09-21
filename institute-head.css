@@ -715,3 +715,25 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 @media(max-width:760px){
   .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:118px 20px 48px!important}
 }
+
+/* STEP 1 definitive fix: sticky nav overlaps the first 100px of ref-main in the live viewport.
+   Move only the Correspondence intro below that overlap without shifting the workspace body. */
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  padding:42px 54px 64px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+  position:relative!important;
+  top:100px!important;
+  z-index:2!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{
+  position:relative!important;
+  top:100px!important;
+  margin-bottom:100px!important;
+}
+@media(max-width:760px){
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:30px 20px 48px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro,
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{top:100px!important}
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-rule{margin-bottom:100px!important}
+}
