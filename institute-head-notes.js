@@ -27,7 +27,7 @@ function validate(cat,sub,ed,state){const body=ed?.innerHTML.trim()||"";if(!cat?
 function nextLocal(category){const year=new Date().getFullYear(),c=String(category||"").trim().toUpperCase().replace(/[^A-Z0-9]+/g," ");const seq=read(GKEY).filter(n=>Number(n.year)===year&&String(n.category||"").trim().toUpperCase()===String(category||"").trim().toUpperCase()).reduce((m,n)=>Math.max(m,Number(n.sequence)||Number(String(n.noteNo||"").split("/").pop())||0),0)+1;return{year,sequence:seq,noteNo:"BLC/"+(c||"SELECT CATEGORY")+"/"+year+"/"+String(seq).padStart(3,"0")}}
 function updateLocalGreen(id,patch){const rows=read(GKEY),i=rows.findIndex(x=>x.id===id);if(i>=0){rows[i]={...rows[i],...patch,updatedAt:new Date().toISOString()};write(GKEY,rows);return rows[i]}return null}
 
-function freshYellow(){yellowEditingId=null;yellowReadonly=false;yWs.classList.remove("ih-yellow-readonly");if(yCat){yCat.disabled=false;yCat.value=""}if(ySub){ySub.readOnly=false;ySub.value=""}if(yEd){yEd.contentEditable="true";yEd.innerHTML=""}if(ySave){ySave.hidden=false;ySave.disabled=false;ySave.textContent="Save Draft"}if(yConvert){yConvert.hidden=false;yConvert.disabled=false}const lab=document.querySelector('label[for="ihYellowFiles"]');if(lab)lab.hidden=false;clearFiles(yFiles,yFileList);if(yState)yState.innerHTML="<b></b>Unsaved working draft"}
+function freshYellow(){yellowEditingId=null;yellowReadonly=false;yWs.classList.remove("ih-yellow-readonly");if(yCat){yCat.disabled=false;yCat.value=""}if(ySub){ySub.readOnly=false;ySub.value=""}if(yEd){yEd.contentEditable="true";yEd.innerHTML=""}document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.disabled=false);if(ySave){ySave.hidden=false;ySave.disabled=false;ySave.textContent="Save Draft"}if(yConvert){yConvert.hidden=false;yConvert.disabled=false;yConvert.textContent="Convert to Green Note"}const lab=document.querySelector('label[for="ihYellowFiles"]');if(lab)lab.hidden=false;clearFiles(yFiles,yFileList);if(yState)yState.innerHTML="<b></b>Unsaved working draft"}
 function freshGreen(){greenViewingId=null;gWs.classList.remove("ih-green-readonly");if(gWs)delete gWs.dataset.viewingId;if(gCat){gCat.disabled=false;gCat.value=""}if(gSub){gSub.readOnly=false;gSub.value=""}if(gEd){gEd.contentEditable="true";gEd.innerHTML=""}document.querySelectorAll("[data-green-cmd]").forEach(b=>b.disabled=false);if(gSave){gSave.hidden=false;gSave.disabled=false;gSave.textContent="Save Green Note"}if(gEsign)gEsign.disabled=false;const lab=document.querySelector('label[for="ihGreenFiles"]');if(lab)lab.hidden=false;clearFiles(gFiles,gFileList);if(gHead)gHead.textContent="OFFICIAL · PENDING ISSUE";if(gHint)gHint.textContent="Reserved preview · sequence is finalized with the official Green Note";if(gState)gState.innerHTML="<b></b>Official note not yet issued";previewGreen()}
 function previewGreen(){if(greenViewingId||!gNum)return;gNum.textContent=nextLocal(gCat?.value).noteNo}
 function lockGreen(){gWs.classList.add("ih-green-readonly");if(gCat)gCat.disabled=true;if(gSub)gSub.readOnly=true;if(gEd)gEd.contentEditable="false";document.querySelectorAll("[data-green-cmd]").forEach(b=>b.disabled=true);if(gSave)gSave.hidden=true;if(gEsign)gEsign.disabled=true;const lab=document.querySelector('label[for="ihGreenFiles"]');if(lab)lab.hidden=true}
@@ -112,12 +112,12 @@ async function convertYellow(){
 }
 
 function openYellow(id){
- const d=read(YKEY).find(x=>x.id===id);if(!d)return;yellowEditingId=d.id;setSection("create");setType("yellow",true);
+ const d=read(YKEY).find(x=>x.id===id);if(!d)return;setSection("create");setType("yellow",true);yellowEditingId=d.id;
  yCat.value=d.category||"";ySub.value=d.subject||"";yEd.innerHTML=d.body||"";
  if(d.convertedToGreenId){lockYellow();if(yState)yState.innerHTML="<b></b>Converted Yellow source · read only"}else{yellowReadonly=false;yWs.classList.remove("ih-yellow-readonly");yCat.disabled=false;ySub.readOnly=false;yEd.contentEditable="true";document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.disabled=false);ySave.hidden=false;yConvert.hidden=false;if(yState)yState.innerHTML="<b></b>Saved Yellow draft · editable"}
 }
 function openGreen(id){
- const d=read(GKEY).find(x=>x.id===id);if(!d)return;greenViewingId=d.id;setSection("create");setType("green",true);
+ const d=read(GKEY).find(x=>x.id===id);if(!d)return;setSection("create");setType("green",true);greenViewingId=d.id;
  gWs.dataset.viewingId=d.id;gCat.value=d.category||"";gSub.value=d.subject||"";gEd.innerHTML=d.body||"";gNum.textContent=d.noteNo||"";if(gHead)gHead.textContent="OFFICIAL · LOCKED";if(gHint)gHint.textContent="Locked official record · read only";if(gState)gState.innerHTML="<b></b>Read-only Green Note · ready for sending";lockGreen()
 }
 
