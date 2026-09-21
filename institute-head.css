@@ -986,3 +986,19 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 
 /* STEP 7 — Green entries in All Notes */
 .ih-register-row-green{background:rgba(101,151,95,.045)!important}.ih-register-row-green .ih-note-id{font-weight:700!important;color:#8db187!important}.ih-green-note-meta select:disabled{opacity:.78!important;cursor:not-allowed!important}
+
+/* GREEN NOTE NAVIGATION LOCK — keep the five main Notes actions reachable while editing.
+   Additive only: no existing Notes geometry or paper styling is replaced. */
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
+  position:sticky!important;
+  top:144px!important;
+  z-index:60!important;
+  background:#071923!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions button{
+  background:#071923!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions button.active{
+  background:rgba(194,151,73,.07)!important;
+}
