@@ -702,3 +702,16 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   padding-top:0!important;
   transform:none!important;
 }
+
+/* STEP 1 viewport correction — measured against the actual sticky Executive header/nav */
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+  padding:142px 54px 64px!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+  position:relative!important;
+  inset:auto!important;
+  margin:0 auto!important;
+}
+@media(max-width:760px){
+  .ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding:118px 20px 48px!important}
+}
