@@ -831,3 +831,38 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-yellow-note-foot{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:22px 32px 26px!important}.ih-yellow-note-foot p{margin:0!important;font:500 7px "DM Sans",sans-serif!important;letter-spacing:.11em!important;text-transform:uppercase!important;color:#6f8088!important}.ih-yellow-note-foot p b{display:inline-block!important;width:5px!important;height:5px!important;margin-right:8px!important;border-radius:50%!important;background:#9b7535!important}
 .ih-yellow-note-foot>div{display:flex!important;gap:8px!important}.ih-yellow-note-foot button{height:36px!important;padding:0 17px!important;font:600 7px "DM Sans",sans-serif!important;letter-spacing:.12em!important;cursor:pointer!important}.ih-yellow-cancel{border:1px solid rgba(255,255,255,.09)!important;background:transparent!important;color:#87969d!important}.ih-yellow-save{border:1px solid #c79b48!important;background:#c79b48!important;color:#07131b!important}
 @media(max-width:900px){.ih-yellow-note-meta{grid-template-columns:1fr!important}.ih-yellow-note-head{align-items:flex-start!important;flex-direction:column!important}}
+
+/* STEP 3 refinement — paper identity + immediate gold interaction feedback */
+.ih-yellow-note-workspace{
+ background:#e6d486!important;color:#211d12!important;
+ border-top:1px solid #b9973e!important
+}
+.ih-yellow-note-head{
+ background:linear-gradient(90deg,#d7c06e,#eadb9a 48%,#e3d184)!important;
+ border-bottom:1px solid rgba(84,65,20,.25)!important
+}
+.ih-yellow-note-head h3{color:#201b10!important}.ih-yellow-note-head p{color:#665a36!important}
+.ih-yellow-note-head small{color:#70520f!important}.ih-yellow-note-head>span{border-color:rgba(91,67,13,.36)!important;color:#674b0b!important;background:rgba(255,255,255,.13)!important}
+.ih-yellow-note-meta label>span{color:#62562f!important}
+.ih-yellow-note-meta input,.ih-yellow-note-meta select{
+ background:#efe2a6!important;color:#2b2516!important;border-color:rgba(83,66,25,.28)!important
+}
+.ih-yellow-note-meta input::placeholder{color:#827653!important}
+.ih-yellow-editor-block{background:#f0e3aa!important;border-color:rgba(83,66,25,.30)!important}
+.ih-yellow-toolbar{background:#d8c476!important;border-bottom-color:rgba(83,66,25,.22)!important}
+.ih-yellow-toolbar button{color:#54471f!important}.ih-yellow-toolbar button:hover{color:#211a08!important;border-color:rgba(83,66,25,.30)!important;background:rgba(255,255,255,.16)!important}
+.ih-yellow-toolbar>i{background:rgba(71,55,17,.22)!important}
+.ih-yellow-editor{background:#f3e8b7!important;color:#292314!important}
+.ih-yellow-editor:empty:before{color:#8a7c51!important}
+.ih-yellow-attachments{background:#dfcd84!important;border-color:rgba(83,66,25,.25)!important}
+.ih-yellow-attachments small{color:#725617!important}.ih-yellow-attachments strong{color:#292315!important}.ih-yellow-attachments p{color:#6e623e!important}
+.ih-yellow-attachments label{border-color:#8c6919!important;color:#513b09!important;background:rgba(255,255,255,.14)!important}
+.ih-yellow-file-list{color:#514727!important;background:rgba(255,255,255,.17)!important;border-left-color:#8d6815!important}
+.ih-yellow-note-foot p{color:#615632!important}.ih-yellow-note-foot p b{background:#80601a!important}
+.ih-yellow-cancel{border-color:rgba(70,55,20,.30)!important;color:#514725!important;background:rgba(255,255,255,.10)!important}
+.ih-yellow-save{border-color:#9d7419!important;background:#a87c1d!important;color:#fff8e2!important}
+.ih-yellow-note-workspace .ih-click-gold{
+ box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;
+ border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;
+ transform:translateY(-1px)!important
+}
