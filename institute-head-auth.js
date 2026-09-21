@@ -31,6 +31,7 @@
 /* GREEN NOTE NAVIGATION LOCK — switching into Create/Green returns to the action rail. */
 
 
-/* NOTES VIEWPORT RESET — single source of truth.
-   Prevent retained editor scroll from cropping the title, action rail or Yellow/Green selector. */
-(()=>{const panel=document.getElementById('ihPanel'),nav=document.querySelector('.ih-notes-actions'),sw=document.getElementById('ihNoteTypeSwitch');if(!panel||!nav||!sw)return;const reset=()=>requestAnimationFrame(()=>{panel.scrollTop=0;panel.scrollLeft=0;window.scrollTo({top:0,left:0,behavior:'auto'})});nav.addEventListener('click',e=>{if(e.target.closest('[data-note-section]'))reset()});sw.addEventListener('click',e=>{if(e.target.closest('[data-note-type]'))reset()})})();
+
+
+/* NOTES VIEWPORT RESET v6 — run after panel visibility/layout settles. */
+(()=>{const panel=document.getElementById('ihPanel'),nav=document.querySelector('.ih-notes-actions'),sw=document.getElementById('ihNoteTypeSwitch');if(!panel||!nav||!sw)return;const reset=()=>{const go=()=>{panel.scrollTop=0;panel.scrollLeft=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,60);setTimeout(go,180)};nav.addEventListener('click',e=>{if(e.target.closest('[data-note-section]'))reset()});sw.addEventListener('click',e=>{if(e.target.closest('[data-note-type]'))reset()})})();
