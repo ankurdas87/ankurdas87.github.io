@@ -3,3 +3,6 @@
 .staff-auth-copyright{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12);text-align:center;color:#7f8997;font-family:Inter,Segoe UI,Arial,sans-serif}.staff-auth-copyright p{margin:0;font-size:9.5px;line-height:1.6;letter-spacing:.01em}.staff-auth-copyright .blc-developer-credit{margin-top:1px;font-size:9px;color:#6f7885}.staff-auth-copyright .blc-developer-credit strong{font-weight:700;color:#939ba6}.register-mode .staff-auth-copyright{display:none}@media(max-width:700px){.staff-auth-copyright{margin-top:14px;padding-top:12px}.staff-auth-copyright p{font-size:9px}.staff-auth-copyright .blc-developer-credit{font-size:8.5px}}
 
 .signup-auth-copyright{margin:14px auto 0;padding-top:12px;border-top:1px solid #e3e6eb;text-align:center;color:#8b94a0;font-family:Inter,Segoe UI,Arial,sans-serif}.signup-auth-copyright p{margin:0;font-size:9px;line-height:1.55}.signup-auth-copyright p+p{margin-top:1px;font-size:8.5px;color:#a0a7b0}.signup-auth-copyright strong{font-weight:700;color:#78818d}
+
+/* Final credit typography: developer name must never appear bold */
+.blc-copyright .blc-developer-credit strong,.staff-auth-copyright .blc-developer-credit strong,.signup-auth-copyright strong{font-weight:400!important;color:inherit!important}
