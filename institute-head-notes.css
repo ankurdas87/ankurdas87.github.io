@@ -145,3 +145,14 @@
   margin:0!important;
   z-index:8!important;
 }
+
+/* v13 — keep the MAIN Notes tabs visible in Send / Inbox / Sent without touching All Notes or Create Note. */
+.ref-main .ih-view.ih-correspondence-home:has(.ih-notes-actions [data-note-section="send"].active) .ih-notes-actions,
+.ref-main .ih-view.ih-correspondence-home:has(.ih-notes-actions [data-note-section="inbox"].active) .ih-notes-actions,
+.ref-main .ih-view.ih-correspondence-home:has(.ih-notes-actions [data-note-section="sent"].active) .ih-notes-actions{
+  position:sticky!important;
+  top:144px!important;
+  z-index:990!important;
+  background:#071923!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
+}
