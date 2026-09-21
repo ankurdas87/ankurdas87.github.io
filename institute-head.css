@@ -1033,3 +1033,32 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   overflow-x:auto!important;grid-template-columns:repeat(5,minmax(150px,1fr))!important;
  }
 }
+
+/* ALL NOTES TITLE VISIBILITY LOCK — the executive title block must never sit under portal chrome. */
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+ position:relative!important;
+ top:0!important;
+ z-index:20!important;
+ visibility:visible!important;
+ opacity:1!important;
+ transform:none!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro small,
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro h1,
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro p{
+ visibility:visible!important;
+ opacity:1!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
+ padding-top:54px!important;
+}
+.ref-main .ih-view.ih-correspondence-home{
+ padding-top:100px!important;
+ scroll-padding-top:250px!important;
+}
+/* Keep the five-note action rail above Green content without hiding the title in All Notes. */
+.ref-main .ih-view.ih-correspondence-home:not(:has(#ihNoteTypeSwitch:not([hidden]))) .ih-notes-actions{
+ position:relative!important;
+ top:auto!important;
+ transform:none!important;
+}
