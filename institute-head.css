@@ -594,3 +594,47 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   76%{opacity:.8}
   86%,100%{left:110%;opacity:0}
 }
+
+/* COPYRIGHT v5 — shimmer is clipped directly INSIDE every text glyph */
+.ref-executive-credit.ref-credit-v5{
+  box-sizing:border-box!important;width:100%!important;min-height:72px!important;padding:0 24px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  background:linear-gradient(180deg,#03111b 0%,#020d15 100%)!important;
+  border-top:1px solid rgba(174,132,55,.28)!important;overflow:hidden!important;
+}
+.ref-credit-v5 .ref-credit-v5-line{
+  display:flex!important;align-items:center!important;justify-content:center!important;gap:18px!important;
+  width:max-content!important;max-width:100%!important;margin:0!important;padding:10px 18px!important;white-space:nowrap!important;
+  border-radius:999px!important;font-family:"DM Sans",Arial,sans-serif!important;font-size:7px!important;font-weight:500!important;
+  line-height:1!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:rgba(242,239,232,.82)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.018)!important;
+}
+.ref-credit-v5 .ref-credit-v5-line>span{
+  display:inline-block!important;margin:0!important;padding:0!important;
+  font:inherit!important;font-size:inherit!important;font-weight:inherit!important;line-height:inherit!important;
+  letter-spacing:inherit!important;text-transform:inherit!important;
+  color:transparent!important;-webkit-text-fill-color:transparent!important;
+  background-image:linear-gradient(110deg,
+    #e8e5de 0%,#e8e5de 35%,
+    #a8792f 43%,#d0a352 47%,#f6df9d 50%,#d0a352 53%,#a8792f 57%,
+    #e8e5de 65%,#e8e5de 100%)!important;
+  background-size:300% 100%!important;background-position:150% 50%;
+  -webkit-background-clip:text!important;background-clip:text!important;
+  animation:refTextGoldShimmer 3.6s linear infinite!important;
+  will-change:background-position!important;
+}
+.ref-credit-v5 .ref-credit-v5-line>span:nth-of-type(2){animation-delay:.10s!important}
+.ref-credit-v5 .ref-credit-v5-line>span:nth-of-type(3){animation-delay:.20s!important}
+.ref-credit-v5 .ref-credit-v5-line>i{
+  display:block!important;flex:0 0 34px!important;width:34px!important;height:1px!important;margin:0!important;
+  background:linear-gradient(90deg,transparent,rgba(177,133,55,.75),transparent)!important;
+}
+@keyframes refTextGoldShimmer{
+  0%{background-position:150% 50%}
+  100%{background-position:-50% 50%}
+}
+@media(max-width:760px){
+ .ref-executive-credit.ref-credit-v5{padding:15px 12px!important;min-height:76px!important}
+ .ref-credit-v5 .ref-credit-v5-line{gap:9px!important;padding:9px 13px!important;font-size:6.25px!important;letter-spacing:.12em!important;white-space:normal!important;flex-wrap:wrap!important}
+ .ref-credit-v5 .ref-credit-v5-line>i{flex-basis:18px!important;width:18px!important}
+}
