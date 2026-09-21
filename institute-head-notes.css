@@ -156,3 +156,33 @@
   background:#071923!important;
   box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
 }
+
+/* v14 — Inbox/Sent two-stage note viewer, same Staff workflow with Institute Head styling. */
+.ih-correspondence-note-link{border:0;background:none;padding:0;color:#cba257;font:700 8px "DM Sans",sans-serif;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(203,162,87,.38);text-underline-offset:3px}
+.ih-correspondence-note-link:hover{color:#efd083}
+.ih-modal-note-number-open{border:1px solid rgba(110,159,105,.38);background:rgba(110,159,105,.09);color:#9bc497;padding:8px 11px;font:800 9px "DM Sans",sans-serif;letter-spacing:.08em;cursor:pointer}
+.ih-modal-note-number-open:hover{background:rgba(110,159,105,.15)}
+.ih-modal-open-hint{margin-top:18px;padding:11px 13px;border:1px dashed rgba(194,151,73,.24);font:500 8px/1.5 "DM Sans",sans-serif;color:#71858d}
+.ih-full-note-view{width:min(720px,100%);margin:0 auto}
+.ih-full-note-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+.ih-full-note-toolbar button{border:0;background:none;color:#b18f51;padding:0;font:700 8px "DM Sans",sans-serif;cursor:pointer}
+.ih-full-note-toolbar span{font:700 7px "DM Sans",sans-serif;letter-spacing:.16em;color:#70848c}
+.ih-full-note-sheet{overflow:hidden;border:1px solid rgba(95,143,91,.38);background:#dcebd8;color:#173421;box-shadow:0 18px 42px rgba(0,0,0,.28)}
+.ih-full-note-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;background:#c7dfc1;border-bottom:1px solid rgba(52,91,53,.22)}
+.ih-full-note-header small,.ih-full-note-ref small{display:block;font:800 6px "DM Sans",sans-serif;letter-spacing:.14em;color:#55755a}
+.ih-full-note-header h3{margin:5px 0 0;font:400 17px "Libre Baskerville",serif;color:#173421}
+.ih-full-note-ref{text-align:right}.ih-full-note-ref strong{display:block;margin-top:5px;font:800 9px "DM Sans",sans-serif;color:#255b31}
+.ih-full-note-meta{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(58,100,59,.16);border-bottom:1px solid rgba(52,91,53,.18)}
+.ih-full-note-meta>div{padding:11px 14px;background:#e5f0e2}
+.ih-full-note-meta small{display:block;margin-bottom:4px;font:800 6px "DM Sans",sans-serif;letter-spacing:.12em;color:#668069}
+.ih-full-note-meta strong{display:block;font:600 8px/1.45 "DM Sans",sans-serif;color:#304b35;overflow-wrap:anywhere}
+.ih-full-note-body{padding:20px}
+.ih-full-note-body label{display:block;margin-bottom:6px;font:800 6px "DM Sans",sans-serif;letter-spacing:.13em;color:#64806a}
+.ih-full-note-body h2{margin:0 0 20px;font:400 20px "Libre Baskerville",serif;color:#173421}
+.ih-full-note-content{min-height:115px;padding:15px 16px;border:1px solid rgba(59,100,60,.16);background:#edf5eb;color:#29412e;font:400 10px/1.75 "DM Sans",sans-serif;overflow-wrap:anywhere}
+.ih-full-note-files{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 20px 18px;padding:12px 14px;border:1px solid rgba(58,100,59,.18);background:#e8f2e5}
+.ih-full-note-files strong{display:block;font:700 8px "DM Sans",sans-serif;color:#304b35}.ih-full-note-files small{display:block;margin-top:3px;font:500 7px "DM Sans",sans-serif;color:#728574}
+.ih-full-note-file-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.ih-full-note-file-actions button{border:1px solid rgba(58,100,59,.25);background:#f5faf4;color:#315f37;padding:7px 9px;font:700 7px "DM Sans",sans-serif;cursor:pointer}.ih-full-note-file-actions span{font:500 7px "DM Sans",sans-serif;color:#7d8d7f}
+.ih-full-note-signature{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:15px 20px;background:#d2e5ce;border-top:1px solid rgba(58,100,59,.18)}
+.ih-full-note-signature strong{display:block;font:700 8px "DM Sans",sans-serif;color:#304b35}.ih-full-note-signature small,.ih-full-note-signature>div:last-child{font:500 7px "DM Sans",sans-serif;color:#708172}
+@media(max-width:680px){.ih-full-note-header,.ih-full-note-files,.ih-full-note-signature{align-items:flex-start;flex-direction:column}.ih-full-note-ref{text-align:left}.ih-full-note-meta{grid-template-columns:1fr}}
