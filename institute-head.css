@@ -232,3 +232,11 @@
 
 /* Final spacing: separate portrait motto from dashboard cards */
 .ref-main .ih-view[data-view="dashboard"] .ref-photo>span{position:relative!important;top:10px!important;margin-bottom:14px!important;}
+
+/* FINAL navigation/footer cleanup — authenticated Executive Office */
+body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
+.ref-meta .ref-portal-back{height:34px;display:inline-flex;align-items:center;padding:0 13px;border:1px solid rgba(211,164,77,.38);border-radius:999px;color:#d7aa55;text-decoration:none;font:700 6px/1 "DM Sans";letter-spacing:.16em;white-space:nowrap;transition:.2s ease;background:rgba(211,164,77,.025)}
+.ref-meta .ref-portal-back:hover{border-color:rgba(211,164,77,.72);background:rgba(211,164,77,.08);transform:translateX(-1px)}
+.ref-executive-credit small{font-weight:500!important}
+.ref-executive-credit strong{font-weight:500!important;background:none!important;color:inherit!important;animation:none!important}
+@media(max-width:1320px){.ref-meta .ref-portal-back{padding:0 10px}.ref-meta>span,.ref-meta>small{display:none!important}}
