@@ -987,78 +987,44 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 /* STEP 7 — Green entries in All Notes */
 .ih-register-row-green{background:rgba(101,151,95,.045)!important}.ih-register-row-green .ih-note-id{font-weight:700!important;color:#8db187!important}.ih-green-note-meta select:disabled{opacity:.78!important;cursor:not-allowed!important}
 
-/* GREEN NOTE NAVIGATION LOCK — keep the five main Notes actions reachable while editing.
-   Additive only: no existing Notes geometry or paper styling is replaced. */
-.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
-  position:sticky!important;
-  top:144px!important;
-  z-index:60!important;
-  background:#071923!important;
-  box-shadow:0 8px 18px rgba(0,0,0,.18)!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-notes-actions button{
-  background:#071923!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-notes-actions button.active{
-  background:rgba(194,151,73,.07)!important;
-}
 
-/* GREEN NOTE ACTION BAR — FINAL VISIBILITY FIX
-   When Create Note is open, pin the actual five-button rail inside the visible portal viewport.
-   This deliberately overrides earlier :has()/offset rules only for the action rail. */
-.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions,
-.ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
- position:fixed!important;
- top:162px!important;
- left:50%!important;
- transform:translateX(-50%)!important;
- width:calc(100vw - 100px)!important;
- max-width:1620px!important;
- height:86px!important;
+/* NOTES NAVIGATION STABILITY — structural, non-overlapping.
+   The five main actions and Yellow/Green selector remain consecutive in normal document flow. */
+.ref-main .ih-view.ih-correspondence-home .ih-notes-actions{
+ position:relative!important;
+ top:auto!important;
+ left:auto!important;
+ right:auto!important;
+ transform:none!important;
+ width:100%!important;
+ height:auto!important;
  margin:0!important;
  display:grid!important;
  grid-template-columns:repeat(5,minmax(0,1fr))!important;
- z-index:9999!important;
- background:#071923!important;
- border:1px solid rgba(194,151,73,.20)!important;
- box-shadow:0 12px 28px rgba(0,0,0,.38)!important;
+ z-index:8!important;
+ box-shadow:none!important;
 }
-.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-section-marker{
- margin-top:86px!important;
-}
-@media(max-width:760px){
- .ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions,
- .ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
-  left:12px!important;right:12px!important;transform:none!important;width:auto!important;
-  overflow-x:auto!important;grid-template-columns:repeat(5,minmax(150px,1fr))!important;
- }
-}
-
-/* ALL NOTES TITLE VISIBILITY LOCK — the executive title block must never sit under portal chrome. */
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
- position:relative!important;
- top:0!important;
- z-index:20!important;
- visibility:visible!important;
- opacity:1!important;
- transform:none!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro small,
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro h1,
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro p{
- visibility:visible!important;
- opacity:1!important;
-}
-.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{
- padding-top:54px!important;
-}
-.ref-main .ih-view.ih-correspondence-home{
- padding-top:100px!important;
- scroll-padding-top:250px!important;
-}
-/* Keep the five-note action rail above Green content without hiding the title in All Notes. */
-.ref-main .ih-view.ih-correspondence-home:not(:has(#ihNoteTypeSwitch:not([hidden]))) .ih-notes-actions{
+.ref-main .ih-view.ih-correspondence-home .ih-notes-section-marker{
  position:relative!important;
  top:auto!important;
- transform:none!important;
+ margin:0!important;
+ z-index:8!important;
 }
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch{
+ position:relative!important;
+ top:auto!important;
+ left:auto!important;
+ transform:none!important;
+ width:100%!important;
+ margin:0!important;
+ display:grid!important;
+ grid-template-columns:1fr 1fr!important;
+ z-index:8!important;
+ clear:both!important;
+}
+.ref-main .ih-view.ih-correspondence-home .ih-note-type-switch[hidden]{display:none!important}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-intro{
+ position:relative!important;top:0!important;z-index:2!important;visibility:visible!important;opacity:1!important
+}
+.ref-main .ih-view.ih-correspondence-home{padding-top:100px!important}
+.ref-main .ih-view.ih-correspondence-home .ih-correspondence-stage{padding-top:42px!important}
