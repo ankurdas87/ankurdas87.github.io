@@ -907,3 +907,25 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-notes-section-marker{position:relative!important;z-index:8!important}
 .ih-note-type-switch{position:relative!important;z-index:8!important}
 .ih-green-note-workspace,.ih-yellow-note-workspace{position:relative!important;z-index:1!important}
+
+/* STEP 4 FINAL — Notes action rail stays below the portal nav while editing either note type */
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])){
+  padding-top:108px!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-correspondence-stage{
+  padding-top:42px!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-correspondence-console{
+  margin-top:0!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-actions{
+  position:sticky!important;
+  top:0!important;
+  z-index:30!important;
+  background:#071923!important;
+  box-shadow:0 8px 22px rgba(0,0,0,.18)!important;
+}
+.ref-main .ih-view.ih-correspondence-home:has(#ihNoteTypeSwitch:not([hidden])) .ih-notes-section-marker{
+  background:#081b25!important;
+  z-index:29!important;
+}
