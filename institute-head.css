@@ -929,3 +929,8 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
   background:#081b25!important;
   z-index:29!important;
 }
+
+/* STEP 4 visual lock — match Green Note action-rail vertical clearance to Yellow Note */
+.ref-main .ih-view.ih-correspondence-home:has(#ihGreenNoteWorkspace:not([hidden])) .ih-notes-actions{
+  margin-top:24px!important;
+}
