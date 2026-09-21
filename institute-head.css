@@ -555,3 +555,42 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
  .ref-credit-v4 .ref-credit-v4-line{gap:9px!important;padding:9px 13px!important;font-size:6.25px!important;letter-spacing:.12em!important;white-space:normal!important;flex-wrap:wrap!important}
  .ref-credit-v4 .ref-credit-v4-line>i{flex-basis:18px!important;width:18px!important}
 }
+
+/* COPYRIGHT v4.1 — keep approved white design; make the antique-gold shimmer unmistakably visible */
+.ref-credit-v4 .ref-credit-v4-line{isolation:isolate!important}
+.ref-credit-v4 .ref-credit-v4-line>span,
+.ref-credit-v4 .ref-credit-v4-line>i{z-index:2!important}
+.ref-credit-v4 .ref-credit-v4-sweep{
+  display:block!important;
+  position:absolute!important;
+  z-index:4!important;
+  top:-55%!important;
+  bottom:-55%!important;
+  left:-22%!important;
+  width:16%!important;
+  height:auto!important;
+  opacity:0!important;
+  background:linear-gradient(90deg,
+    rgba(170,125,47,0) 0%,
+    rgba(170,125,47,.10) 18%,
+    rgba(190,143,59,.45) 37%,
+    rgba(225,188,105,.92) 48%,
+    rgba(255,232,166,1) 50%,
+    rgba(225,188,105,.92) 52%,
+    rgba(190,143,59,.45) 63%,
+    rgba(170,125,47,.10) 82%,
+    rgba(170,125,47,0) 100%)!important;
+  transform:skewX(-20deg)!important;
+  filter:drop-shadow(0 0 5px rgba(194,148,64,.42))!important;
+  mix-blend-mode:screen!important;
+  animation:refLuxurySweepVisible 3.8s ease-in-out infinite!important;
+  will-change:left,opacity!important;
+  pointer-events:none!important;
+}
+@keyframes refLuxurySweepVisible{
+  0%,10%{left:-22%;opacity:0}
+  16%{opacity:.75}
+  45%{opacity:1}
+  76%{opacity:.8}
+  86%,100%{left:110%;opacity:0}
+}
