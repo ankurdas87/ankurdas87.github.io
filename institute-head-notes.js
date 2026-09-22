@@ -167,7 +167,7 @@ function renderCorrespondence(mode){
 async function openDelivery(id,mode){
  const r=(deliveries[mode]||[]).find(x=>String(x.id)===String(id));if(!r||!modal||!modalBody)return;activeDelivery={r,mode};const c=sb(),n=noteOf(r),sender=mode==="inbox"?otherProfile(r,mode):null,recipient=mode==="sent"?otherProfile(r,mode):null;
  if(mode==="inbox"&&!r.read_at&&r.status!=="read"){const mk=await c.rpc("mark_staff_note_read",{p_delivery_id:r.id});if(!mk.error){r.status="read";r.read_at=new Date().toISOString();renderCorrespondence(mode)}}
- modalBody.innerHTML='<button type="button" class="ih-modal-note-number-open" data-open-full-note="'+esc(r.id)+'" data-mode="'+mode+'">'+esc(n?.note_number||"GREEN NOTE")+'</button><h3>'+esc(n?.subject||"Official Green Note")+'</h3><div class="ih-modal-parties"><div><small>FROM</small><strong>'+esc(mode==="inbox"?profileLine(sender):"Principal-cum-Secretary · BLC@Principal")+'</strong></div><div><small>TO</small><strong>'+esc(mode==="sent"?profileLine(recipient):"Principal-cum-Secretary · BLC@Principal")+'</strong></div><div><small>CATEGORY</small><strong>'+esc(labels[n?.category]||n?.category||"—")+'</strong></div><div><small>'+(mode==="inbox"?"RECEIVED":"SENT")+'</small><strong>'+new Date(r.sent_at).toLocaleString()+'</strong></div></div>'+(r.message?'<div class="ih-modal-remark"><b>Forwarding Remark</b><br>'+esc(r.message)+'</div>':"")+'<div class="ih-modal-open-hint">Click the Note No. above to open the complete official Green Note.</div>'+(mode==="inbox"?'<div class="ih-forward-box" id="ihForwardBox" hidden><div class="ih-dispatch-field"><label>TO STAFF MEMBER</label><select id="ihForwardRecipient"></select></div><div class="ih-dispatch-field"><label>FORWARDING REMARK</label><input id="ihForwardMessage" maxlength="1000" placeholder="Optional official remark"></div><button type="button" class="ih-forward-submit" id="ihForwardSubmit">Forward →</button></div>':"");
+ modalBody.innerHTML='<button type="button" class="ih-modal-note-number-open" data-open-full-note="'+esc(r.id)+'" data-mode="'+mode+'">'+esc(n?.note_number||"GREEN NOTE")+'</button><h3>'+esc(n?.subject||"Official Green Note")+'</h3><div class="ih-modal-parties"><div><small>FROM</small><strong>'+esc(mode==="inbox"?profileLine(sender):"Principal-cum-Secretary · BLC@Principal")+'</strong></div><div><small>TO</small><strong>'+esc(mode==="sent"?profileLine(recipient):"Principal-cum-Secretary · BLC@Principal")+'</strong></div><div><small>CATEGORY</small><strong>'+esc(labels[n?.category]||n?.category||"—")+'</strong></div><div><small>'+(mode==="inbox"?"RECEIVED":"SENT")+'</small><strong>'+new Date(r.sent_at).toLocaleString()+'</strong></div></div>'+(r.message?'<div class="ih-modal-remark"><b>Forwarding Remark</b><br>'+esc(r.message)+'</div>':"")+'<div class="ih-modal-open-hint">Click the Note No. above to open the complete official Green Note.</div>'+(mode==="inbox"?'<div class="ih-forward-box"><button type="button" class="ih-forward-submit" data-forward-delivery="'+esc(r.id)+'">Forward This Note →</button></div>':"");
  modal.hidden=false
 }
 async function openFullNote(id,mode){
@@ -179,11 +179,30 @@ async function openFullNote(id,mode){
 async function openHeadAttachment(path){
  const c=sb();if(!c||!path)return;const r=await c.storage.from("staff-note-attachments").createSignedUrl(path,60);if(r.error||!r.data?.signedUrl){alert("This attachment is not available to your account yet.");return}window.open(r.data.signedUrl,"_blank","noopener")
 }
+let forwarding=false;
 async function openForward(id){
- const r=(deliveries.inbox||[]).find(x=>String(x.id)===String(id));if(!r)return;await openDelivery(id,"inbox");if(!recipients.length)await loadRecipients();const box=$("#ihForwardBox"),s=$("#ihForwardRecipient");if(box&&s){s.innerHTML='<option value="">Select recipient</option>'+recipients.map(p=>'<option value="'+esc(p.id)+'">'+esc(profileName(p))+' · '+esc(p.username||"")+'</option>').join("");box.hidden=false}
-}
-async function submitForward(){
- if(!activeDelivery?.r)return;const recipient=$("#ihForwardRecipient")?.value,message=$("#ihForwardMessage")?.value.trim()||"";if(!recipient){alert("Select the staff member who should receive this note.");return}const c=sb();const r=await c.rpc("forward_staff_note",{p_delivery_id:activeDelivery.r.id,p_recipient_id:recipient,p_message:message||null});if(r.error){alert("Note could not be forwarded: "+r.error.message);return}modal.hidden=true;statusToast("Note forwarded successfully");loadCorrespondence("inbox")
+ if(forwarding)return;
+ const r=(deliveries.inbox||[]).find(x=>String(x.id)===String(id));if(!r)return;
+ forwarding=true;
+ try{
+  const c=sb(),u=await authUser();if(!c||!u){alert("Secure session unavailable. Please sign in again.");return}
+  const {data,error}=await c.rpc("get_staff_note_recipients");
+  if(error){alert("Staff recipients could not be loaded: "+error.message);return}
+  const available=(data||[]).filter(p=>p.id!==u.id);
+  if(!available.length){alert("No other staff accounts are available.");return}
+  const entered=(prompt("Enter the Staff Username to forward this note to:","")||"").trim();if(!entered)return;
+  const target=available.find(p=>String(p.username||"").trim().toLowerCase()===entered.toLowerCase());
+  if(!target){alert("Staff Username not found. Enter the exact registered username, for example BLC@ComputerOperator01.");return}
+  const remark=prompt("Forwarding remark (optional):","");if(remark===null)return;
+  if(!confirm("Forward "+(noteOf(r)?.note_number||"this note")+" to "+profileLine(target)+"?"))return;
+  const {error:sendError}=await c.rpc("forward_staff_note",{p_delivery_id:r.id,p_recipient_id:target.id,p_message:remark.trim()||null});
+  if(sendError){alert("Note could not be forwarded: "+sendError.message);return}
+  modal.hidden=true;
+  statusToast("Note forwarded successfully","Delivered to "+target.username+".");
+  window.dispatchEvent(new Event("blc-note-delivery-changed"));
+  await loadCorrespondence("inbox");
+ }catch(err){alert("Note could not be forwarded: "+(err.message||"Please try again."))}
+ finally{forwarding=false}
 }
 
 document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.addEventListener("click",()=>{if(yellowReadonly)return;yEd?.focus();document.execCommand(b.dataset.cmd,false,null)}));
@@ -206,7 +225,6 @@ document.addEventListener("click",e=>{
  const back=e.target.closest("[data-back-summary]");if(back&&activeDelivery)openDelivery(activeDelivery.r.id,activeDelivery.mode);
  const att=e.target.closest("[data-open-head-attachment]");if(att)openHeadAttachment(att.dataset.path);
  const fw=e.target.closest("[data-forward-delivery]");if(fw)openForward(fw.dataset.forwardDelivery);
- if(e.target.id==="ihForwardSubmit")submitForward();
  if(e.target.id==="ihCorrespondenceModalClose"||e.target.id==="ihCorrespondenceModal")modal.hidden=true
 });
 $("#ihSendSelect")?.addEventListener("change",e=>attachSend(e.target.value));
