@@ -89,7 +89,6 @@ BEGIN
 END;
 $$;
 
-REVOKE ALL ON FUNCTION public.decide_institute_head_request(uuid,text,text) FROM PUBLIC, anon;
 REVOKE ALL ON FUNCTION public.decide_institute_head_request(uuid,text,text,boolean) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION public.decide_institute_head_request(uuid,text,text,boolean) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.get_institute_head_request(uuid) TO authenticated;
