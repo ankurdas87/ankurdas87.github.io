@@ -33,7 +33,7 @@
    <div class="hr-seal-body"><svg class="hr-seal-watermark" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M 22 36 L 76 84 L 278 10"/></svg><strong>${esc(who)}</strong><span>${esc(designation)}</span><time>${esc(signatureDate(when))}</time></div>
    </div>`;
  }
- let records = [], notifications = [], selected = null, busy = false, loading = false, detailToken = 0, esignApplied = false;
+ let records = [], notifications = [], selected = null, busy = false, loading = false, detailToken = 0, esignApplied = false, signatureBusy = false;
  const requestRoot = $('.ih-view[data-view="requests"]');
  const notificationRoot = $('.ih-view[data-view="notifications"]');
  if (!requestRoot || !notificationRoot) return;
@@ -50,27 +50,61 @@
  esignOverlay.id = 'hrEsignAuth'; esignOverlay.className = 'hr-overlay'; esignOverlay.hidden = true;
  document.body.appendChild(esignOverlay);
  let previousFocus;
- function close() { if (busy) return; detailToken++; overlay.hidden = true; overlay.inert = false; esignOverlay.hidden = true; selected = null; previousFocus?.focus(); }
- function closeEsign() { if (busy) return; overlay.inert = false; esignOverlay.hidden = true; $('#hrApplyEsign')?.focus(); }
+ function close() { if (busy || signatureBusy) return; detailToken++; overlay.hidden = true; overlay.inert = false; esignOverlay.hidden = true; selected = null; previousFocus?.focus(); }
+ function closeEsign() { if (busy || signatureBusy) return; overlay.inert = false; esignOverlay.hidden = true; $('#hrApplyEsign')?.focus(); }
  function openEsign() {
   const head = selected?.head || principalFallback;
   esignOverlay.innerHTML = `<section class="hr-esign-modal" role="dialog" aria-modal="true" aria-labelledby="hrEsignTitle">
-   <header class="hr-esign-modal-head"><div><small>BARPETA LAW COLLEGE · OFFICIAL E-SIGNATURE</small><h2 id="hrEsignTitle">E-signature preview</h2></div><button type="button" id="hrEsignClose" aria-label="Close e-signature preview">×</button></header>
-   <div class="hr-esign-modal-body"><div class="hr-esign-visual"><span class="hr-esign-step">SIGNATURE PREVIEW</span>${eSignSeal(head,null,'hr-esign-seal-preview')}<p>Preview of the portal signature. Confirming uses your signed-in portal account; it does not verify Aadhaar.</p></div>
-   <div class="hr-esign-steps"><div class="hr-auth-step is-active"><span>01</span><div><b>Signer identity</b><small>Identity verification is not active in this design preview.</small><label for="hrAadhaarNumber">AADHAAR / UIDAI NUMBER</label><input id="hrAadhaarNumber" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="12-digit number — preview only" disabled><p class="hr-auth-note">Preview only. Do not enter personal identification numbers.</p></div></div><div class="hr-auth-step"><span>02</span><div><b>OTP verification</b><small>Portal email verification will be connected separately.</small><label for="hrEsignOtp">6-DIGIT OTP</label><input id="hrEsignOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" disabled><p class="hr-auth-note">No code is sent by this preview.</p></div></div><div class="hr-auth-success" hidden><span>✓</span><div><b>Signature preview ready. Authentication is not connected.</b><small>No identity verification has been performed in this preview.</small></div></div></div></div>
-   <footer class="hr-esign-modal-foot"><span>Portal signature confirmation only. Aadhaar and OTP authentication are not connected.</span><button type="button" id="hrConfirmPortalSignature">Confirm portal signature</button><button type="button" id="hrEsignCloseBottom">Close Preview</button></footer>
+   <header class="hr-esign-modal-head"><div><small>BARPETA LAW COLLEGE · PORTAL E-SIGNATURE</small><h2 id="hrEsignTitle">Verify before signing</h2></div><button type="button" id="hrEsignClose" aria-label="Close e-signature verification">×</button></header>
+   <div class="hr-esign-modal-body"><div class="hr-esign-visual"><span class="hr-esign-step">SIGNATURE</span>${eSignSeal(head,null,'hr-esign-seal-preview')}</div>
+   <div class="hr-esign-steps"><div class="hr-auth-step is-active"><span>01</span><div><b>Registered portal email</b><small>Send a fresh code to the email used by your Institute Head account.</small><p id="hrSignatureEmail" class="hr-auth-email">Checking signed-in account…</p><button type="button" id="hrSendEsignOtp">Send email code</button></div></div><div class="hr-auth-step"><span>02</span><div><b>Verify the email code</b><small>Enter the 6-digit code within 10 minutes, then record your decision.</small><label for="hrEsignOtp">6-DIGIT EMAIL CODE</label><input id="hrEsignOtp" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000000" disabled><button type="button" id="hrVerifyEsignOtp" disabled>Verify code</button><p id="hrEsignMessage" class="hr-auth-note" role="status" aria-live="polite"></p></div></div></div></div>
+   <footer class="hr-esign-modal-foot"><span>Verification uses your registered portal email.</span><button type="button" id="hrEsignCloseBottom">Close</button></footer>
   </section>`;
   overlay.inert = true; esignOverlay.hidden = false; $('#hrEsignClose')?.focus();
   $('#hrEsignClose')?.addEventListener('click',closeEsign); $('#hrEsignCloseBottom')?.addEventListener('click',closeEsign);
-  $('#hrConfirmPortalSignature')?.addEventListener('click',()=>{
-   esignApplied=true;
-   $('#hrEsignState').textContent='Confirmed in portal';
-   $('#hrEsignPanel').classList.remove('hr-esign-required');
-   $('#hrEsignPanel').classList.add('hr-esign-applied');
-   $('#hrEsignError').hidden=true;
-   closeEsign();
+  let challengeId = null, expectedUserId = null, registeredEmail = null;
+  const status = (message, isError=false) => {const box=$('#hrEsignMessage');if(box){box.textContent=message;box.classList.toggle('bad',isError)}};
+  client().auth.getUser().then(({data:{user},error})=>{
+   if (esignOverlay.hidden) return;
+   if (error || !user?.email) {status('Your registered portal email is unavailable. Sign in again.',true);$('#hrSendEsignOtp').disabled=true;return;}
+   expectedUserId=user.id;registeredEmail=user.email;
+   const [local,domain]=registeredEmail.split('@');
+   $('#hrSignatureEmail').textContent=local.slice(0,2)+'•••@'+domain;
+  }).catch(()=>status('Unable to check your signed-in account.',true));
+  $('#hrSendEsignOtp').addEventListener('click',async()=>{
+   if(signatureBusy||!selected||!registeredEmail)return;
+   esignApplied=false;
+   if($('#hrEsignState'))$('#hrEsignState').textContent='Not verified';
+   $('#hrEsignPanel')?.classList.remove('hr-esign-applied');
+   signatureBusy=true;$('#hrSendEsignOtp').disabled=true;status('Sending your email code…');
+   try{
+    challengeId=await rpc('begin_institute_head_signature',{p_request_id:selected.request.id});
+    const {error}=await client().auth.signInWithOtp({email:registeredEmail,options:{shouldCreateUser:false}});
+    if(error)throw error;
+    $('#hrEsignOtp').disabled=false;$('#hrVerifyEsignOtp').disabled=false;$('#hrEsignOtp').focus();
+    status('Code sent to your registered email. It expires in 10 minutes.');
+   }catch(err){challengeId=null;status('Code could not be sent: '+err.message,true)}
+   finally{signatureBusy=false;$('#hrSendEsignOtp').disabled=false}
   });
-
+  $('#hrVerifyEsignOtp').addEventListener('click',async()=>{
+   if(signatureBusy||!challengeId||!registeredEmail||!selected)return;
+   const token=$('#hrEsignOtp').value.trim();
+   if(!/^\d{6}$/.test(token)){status('Enter the full 6-digit email code.',true);return;}
+   signatureBusy=true;$('#hrVerifyEsignOtp').disabled=true;status('Verifying your code…');
+   try{
+    const {data,error}=await client().auth.verifyOtp({email:registeredEmail,token,type:'email'});
+    if(error || !data?.session || data.user?.id!==expectedUserId)throw error||new Error('Verification did not match your signed-in account.');
+    await rpc('confirm_institute_head_signature',{p_challenge_id:challengeId});
+    esignApplied=true;
+    $('#hrEsignState').textContent='Portal email verified';
+    $('#hrEsignPanel').classList.remove('hr-esign-required');
+    $('#hrEsignPanel').classList.add('hr-esign-applied');
+    $('#hrEsignError').hidden=true;
+    status('Email verification completed. You may now record your decision.');
+    signatureBusy=false;closeEsign();return;
+   }catch(err){status(err.message||'The code was invalid or expired.',true)}
+   finally{signatureBusy=false;$('#hrVerifyEsignOtp').disabled=false}
+  });
  }
  function error(message) { for (const id of ['#hrError','#hrNotificationError']) { $(id).textContent = message; $(id).hidden = !message; } }
  async function rpc(fn,args) { const c=client(); if(!c) throw new Error('Secure session unavailable.'); const r=await c.rpc(fn,args);if(r.error)throw r.error;return r.data; }
@@ -118,7 +152,7 @@
    const principalSignature=principalRecorded?`<section class="hr-principal-signature"><div class="hr-recorded-seal">${eSignSeal({full_name:recordedSignerName(r.principal_esign_name,head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at)}</div><div class="hr-recorded-seal-meta"><small>E-SIGNATURE RECORD</small><strong>${esc(label(r.status))}</strong><span>${esc(signatureDate(r.principal_esign_at||r.decided_at))} · ${esc(head.designation||'Principal-cum-Secretary')}</span></div></section>`:'';
   $('#hrDetail').innerHTML=`<div class="hr-detail-heading"><div><small>${esc(r.request_type)}</small><h2 id="hrModalTitle">${esc(r.title)}</h2></div><em class="hr-status ${esc(r.status)}">${esc(label(r.status))}</em></div><div class="hr-detail-meta"><div><small>SUBMITTED BY</small><strong>${esc(name(p))}</strong><span>${esc(p.username)} · ${esc(p.designation)}</span></div><div><small>ADDRESSED TO</small><strong>BLC@Principal</strong><span>${date(r.submitted_at)}</span></div></div><section class="hr-purpose"><small>REQUEST DETAILS</small><p>${esc(r.request_details)}</p></section>
   ${a?'<div class="hr-attachment"><div><small>ATTACHED APPLICATION</small><strong>'+esc(a.application_number||'Application')+'</strong><span>'+esc(a.application_title)+'</span></div><button type="button" id="hrAttachment">Open Application ↗</button></div>':r.file_path?'<div class="hr-attachment"><div><small>SUPPORTING FILE</small><strong>'+esc(r.original_file_name||'Document')+'</strong></div><button type="button" id="hrAttachment">Open File ↗</button></div>':''}
-   ${r.status==='submitted'?`<form id="hrDecisionForm" class="hr-decision"><small>INSTITUTE HEAD DECISION</small><div class="hr-esign-panel" id="hrEsignPanel"><div class="hr-esign-preview"><div class="hr-pending-seal">${eSignSeal(head,null,'hr-esign-seal-small')}</div><div><small>PRINCIPAL E-SIGNATURE</small><strong>${esc(principalName(head))}</strong><span>Principal signature confirmation required</span></div><em id="hrEsignState">Not applied</em></div><button type="button" class="hr-esign-action" id="hrApplyEsign">Preview portal e-signature</button><p id="hrEsignError" class="hr-error" role="alert" hidden></p></div><label for="hrDecision">Decision</label><select id="hrDecision" required><option value="">Select decision</option><option value="approved">Approved — permission granted</option><option value="accepted">Accepted — submission accepted</option><option value="rejected">Rejected — submission declined</option></select><label for="hrRemark">Official remark <span>(required for rejection)</span></label><textarea id="hrRemark" maxlength="2000" rows="3" placeholder="Add your remarks for the staff member"></textarea><p id="hrDecisionError" class="hr-error" role="alert"></p><button type="submit" class="hr-primary" id="hrDecisionSubmit">Record Decision & Notify Staff</button></form>`:`<section class="hr-decision"><small>RECORDED DECISION</small><h3>${esc(label(r.status))}</h3><p>${esc(r.decision_remark||'No remark recorded.')}</p><small>${date(r.decided_at)} · ${esc(head.designation||'Principal-cum-Secretary')}</small>${principalSignature}</section>`}`;
+   ${r.status==='submitted'?`<form id="hrDecisionForm" class="hr-decision"><small>INSTITUTE HEAD DECISION</small><div class="hr-esign-panel" id="hrEsignPanel"><div class="hr-esign-preview"><div class="hr-pending-seal">${eSignSeal(head,null,'hr-esign-seal-small')}</div><div><small>PRINCIPAL E-SIGNATURE</small><strong>${esc(principalName(head))}</strong><span>Fresh portal email code required</span></div><em id="hrEsignState">Not verified</em></div><button type="button" class="hr-esign-action" id="hrApplyEsign">Verify portal email to sign</button><p id="hrEsignError" class="hr-error" role="alert" hidden></p></div><label for="hrDecision">Decision</label><select id="hrDecision" required><option value="">Select decision</option><option value="approved">Approved — permission granted</option><option value="accepted">Accepted — submission accepted</option><option value="rejected">Rejected — submission declined</option></select><label for="hrRemark">Official remark <span>(required for rejection)</span></label><textarea id="hrRemark" maxlength="2000" rows="3" placeholder="Add your remarks for the staff member"></textarea><p id="hrDecisionError" class="hr-error" role="alert"></p><button type="submit" class="hr-primary" id="hrDecisionSubmit">Record Decision & Notify Staff</button></form>`:`<section class="hr-decision"><small>RECORDED DECISION</small><h3>${esc(label(r.status))}</h3><p>${esc(r.decision_remark||'No remark recorded.')}</p><small>${date(r.decided_at)} · ${esc(head.designation||'Principal-cum-Secretary')}</small>${principalSignature}</section>`}`;
   $('#hrAttachment')?.addEventListener('click',attachment);
   $('#hrDecisionForm')?.addEventListener('submit',decide);
   $('#hrApplyEsign')?.addEventListener('click',openEsign);
@@ -143,12 +177,12 @@
   e.preventDefault();if(busy||!selected)return;
   const id=selected.request.id,decision=$('#hrDecision').value,remark=$('#hrRemark').value.trim();
   if(!['approved','accepted','rejected'].includes(decision))return;
-  if(!esignApplied){const box=$('#hrEsignError');if(box){box.textContent='Principal e-signature is mandatory before recording a decision.';box.hidden=false}$('#hrEsignPanel')?.classList.add('hr-esign-required');$('#hrApplyEsign')?.focus();return}
+   if(!esignApplied){const box=$('#hrEsignError');if(box){box.textContent='Verify a fresh code from your registered portal email before recording a decision.';box.hidden=false}$('#hrEsignPanel')?.classList.add('hr-esign-required');$('#hrApplyEsign')?.focus();return}
   if(decision==='rejected'&&!remark){$('#hrDecisionError').textContent='Please give a reason for rejection.';return}
   if(!confirm('Record this request as '+label(decision)+' and notify the staff member? This decision will be final.'))return;
   busy=true;$('#hrDecisionSubmit').disabled=true;$('#hrClose').disabled=true;$('#hrDecisionError').textContent='';
   try{await rpc('decide_institute_head_request',{p_request_id:id,p_decision:decision,p_remark:remark||null,p_esign:true});selected=await rpc('get_institute_head_request',{p_request_id:id});showDetail();await refresh();}
-  catch(err){if($('#hrDecisionError'))$('#hrDecisionError').textContent=err.message;else alert(err.message)}
+   catch(err){if(/verify|code|expired/i.test(err.message||'')){esignApplied=false;if($('#hrEsignState'))$('#hrEsignState').textContent='Verification required';}if($('#hrDecisionError'))$('#hrDecisionError').textContent=err.message;else alert(err.message)}
   finally{busy=false;$('#hrClose').disabled=false;if($('#hrDecisionSubmit'))$('#hrDecisionSubmit').disabled=false}
  }
  document.addEventListener('click',e=>{

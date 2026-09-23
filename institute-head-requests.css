@@ -96,3 +96,11 @@
 .hr-letter-principal-seal{align-items:flex-start}
 @media(max-width:720px){.hr-esign-seal-preview{transform:none;margin:0}.hr-esign-preview{flex-wrap:wrap}.hr-letter-signature-row{align-items:flex-start;gap:26px}}
 @media(max-width:380px){.hr-esign-preview>.hr-pending-seal{margin:0 auto}}
+
+/* Fresh portal email code in the request signature modal. */
+.hr-esign-visual{background:#fff;min-height:260px}
+.hr-auth-email{margin:2px 0 13px;color:#243a4e;font:700 13px "DM Sans",sans-serif}
+.hr-auth-step button{margin-top:11px;padding:9px 13px;border:1px solid #1a3149;border-radius:6px;background:#1a3149;color:#fff;font:700 11px "DM Sans",sans-serif}
+.hr-auth-step button:disabled{opacity:.48;cursor:not-allowed}
+.hr-auth-step .hr-auth-note.bad{color:#a42d2d}
+.hr-esign-modal-foot{justify-content:space-between}
