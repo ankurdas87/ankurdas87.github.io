@@ -35,7 +35,7 @@ if(!document.querySelector('script[data-blc-note-register]')){const r=document.c
 if(!document.querySelector('script[data-blc-green-note-editor]')){const g=document.createElement('script');g.src='staff-green-note-editor.js';g.defer=true;g.dataset.blcGreenNoteEditor='1';document.head.appendChild(g);}
 if(!document.querySelector('script[data-blc-send-note]')){const s=document.createElement('script');s.src='staff-send-note.js?v=2';s.defer=true;s.dataset.blcSendNote='1';document.head.appendChild(s);}
 if(!document.querySelector('script[data-blc-note-correspondence]')){const x=document.createElement('script');x.src='staff-note-correspondence.js?v=10';x.defer=true;x.dataset.blcNoteCorrespondence='1';document.head.appendChild(x);}
-if(!document.querySelector('script[data-blc-requests]')){const q=document.createElement('script');q.src='staff-requests.js?v=20260924-decision-seal-v2';q.defer=true;q.dataset.blcRequests='1';document.head.appendChild(q);}
+if(!document.querySelector('script[data-blc-requests]')){const q=document.createElement('script');q.src='staff-requests.js?v=20260924-banded-stamp-v3';q.defer=true;q.dataset.blcRequests='1';document.head.appendChild(q);}
 if(!document.querySelector('script[data-blc-notifications]')){const n=document.createElement('script');n.src='staff-notifications.js?v=20260922-requests-v16';n.defer=true;n.dataset.blcNotifications='1';document.head.appendChild(n);}
 if(!document.querySelector('script[data-blc-settings]')){const z=document.createElement('script');z.src='staff-settings.js?v=20260918a';z.defer=true;z.dataset.blcSettings='1';document.head.appendChild(z);}
 })();
