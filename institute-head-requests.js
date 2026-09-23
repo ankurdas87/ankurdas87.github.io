@@ -6,15 +6,23 @@
  const date = v => v ? new Date(v).toLocaleString('en-IN') : '—';
  const label = s => ({submitted:'Pending',approved:'Approved',accepted:'Accepted',rejected:'Rejected',returned:'Returned'}[s] || s);
  const name = p => [p?.first_name,p?.last_name].filter(Boolean).join(' ') || p?.username || 'Staff Member';
- const principalName = p => p?.full_name || p?.display_name || p?.name || [p?.first_name,p?.last_name].filter(Boolean).join(' ') || 'Dr. Pratap Chandra Dash';
- const principalFallback = {first_name:'Dr. Pratap',last_name:'Chandra Dash',designation:'Principal-cum-Secretary'};
- const signatureDate = v => v ? date(v) : 'Date and time after authentication';
+ const principalName = p => {
+  const profileName = String(p?.full_name || p?.display_name || p?.name || [p?.first_name,p?.last_name].filter(Boolean).join(' ') || '').trim();
+  if (p?.username === 'BLC@Principal' && (!profileName || /^principal$/i.test(profileName))) return 'Dr. Pratap Chandra Dash';
+  return profileName || 'Signer name unavailable';
+ };
+ const recordedSignerName = (saved, profile) => {
+  const recorded = String(saved || '').trim();
+  return recorded && !/^(principal|blc@principal)$/i.test(recorded) ? recorded : principalName(profile);
+ };
+ const principalFallback = {first_name:'Dr. Pratap',last_name:'Chandra Dash',username:'BLC@Principal',designation:'Principal-cum-Secretary'};
+ const signatureDate = v => v ? date(v) : 'Date/time added on signing';
  function eSignSeal(person, when, extra='') {
   const who = principalName(person), designation = person?.designation || 'Principal-cum-Secretary';
   const id = (extra || 'recorded').replace(/[^a-z0-9_-]/gi, '');
   return `<div class="hr-esign-seal ${extra}" role="img" aria-label="Verified e-signature for ${esc(who)}">
    <svg class="hr-seal-ring-text" viewBox="0 0 180 180" aria-hidden="true" focusable="false">
-    <defs><path id="hr-seal-top-${id}" d="M 25,91 A 65,65 0 0,1 155,91"/><path id="hr-seal-bottom-${id}" d="M 155,91 A 65,65 0 0,1 25,91"/></defs>
+    <defs><path id="hr-seal-top-${id}" d="M 25,91 A 65,65 0 0,1 155,91"/><path id="hr-seal-bottom-${id}" d="M 25,91 A 65,65 0 0,0 155,91"/></defs>
     <text><textPath href="#hr-seal-top-${id}" startOffset="50%" text-anchor="middle">BARPETA LAW COLLEGE</textPath></text>
     <text><textPath href="#hr-seal-bottom-${id}" startOffset="50%" text-anchor="middle">VERIFIED E-SIGNATURE</textPath></text>
    </svg>
@@ -103,7 +111,7 @@
   const {request:r,staff:p,application:a}=selected,head=selected.head||principalFallback;
   esignApplied=false;
   const principalRecorded=r.principal_esign_applied===true;
-  const principalSignature=principalRecorded?`<section class="hr-principal-signature"><div class="hr-recorded-seal">${eSignSeal({full_name:r.principal_esign_name||principalName(head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at)}</div><div class="hr-recorded-seal-meta"><small>E-SIGNATURE RECORD</small><strong>${esc(label(r.status))}</strong><span>${date(r.principal_esign_at||r.decided_at)} · Principal-cum-Secretary</span></div></section>`:'';
+  const principalSignature=principalRecorded?`<section class="hr-principal-signature"><div class="hr-recorded-seal">${eSignSeal({full_name:recordedSignerName(r.principal_esign_name,head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at)}</div><div class="hr-recorded-seal-meta"><small>E-SIGNATURE RECORD</small><strong>${esc(label(r.status))}</strong><span>${date(r.principal_esign_at||r.decided_at)} · Principal-cum-Secretary</span></div></section>`:'';
   $('#hrDetail').innerHTML=`<div class="hr-detail-heading"><div><small>${esc(r.request_type)}</small><h2 id="hrModalTitle">${esc(r.title)}</h2></div><em class="hr-status ${esc(r.status)}">${esc(label(r.status))}</em></div><div class="hr-detail-meta"><div><small>SUBMITTED BY</small><strong>${esc(name(p))}</strong><span>${esc(p.username)} · ${esc(p.designation)}</span></div><div><small>ADDRESSED TO</small><strong>BLC@Principal</strong><span>${date(r.submitted_at)}</span></div></div><section class="hr-purpose"><small>REQUEST DETAILS</small><p>${esc(r.request_details)}</p></section>
   ${a?'<div class="hr-attachment"><div><small>ATTACHED APPLICATION</small><strong>'+esc(a.application_number||'Application')+'</strong><span>'+esc(a.application_title)+'</span></div><button type="button" id="hrAttachment">Open Application ↗</button></div>':r.file_path?'<div class="hr-attachment"><div><small>SUPPORTING FILE</small><strong>'+esc(r.original_file_name||'Document')+'</strong></div><button type="button" id="hrAttachment">Open File ↗</button></div>':''}
   ${r.status==='submitted'?`<form id="hrDecisionForm" class="hr-decision"><small>INSTITUTE HEAD DECISION</small><div class="hr-esign-panel" id="hrEsignPanel"><div class="hr-esign-preview"><div class="hr-pending-seal">${eSignSeal(head,null,'hr-esign-seal-small')}</div><div><small>PRINCIPAL E-SIGNATURE</small><strong>${esc(principalName(head))}</strong><span>Principal signature confirmation required</span></div><em id="hrEsignState">Not applied</em></div><button type="button" class="hr-esign-action" id="hrApplyEsign">Open e-signature authentication</button><p id="hrEsignError" class="hr-error" role="alert" hidden></p></div><label for="hrDecision">Decision</label><select id="hrDecision" required><option value="">Select decision</option><option value="approved">Approved — permission granted</option><option value="accepted">Accepted — submission accepted</option><option value="rejected">Rejected — submission declined</option></select><label for="hrRemark">Official remark <span>(required for rejection)</span></label><textarea id="hrRemark" maxlength="2000" rows="3" placeholder="Add your remarks for the staff member"></textarea><p id="hrDecisionError" class="hr-error" role="alert"></p><button type="submit" class="hr-primary" id="hrDecisionSubmit">Record Decision & Notify Staff</button></form>`:`<section class="hr-decision"><small>RECORDED DECISION</small><h3>${esc(label(r.status))}</h3><p>${esc(r.decision_remark||'No remark recorded.')}</p><small>${date(r.decided_at)} · Principal-cum-Secretary</small>${principalSignature}</section>`}`;
@@ -118,7 +126,7 @@
    let x;try{x=JSON.parse(a.application_content||'{}')}catch{x={body:a.application_content||''}}
    const head=selected.head||principalFallback;
    const principalRecorded=r.principal_esign_applied===true;
-   const principalSignature=principalRecorded?`<div class="hr-letter-principal-sign"><div class="hr-letter-principal-seal">${eSignSeal({first_name:r.principal_esign_name||principalName(head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at,'hr-esign-seal-letter')}<span class="hr-letter-decision-stamp">${esc(label(r.status))} · ${date(r.principal_esign_at||r.decided_at)}</span></div></div>`:'';
+   const principalSignature=principalRecorded?`<div class="hr-letter-principal-sign"><div class="hr-letter-principal-seal">${eSignSeal({first_name:recordedSignerName(r.principal_esign_name,head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at,'hr-esign-seal-letter')}<span class="hr-letter-decision-stamp">${esc(label(r.status))} · ${date(r.principal_esign_at||r.decided_at)}</span></div></div>`:'';
    $('#hrDetail').innerHTML=`<button type="button" id="hrBack">← Back to Request</button><article class="hr-letter"><small>${esc(a.application_number)}</small><h2 id="hrModalTitle">${esc(a.application_title)}</h2><p class="hr-letter-date">Date: ${esc(x.date||'—')}</p><p>To,<br><b>The Principal-cum-Secretary</b><br>Barpeta Law College<br>Barpeta, Assam</p><p><b>Subject:</b> ${esc(x.subject||a.application_title)}</p><p>Respected Sir,</p><div class="hr-letter-body">${esc(x.body||'')}</div><div class="hr-letter-signature-row">${principalSignature}<div class="hr-letter-staff-sign"><div class="hr-auto-sign">${esc(name(p))}</div><span>Yours faithfully,</span><strong>${esc(name(p))}</strong><em>${esc(p.designation||'Staff')}</em></div></div></article>`;$('#hrBack').onclick=showDetail;return;
   }
   const win=window.open('about:blank','_blank');if(win)win.opener=null;
