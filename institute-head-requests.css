@@ -68,3 +68,31 @@
 .hr-esign-modal .hr-esign-seal-preview{flex:0 0 184px}
 @media(max-width:720px){.hr-esign-seal-preview{transform:none;margin:0}.hr-letter-signature-row{gap:20px}}
 @media(max-width:380px){.hr-esign-preview{flex-wrap:wrap}.hr-esign-preview .hr-pending-seal{margin:0 auto}}
+
+/* Request signature: compact document imprint, without the former circular seal. */
+.hr-esign-seal,.hr-recorded-seal>.hr-esign-seal,.hr-letter-principal-sign>.hr-letter-principal-seal>.hr-esign-seal{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;box-sizing:border-box;width:310px;max-width:100%;height:auto;min-height:0;flex:0 1 auto;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#20262c;overflow:visible;text-align:center}
+.hr-esign-seal:before,.hr-esign-seal:after{display:none}
+.hr-seal-label{display:inline-flex;align-items:center;justify-content:center;gap:7px;width:max-content;max-width:100%;padding:7px 11px;border-radius:2px;background:#1a3149;color:#fff;font:700 12px/1.1 "DM Sans",sans-serif;white-space:nowrap}
+.hr-seal-label svg{width:16px;height:16px;flex:none;fill:none;stroke:#fff;stroke-width:1.5;stroke-linecap:square;stroke-linejoin:miter}
+.hr-seal-body{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;width:100%;min-height:95px;padding:13px 2px 6px;white-space:nowrap}
+.hr-seal-watermark{position:absolute;z-index:0;inset:4px 3% 0;width:94%;height:88%;fill:none;stroke:#06652d;stroke-width:18;stroke-linecap:butt;stroke-linejoin:miter;opacity:.43;pointer-events:none}
+.hr-seal-body strong,.hr-seal-body span,.hr-seal-body time{position:relative;z-index:1;display:block;max-width:none;overflow:visible;text-overflow:clip;white-space:nowrap;color:#20262c}
+.hr-seal-body strong{font:700 20px/1.1 "Roboto Condensed","Arial Narrow","DM Sans",sans-serif}
+.hr-seal-body span{font:700 15px/1.1 "Roboto Condensed","Arial Narrow","DM Sans",sans-serif}
+.hr-seal-body time{font:700 12px/1.1 "Roboto Condensed","Arial Narrow","DM Sans",sans-serif}
+.hr-esign-seal-preview{width:310px;flex:0 1 310px}
+.hr-esign-seal-letter{width:310px;flex:0 1 310px}
+.hr-esign-seal-small{width:220px;flex:0 1 220px;transform:none;margin:0}
+.hr-esign-seal-small .hr-seal-label{gap:5px;padding:5px 7px;font-size:9px}
+.hr-esign-seal-small .hr-seal-label svg{width:13px;height:13px}
+.hr-esign-seal-small .hr-seal-body{gap:3px;min-height:70px;padding:9px 1px 4px}
+.hr-esign-seal-small .hr-seal-body strong{font-size:15px}
+.hr-esign-seal-small .hr-seal-body span{font-size:11px}
+.hr-esign-seal-small .hr-seal-body time{font-size:9px}
+.hr-esign-preview>.hr-pending-seal{display:flex;align-items:center;justify-content:center;width:220px;height:auto;flex:0 1 220px;overflow:visible}
+.hr-esign-preview .hr-esign-seal-small{width:220px;flex:0 1 220px;transform:none}
+.hr-esign-modal .hr-esign-seal-preview{width:310px;flex:0 1 310px}
+.hr-recorded-seal{min-width:0}
+.hr-letter-principal-seal{align-items:flex-start}
+@media(max-width:720px){.hr-esign-seal-preview{transform:none;margin:0}.hr-esign-preview{flex-wrap:wrap}.hr-letter-signature-row{align-items:flex-start;gap:26px}}
+@media(max-width:380px){.hr-esign-preview>.hr-pending-seal{margin:0 auto}}

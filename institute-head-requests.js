@@ -16,18 +16,22 @@
   return recorded && !/^(principal|blc@principal)$/i.test(recorded) ? recorded : principalName(profile);
  };
  const principalFallback = {first_name:'Dr. Pratap',last_name:'Chandra Dash',username:'BLC@Principal',designation:'Principal-cum-Secretary'};
- const signatureDate = v => v ? date(v) : 'Date/time added on signing';
+ const signatureDate = v => {
+  if (!v) return 'Date and time added on signing';
+  const signedAt = new Date(v);
+  if (Number.isNaN(signedAt.getTime())) return 'Signing time unavailable';
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-IN', {
+   timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric',
+   hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true
+  }).formatToParts(signedAt).map(({type,value})=>[type,value]));
+  return `${parts.day}-${parts.month}-${parts.year} ${parts.hour}:${parts.minute}:${parts.second} ${parts.dayPeriod.toUpperCase()}`;
+ };
  function eSignSeal(person, when, extra='') {
-  const who = principalName(person), designation = person?.designation || 'Principal-cum-Secretary';
-  const id = (extra || 'recorded').replace(/[^a-z0-9_-]/gi, '');
-  return `<div class="hr-esign-seal ${extra}" role="img" aria-label="Verified e-signature for ${esc(who)}">
-   <svg class="hr-seal-ring-text" viewBox="0 0 180 180" aria-hidden="true" focusable="false">
-    <defs><path id="hr-seal-top-${id}" d="M 25,91 A 65,65 0 0,1 155,91"/><path id="hr-seal-bottom-${id}" d="M 25,91 A 65,65 0 0,0 155,91"/></defs>
-    <text><textPath href="#hr-seal-top-${id}" startOffset="50%" text-anchor="middle">BARPETA LAW COLLEGE</textPath></text>
-    <text><textPath href="#hr-seal-bottom-${id}" startOffset="50%" text-anchor="middle">VERIFIED E-SIGNATURE</textPath></text>
-   </svg>
-   <div class="hr-seal-core"><span class="hr-seal-tick" aria-hidden="true">✓</span><small>Digitally Signed by</small><strong>${esc(who)}</strong><span>${esc(designation)}</span><em>${esc(signatureDate(when))}</em></div>
-  </div>`;
+  const who = principalName(person), designation = String(person?.designation || 'Principal-cum-Secretary').trim();
+  return `<div class="hr-esign-seal ${extra}" role="img" aria-label="Portal e-signature for ${esc(who)}, ${esc(designation)}, ${esc(signatureDate(when))}">
+   <div class="hr-seal-label"><svg viewBox="0 0 18 18" aria-hidden="true" focusable="false"><rect x="1" y="1" width="16" height="16" rx="2"/><path d="m4 9 3 3 7-7"/></svg><span>Digitally Signed</span></div>
+   <div class="hr-seal-body"><svg class="hr-seal-watermark" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M 22 36 L 76 84 L 278 10"/></svg><strong>${esc(who)}</strong><span>${esc(designation)}</span><time>${esc(signatureDate(when))}</time></div>
+   </div>`;
  }
  let records = [], notifications = [], selected = null, busy = false, loading = false, detailToken = 0, esignApplied = false;
  const requestRoot = $('.ih-view[data-view="requests"]');
@@ -52,7 +56,7 @@
   const head = selected?.head || principalFallback;
   esignOverlay.innerHTML = `<section class="hr-esign-modal" role="dialog" aria-modal="true" aria-labelledby="hrEsignTitle">
    <header class="hr-esign-modal-head"><div><small>BARPETA LAW COLLEGE · OFFICIAL E-SIGNATURE</small><h2 id="hrEsignTitle">E-signature preview</h2></div><button type="button" id="hrEsignClose" aria-label="Close e-signature preview">×</button></header>
-   <div class="hr-esign-modal-body"><div class="hr-esign-visual"><span class="hr-esign-step">SIGNATURE PREVIEW</span>${eSignSeal(head,null,'hr-esign-seal-preview')}<p>Preview of the portal signature seal. Confirming uses your signed-in portal account; it does not verify Aadhaar.</p></div>
+   <div class="hr-esign-modal-body"><div class="hr-esign-visual"><span class="hr-esign-step">SIGNATURE PREVIEW</span>${eSignSeal(head,null,'hr-esign-seal-preview')}<p>Preview of the portal signature. Confirming uses your signed-in portal account; it does not verify Aadhaar.</p></div>
    <div class="hr-esign-steps"><div class="hr-auth-step is-active"><span>01</span><div><b>Signer identity</b><small>Identity verification is not active in this design preview.</small><label for="hrAadhaarNumber">AADHAAR / UIDAI NUMBER</label><input id="hrAadhaarNumber" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="12-digit number — preview only" disabled><p class="hr-auth-note">Preview only. Do not enter personal identification numbers.</p></div></div><div class="hr-auth-step"><span>02</span><div><b>OTP verification</b><small>Portal email verification will be connected separately.</small><label for="hrEsignOtp">6-DIGIT OTP</label><input id="hrEsignOtp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" disabled><p class="hr-auth-note">No code is sent by this preview.</p></div></div><div class="hr-auth-success" hidden><span>✓</span><div><b>Signature preview ready. Authentication is not connected.</b><small>No identity verification has been performed in this preview.</small></div></div></div></div>
    <footer class="hr-esign-modal-foot"><span>Portal signature confirmation only. Aadhaar and OTP authentication are not connected.</span><button type="button" id="hrConfirmPortalSignature">Confirm portal signature</button><button type="button" id="hrEsignCloseBottom">Close Preview</button></footer>
   </section>`;
@@ -111,10 +115,10 @@
   const {request:r,staff:p,application:a}=selected,head=selected.head||principalFallback;
   esignApplied=false;
   const principalRecorded=r.principal_esign_applied===true;
-  const principalSignature=principalRecorded?`<section class="hr-principal-signature"><div class="hr-recorded-seal">${eSignSeal({full_name:recordedSignerName(r.principal_esign_name,head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at)}</div><div class="hr-recorded-seal-meta"><small>E-SIGNATURE RECORD</small><strong>${esc(label(r.status))}</strong><span>${date(r.principal_esign_at||r.decided_at)} · Principal-cum-Secretary</span></div></section>`:'';
+   const principalSignature=principalRecorded?`<section class="hr-principal-signature"><div class="hr-recorded-seal">${eSignSeal({full_name:recordedSignerName(r.principal_esign_name,head),designation:head.designation||'Principal-cum-Secretary'},r.principal_esign_at||r.decided_at)}</div><div class="hr-recorded-seal-meta"><small>E-SIGNATURE RECORD</small><strong>${esc(label(r.status))}</strong><span>${esc(signatureDate(r.principal_esign_at||r.decided_at))} · ${esc(head.designation||'Principal-cum-Secretary')}</span></div></section>`:'';
   $('#hrDetail').innerHTML=`<div class="hr-detail-heading"><div><small>${esc(r.request_type)}</small><h2 id="hrModalTitle">${esc(r.title)}</h2></div><em class="hr-status ${esc(r.status)}">${esc(label(r.status))}</em></div><div class="hr-detail-meta"><div><small>SUBMITTED BY</small><strong>${esc(name(p))}</strong><span>${esc(p.username)} · ${esc(p.designation)}</span></div><div><small>ADDRESSED TO</small><strong>BLC@Principal</strong><span>${date(r.submitted_at)}</span></div></div><section class="hr-purpose"><small>REQUEST DETAILS</small><p>${esc(r.request_details)}</p></section>
   ${a?'<div class="hr-attachment"><div><small>ATTACHED APPLICATION</small><strong>'+esc(a.application_number||'Application')+'</strong><span>'+esc(a.application_title)+'</span></div><button type="button" id="hrAttachment">Open Application ↗</button></div>':r.file_path?'<div class="hr-attachment"><div><small>SUPPORTING FILE</small><strong>'+esc(r.original_file_name||'Document')+'</strong></div><button type="button" id="hrAttachment">Open File ↗</button></div>':''}
-  ${r.status==='submitted'?`<form id="hrDecisionForm" class="hr-decision"><small>INSTITUTE HEAD DECISION</small><div class="hr-esign-panel" id="hrEsignPanel"><div class="hr-esign-preview"><div class="hr-pending-seal">${eSignSeal(head,null,'hr-esign-seal-small')}</div><div><small>PRINCIPAL E-SIGNATURE</small><strong>${esc(principalName(head))}</strong><span>Principal signature confirmation required</span></div><em id="hrEsignState">Not applied</em></div><button type="button" class="hr-esign-action" id="hrApplyEsign">Open e-signature authentication</button><p id="hrEsignError" class="hr-error" role="alert" hidden></p></div><label for="hrDecision">Decision</label><select id="hrDecision" required><option value="">Select decision</option><option value="approved">Approved — permission granted</option><option value="accepted">Accepted — submission accepted</option><option value="rejected">Rejected — submission declined</option></select><label for="hrRemark">Official remark <span>(required for rejection)</span></label><textarea id="hrRemark" maxlength="2000" rows="3" placeholder="Add your remarks for the staff member"></textarea><p id="hrDecisionError" class="hr-error" role="alert"></p><button type="submit" class="hr-primary" id="hrDecisionSubmit">Record Decision & Notify Staff</button></form>`:`<section class="hr-decision"><small>RECORDED DECISION</small><h3>${esc(label(r.status))}</h3><p>${esc(r.decision_remark||'No remark recorded.')}</p><small>${date(r.decided_at)} · Principal-cum-Secretary</small>${principalSignature}</section>`}`;
+   ${r.status==='submitted'?`<form id="hrDecisionForm" class="hr-decision"><small>INSTITUTE HEAD DECISION</small><div class="hr-esign-panel" id="hrEsignPanel"><div class="hr-esign-preview"><div class="hr-pending-seal">${eSignSeal(head,null,'hr-esign-seal-small')}</div><div><small>PRINCIPAL E-SIGNATURE</small><strong>${esc(principalName(head))}</strong><span>Principal signature confirmation required</span></div><em id="hrEsignState">Not applied</em></div><button type="button" class="hr-esign-action" id="hrApplyEsign">Preview portal e-signature</button><p id="hrEsignError" class="hr-error" role="alert" hidden></p></div><label for="hrDecision">Decision</label><select id="hrDecision" required><option value="">Select decision</option><option value="approved">Approved — permission granted</option><option value="accepted">Accepted — submission accepted</option><option value="rejected">Rejected — submission declined</option></select><label for="hrRemark">Official remark <span>(required for rejection)</span></label><textarea id="hrRemark" maxlength="2000" rows="3" placeholder="Add your remarks for the staff member"></textarea><p id="hrDecisionError" class="hr-error" role="alert"></p><button type="submit" class="hr-primary" id="hrDecisionSubmit">Record Decision & Notify Staff</button></form>`:`<section class="hr-decision"><small>RECORDED DECISION</small><h3>${esc(label(r.status))}</h3><p>${esc(r.decision_remark||'No remark recorded.')}</p><small>${date(r.decided_at)} · ${esc(head.designation||'Principal-cum-Secretary')}</small>${principalSignature}</section>`}`;
   $('#hrAttachment')?.addEventListener('click',attachment);
   $('#hrDecisionForm')?.addEventListener('submit',decide);
   $('#hrApplyEsign')?.addEventListener('click',openEsign);
