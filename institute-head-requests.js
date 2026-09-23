@@ -50,14 +50,14 @@
  esignOverlay.id = 'hrEsignAuth'; esignOverlay.className = 'hr-overlay'; esignOverlay.hidden = true;
  document.body.appendChild(esignOverlay);
  let previousFocus;
- function close() { if (busy || signatureBusy) return; detailToken++; overlay.hidden = true; overlay.inert = false; esignOverlay.hidden = true; selected = null; previousFocus?.focus(); }
- function closeEsign() { if (busy || signatureBusy) return; overlay.inert = false; esignOverlay.hidden = true; $('#hrApplyEsign')?.focus(); }
+ function close() { if (busy || signatureBusy) return; detailToken++; if($('#hrAadhaarNumber'))$('#hrAadhaarNumber').value=''; overlay.hidden = true; overlay.inert = false; esignOverlay.hidden = true; selected = null; previousFocus?.focus(); }
+ function closeEsign() { if (busy || signatureBusy) return; if($('#hrAadhaarNumber'))$('#hrAadhaarNumber').value=''; overlay.inert = false; esignOverlay.hidden = true; $('#hrApplyEsign')?.focus(); }
  function openEsign() {
   const head = selected?.head || principalFallback;
   esignOverlay.innerHTML = `<section class="hr-esign-modal" role="dialog" aria-modal="true" aria-labelledby="hrEsignTitle">
    <header class="hr-esign-modal-head"><div><small>BARPETA LAW COLLEGE · PORTAL E-SIGNATURE</small><h2 id="hrEsignTitle">Verify before signing</h2></div><button type="button" id="hrEsignClose" aria-label="Close e-signature verification">×</button></header>
    <div class="hr-esign-modal-body"><div class="hr-esign-visual"><span class="hr-esign-step">SIGNATURE</span>${eSignSeal(head,null,'hr-esign-seal-preview')}</div>
-   <div class="hr-esign-steps"><div class="hr-auth-step is-active"><span>01</span><div><b>Registered portal email</b><small>Send a fresh code to the email used by your Institute Head account.</small><p id="hrSignatureEmail" class="hr-auth-email">Checking signed-in account…</p><button type="button" id="hrSendEsignOtp">Send email code</button></div></div><div class="hr-auth-step"><span>02</span><div><b>Verify the email code</b><small>Enter the 6-digit code within 10 minutes, then record your decision.</small><label for="hrEsignOtp">6-DIGIT EMAIL CODE</label><input id="hrEsignOtp" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000000" disabled><button type="button" id="hrVerifyEsignOtp" disabled>Verify code</button><p id="hrEsignMessage" class="hr-auth-note" role="status" aria-live="polite"></p></div></div></div></div>
+   <div class="hr-esign-steps"><div class="hr-auth-step is-active"><span>01</span><div><b>Enter Aadhaar / UIDAI number</b><small>Enter 12 digits to continue. The number is checked for format only and is not saved or verified with UIDAI.</small><label for="hrAadhaarNumber">12-DIGIT NUMBER</label><input id="hrAadhaarNumber" type="text" inputmode="numeric" pattern="[0-9]{12}" autocomplete="off" maxlength="12" placeholder="Enter 12 digits"><p id="hrSignatureEmail" class="hr-auth-email">Checking registered portal email…</p><button type="button" id="hrSendEsignOtp">Check format &amp; send email code</button></div></div><div class="hr-auth-step" id="hrOtpStep" hidden><span>02</span><div><b>Verify the email code</b><small>Enter the 6-digit code sent to your registered portal email within 10 minutes.</small><label for="hrEsignOtp">6-DIGIT EMAIL CODE</label><input id="hrEsignOtp" inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" maxlength="6" placeholder="000000" disabled><button type="button" id="hrVerifyEsignOtp" disabled>Verify code</button></div></div><p id="hrEsignMessage" class="hr-auth-note" role="status" aria-live="polite"></p><div id="hrEsignSuccess" class="hr-auth-success" role="status" aria-live="polite" hidden><span>✓</span><div><b>Portal e-sign verification completed successfully.</b><small>You can now record your decision.</small></div></div></div></div>
    <footer class="hr-esign-modal-foot"><span>Verification uses your registered portal email.</span><button type="button" id="hrEsignCloseBottom">Close</button></footer>
   </section>`;
   overlay.inert = true; esignOverlay.hidden = false; $('#hrEsignClose')?.focus();
@@ -73,6 +73,8 @@
   }).catch(()=>status('Unable to check your signed-in account.',true));
   $('#hrSendEsignOtp').addEventListener('click',async()=>{
    if(signatureBusy||!selected||!registeredEmail)return;
+   const numberInput=$('#hrAadhaarNumber');
+   if(!/^\d{12}$/.test(numberInput.value.trim())){status('Enter exactly 12 digits to continue.',true);numberInput.focus();return;}
    esignApplied=false;
    if($('#hrEsignState'))$('#hrEsignState').textContent='Not verified';
    $('#hrEsignPanel')?.classList.remove('hr-esign-applied');
@@ -81,6 +83,8 @@
     challengeId=await rpc('begin_institute_head_signature',{p_request_id:selected.request.id});
     const {error}=await client().auth.signInWithOtp({email:registeredEmail,options:{shouldCreateUser:false}});
     if(error)throw error;
+    numberInput.value='';
+    $('#hrOtpStep').hidden=false;
     $('#hrEsignOtp').disabled=false;$('#hrVerifyEsignOtp').disabled=false;$('#hrEsignOtp').focus();
     status('Code sent to your registered email. It expires in 10 minutes.');
    }catch(err){challengeId=null;status('Code could not be sent: '+err.message,true)}
@@ -100,8 +104,11 @@
     $('#hrEsignPanel').classList.remove('hr-esign-required');
     $('#hrEsignPanel').classList.add('hr-esign-applied');
     $('#hrEsignError').hidden=true;
-    status('Email verification completed. You may now record your decision.');
-    signatureBusy=false;closeEsign();return;
+    $('#hrEsignMessage').hidden=true;
+    $('#hrEsignSuccess').hidden=false;
+    signatureBusy=false;
+    setTimeout(()=>{if(!esignOverlay.hidden&&$('#hrEsignSuccess')?.hidden===false)closeEsign()},1600);
+    return;
    }catch(err){status(err.message||'The code was invalid or expired.',true)}
    finally{signatureBusy=false;$('#hrVerifyEsignOtp').disabled=false}
   });

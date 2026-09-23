@@ -35,6 +35,7 @@
 .hr-esign-preview>.hr-pending-seal{display:block;flex:0 0 118px}.hr-recorded-seal>.hr-esign-seal,.hr-letter-principal-sign>.hr-letter-principal-seal>.hr-esign-seal{display:flex;gap:0}.hr-letter-principal-sign>.hr-letter-principal-seal{align-items:flex-start;gap:5px}
 
 .hr-auth-success[hidden]{display:none!important}
+#hrEsignSuccess{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1000;box-sizing:border-box;width:min(360px,calc(100vw - 32px));padding:17px;background:#fff;box-shadow:0 18px 55px rgba(10,27,36,.22)}
 .hr-esign-modal button{cursor:pointer;border:1px solid #d9dee4;border-radius:8px;padding:10px 14px;font:600 12px "DM Sans",sans-serif}
 .hr-esign-modal-body>*{min-width:0}
 .hr-esign-seal-preview{flex-basis:auto}
@@ -104,3 +105,6 @@
 .hr-auth-step button:disabled{opacity:.48;cursor:not-allowed}
 .hr-auth-step .hr-auth-note.bad{color:#a42d2d}
 .hr-esign-modal-foot{justify-content:space-between}
+.hr-auth-step[hidden],.hr-auth-success[hidden],#hrEsignMessage[hidden]{display:none!important}
+.hr-esign-steps>.hr-auth-note{margin:0 4px;font-size:11px;line-height:1.5;color:#537064}
+.hr-esign-steps>.hr-auth-note.bad{color:#a42d2d}
