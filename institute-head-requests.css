@@ -45,3 +45,26 @@
 .hr-esign-seal .hr-seal-top,.hr-esign-seal .hr-seal-bottom{display:block}
 .hr-letter-principal-sign>.hr-letter-principal-seal{flex-direction:column}
 @media(max-width:420px){.hr-esign-visual{padding:10px 0;overflow:hidden}.hr-esign-preview{flex-wrap:wrap}.hr-esign-seal-preview{width:280px;flex-basis:auto}}
+
+.hr-esign-seal{position:relative;box-sizing:border-box;width:164px;height:164px;flex:0 0 164px;border:1.5px solid #378b64;border-radius:50%;background:radial-gradient(circle,#fff 55%,#f1faf4 100%);box-shadow:inset 0 0 0 4px rgba(55,139,100,.07),0 4px 12px rgba(35,94,64,.08);overflow:hidden;color:#246448}
+.hr-esign-seal:before{content:"";position:absolute;inset:5px;border:1px solid rgba(48,126,86,.42);border-radius:50%;pointer-events:none}
+.hr-esign-seal:after{content:"";position:absolute;inset:17px;border:1px solid rgba(48,126,86,.25);border-radius:50%;pointer-events:none}
+.hr-seal-ring-text{position:absolute;inset:0;width:100%;height:100%;fill:#276c4d}
+.hr-seal-ring-text text{font:700 7.4px "DM Sans",sans-serif;letter-spacing:1px}
+.hr-seal-core{position:absolute;inset:38px 24px 37px;border:1px solid rgba(53,132,91,.24);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;text-align:center;overflow:hidden}
+.hr-seal-core small{position:relative;z-index:1;font:500 6.5px/1.05 "DM Sans",sans-serif;color:#5d7567}
+.hr-seal-core strong{position:relative;z-index:1;max-width:100%;font:400 21px/1 "Allura","Segoe Script","Brush Script MT",cursive;color:#132d42;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hr-seal-core span:not(.hr-seal-tick){position:relative;z-index:1;font:600 7px/1.1 "DM Sans",sans-serif;color:#456b58;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.hr-seal-core em{position:relative;z-index:1;font:500 6.5px/1.05 "DM Sans",sans-serif;color:#62756a;font-style:normal;white-space:nowrap}
+.hr-seal-core .hr-seal-tick{position:absolute;z-index:2;left:8%;top:22%;font:700 54px/.8 Arial,sans-serif;color:#0b8b61;opacity:.36;transform:rotate(-12deg);mix-blend-mode:multiply;pointer-events:none}
+.hr-esign-seal-small{width:164px;height:164px;flex:0 0 164px;transform:none;margin:0}
+.hr-esign-seal-preview{width:184px;height:184px;flex-basis:184px}
+.hr-esign-seal-letter{width:156px;height:156px;flex-basis:156px}
+.hr-esign-preview>.hr-pending-seal{display:flex;align-items:center;justify-content:center;width:96px;height:96px;flex:0 0 96px;overflow:hidden}
+.hr-esign-preview .hr-esign-seal-small{transform:scale(.58);transform-origin:center;flex-basis:164px}
+.hr-recorded-seal>.hr-esign-seal,.hr-letter-principal-sign>.hr-letter-principal-seal>.hr-esign-seal{display:flex;gap:0}
+.hr-letter-principal-seal{gap:2px}
+.hr-letter-decision-stamp{font-size:8px}
+.hr-esign-modal .hr-esign-seal-preview{flex:0 0 184px}
+@media(max-width:720px){.hr-esign-seal-preview{transform:none;margin:0}.hr-letter-signature-row{gap:20px}}
+@media(max-width:380px){.hr-esign-preview{flex-wrap:wrap}.hr-esign-preview .hr-pending-seal{margin:0 auto}}
