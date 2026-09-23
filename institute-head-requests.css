@@ -108,3 +108,10 @@
 .hr-auth-step[hidden],.hr-auth-success[hidden],#hrEsignMessage[hidden]{display:none!important}
 .hr-esign-steps>.hr-auth-note{margin:0 4px;font-size:11px;line-height:1.5;color:#537064}
 .hr-esign-steps>.hr-auth-note.bad{color:#a42d2d}
+
+/* Compact verified staff application signature (written applications signed after OTP). */
+.hr-staff-digital{display:flex;flex-direction:column;align-items:flex-start;gap:3px;margin-bottom:10px;white-space:nowrap;font-family:Arial,sans-serif;color:#111}
+.hr-staff-digital>span{width:max-content;padding:4px 6px;border-radius:2px;background:#1a3149;color:#fff;font:700 9px/1.1 Arial,sans-serif}
+.hr-staff-digital strong{font:700 17px/1.2 'Arial Narrow',Arial,sans-serif;color:#111}
+.hr-staff-digital small,.hr-staff-digital time{font:600 10px/1.2 Arial,sans-serif;color:#111}
+.hr-legacy-staff-sign{font:600 16px/1.2 Arial,sans-serif;color:#252525;margin-bottom:10px}
