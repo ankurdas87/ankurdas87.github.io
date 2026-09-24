@@ -210,6 +210,9 @@
   const b=e.target.closest('[data-hr-open]');if(b&&!busy)open(b.dataset.hrOpen);
   if(e.target.closest('[data-hr-refresh]'))refresh();
   if(e.target.closest('[data-ih-view="requests"],[data-ih-view="decisions"],[data-ih-view="notifications"]'))refresh();
+  if(e.target.closest('[data-ih-view="decisions"]'))requestAnimationFrame(()=>{
+   if(decisionRoot.classList.contains('active')) $('#ihPanel')?.scrollTo({top:0,behavior:'auto'});
+  });
   if(e.target.id==='hrClose'||e.target===overlay)close();
   if(e.target.id==='hrEsignClose'||e.target.id==='hrEsignCloseBottom'||e.target===esignOverlay)closeEsign();
  });
