@@ -35,12 +35,16 @@
  }
  let records = [], notifications = [], selected = null, busy = false, loading = false, detailToken = 0, esignApplied = false, signatureBusy = false;
  const requestRoot = $('.ih-view[data-view="requests"]');
+ const decisionRoot = $('.ih-view[data-view="decisions"]');
  const notificationRoot = $('.ih-view[data-view="notifications"]');
- if (!requestRoot || !notificationRoot) return;
+ if (!requestRoot || !decisionRoot || !notificationRoot) return;
  requestRoot.classList.remove('ref-placeholder');
+ decisionRoot.classList.remove('ref-placeholder');
  notificationRoot.classList.remove('ref-placeholder');
- requestRoot.innerHTML = `<div class="hr-workspace"><header class="hr-heading"><div><small>OFFICE OF THE PRINCIPAL-CUM-SECRETARY</small><h1>Requests & Applications</h1><p>Review staff submissions and record your official decision.</p></div><button type="button" data-hr-refresh>Refresh</button></header>
- <div class="hr-stats" id="hrStats"></div><div class="hr-tools"><input id="hrSearch" aria-label="Search requests" placeholder="Search title, staff, username or Application No."><select id="hrStatus" aria-label="Filter by status"><option value="all">All requests</option><option value="submitted">Pending</option><option value="approved">Approved</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="returned">Returned</option></select><select id="hrType" aria-label="Filter by type"><option value="all">All types</option><option value="application">Applications</option><option value="notice">Notices</option><option value="document">Documents</option></select></div><p id="hrError" class="hr-error" role="alert" hidden></p><div id="hrList" class="hr-list"><div class="hr-empty">Open this section to load submitted requests.</div></div></div>`;
+ requestRoot.innerHTML = `<div class="hr-workspace"><header class="hr-heading"><div><small>OFFICE OF THE PRINCIPAL-CUM-SECRETARY</small><h1>Requests & Applications</h1><p>Review pending staff applications, notices and documents.</p></div><button type="button" data-hr-refresh>Refresh</button></header>
+ <div class="hr-stats" id="hrStats"></div><div class="hr-tools"><input id="hrSearch" aria-label="Search pending requests" placeholder="Search title, staff, username or Application No."><select id="hrType" aria-label="Filter by type"><option value="all">All types</option><option value="application">Applications</option><option value="notice">Notices</option><option value="document">Documents</option></select></div><p id="hrError" class="hr-error" role="alert" hidden></p><div id="hrList" class="hr-list"><div class="hr-empty">Open this section to load submitted requests.</div></div></div>`;
+ decisionRoot.innerHTML = `<div class="hr-workspace hr-archive"><header class="hr-heading"><div><small>OFFICE OF THE PRINCIPAL-CUM-SECRETARY</small><h1>Decisions</h1><p>Completed staff requests and their recorded decisions. Open a record to view its application or supporting file and signed decision.</p></div><button type="button" data-hr-refresh>Refresh</button></header>
+ <div class="hr-stats" id="hrDecisionStats"></div><div class="hr-tools"><input id="hrDecisionSearch" aria-label="Search decisions" placeholder="Search title, staff, username or Application No."><select id="hrDecisionStatus" aria-label="Filter decisions"><option value="all">All decisions</option><option value="approved">Approved</option><option value="accepted">Accepted</option><option value="rejected">Rejected</option><option value="returned">Returned</option></select><select id="hrDecisionType" aria-label="Filter decided request type"><option value="all">All types</option><option value="application">Applications</option><option value="notice">Notices</option><option value="document">Documents</option></select></div><p id="hrDecisionError" class="hr-error" role="alert" hidden></p><div id="hrDecisionList" class="hr-list"></div></div>`;
  notificationRoot.innerHTML = `<div class="hr-workspace"><header class="hr-heading"><div><small>EXECUTIVE OFFICE</small><h1>Notifications</h1><p>New staff submissions addressed to BLC@Principal.</p></div><button type="button" id="hrReadAll">Mark all as read</button></header><div class="hr-tools"><select id="hrNotificationFilter" aria-label="Filter notifications"><option value="all">All notifications</option><option value="unread">Unread</option></select><button type="button" data-hr-refresh>Refresh</button></div><p class="hr-error" id="hrNotificationError" role="alert" hidden></p><div class="hr-list" id="hrNotifications"></div></div>`;
  const overlay = document.createElement('div');
  overlay.id = 'hrModal'; overlay.className = 'hr-overlay'; overlay.hidden = true;
@@ -113,23 +117,31 @@
    finally{signatureBusy=false;$('#hrVerifyEsignOtp').disabled=false}
   });
  }
- function error(message) { for (const id of ['#hrError','#hrNotificationError']) { $(id).textContent = message; $(id).hidden = !message; } }
+ function error(message) { for (const id of ['#hrError','#hrDecisionError','#hrNotificationError']) { $(id).textContent = message; $(id).hidden = !message; } }
  async function rpc(fn,args) { const c=client(); if(!c) throw new Error('Secure session unavailable.'); const r=await c.rpc(fn,args);if(r.error)throw r.error;return r.data; }
  function badge() {
-  const count=notifications.filter(n=>!n.is_read).length;
+  const pendingIds=new Set(records.filter(r=>r.status==='submitted').map(r=>r.id));
+  const count=notifications.filter(n=>!n.is_read&&pendingIds.has(n.request_id)).length;
   document.querySelectorAll('[data-ih-view="notifications"]').forEach(b=>{
    let e=b.querySelector('.hr-badge');if(!count){e?.remove();return}
    if(!e){e=document.createElement('span');e.className='hr-badge';b.appendChild(e)}e.textContent=count>99?'99+':count;
   });
  }
  function render() {
-  $('#hrStats').innerHTML = [['Total',records.length],['Pending',records.filter(r=>r.status==='submitted').length],['Approved / Accepted',records.filter(r=>['approved','accepted'].includes(r.status)).length],['Rejected',records.filter(r=>r.status==='rejected').length]].map(([k,v])=>`<article><small>${k}</small><strong>${v}</strong></article>`).join('');
-  const q=$('#hrSearch').value.trim().toLowerCase(),status=$('#hrStatus').value,type=$('#hrType').value;
-  const rows=records.filter(r=>(status==='all'||r.status===status)&&(type==='all'||r.request_type===type)&&(!q||[r.title,r.request_details,name(r),r.username,r.application_number].join(' ').toLowerCase().includes(q)));
+  const pending=records.filter(r=>r.status==='submitted');
+  $('#hrStats').innerHTML = [['Pending',pending.length],['Applications',pending.filter(r=>r.request_type==='application').length],['Notices',pending.filter(r=>r.request_type==='notice').length],['Documents',pending.filter(r=>r.request_type==='document').length]].map(([k,v])=>`<article><small>${k}</small><strong>${v}</strong></article>`).join('');
+  const q=$('#hrSearch').value.trim().toLowerCase(),type=$('#hrType').value;
+  const rows=pending.filter(r=>(type==='all'||r.request_type===type)&&(!q||[r.title,r.request_details,name(r),r.username,r.application_number].join(' ').toLowerCase().includes(q)));
   $('#hrList').innerHTML=rows.length?rows.map(r=>`<article class="hr-card"><div class="hr-card-content"><div class="hr-meta"><span>${esc(r.request_type)}</span><em class="hr-status ${esc(r.status)}">${esc(label(r.status))}</em></div><h3>${esc(r.title)}</h3><p>${esc(name(r))} · ${esc(r.username)} · ${esc(r.designation)}</p><small>${esc(r.application_number||'')} · ${date(r.submitted_at)}</small></div><button type="button" data-hr-open="${esc(r.id)}">Review Request →</button></article>`).join(''):'<div class="hr-empty"><strong>No matching requests</strong><p>Submitted applications, notices and documents will appear here.</p></div>';
+  const decided=records.filter(r=>['approved','accepted','rejected','returned'].includes(r.status));
+  $('#hrDecisionStats').innerHTML=[['Decided',decided.length],['Approved',decided.filter(r=>r.status==='approved').length],['Accepted',decided.filter(r=>r.status==='accepted').length],['Rejected',decided.filter(r=>r.status==='rejected').length]].map(([k,v])=>`<article><small>${k}</small><strong>${v}</strong></article>`).join('');
+  const dq=$('#hrDecisionSearch').value.trim().toLowerCase(),ds=$('#hrDecisionStatus').value,dt=$('#hrDecisionType').value;
+  const archived=decided.filter(r=>(ds==='all'||r.status===ds)&&(dt==='all'||r.request_type===dt)&&(!dq||[r.title,r.request_details,r.decision_remark,name(r),r.username,r.application_number].join(' ').toLowerCase().includes(dq))).sort((a,b)=>new Date(b.decided_at||b.submitted_at)-new Date(a.decided_at||a.submitted_at));
+  $('#hrDecisionList').innerHTML=archived.length?archived.map(r=>`<article class="hr-card hr-decision-card"><div class="hr-card-content"><div class="hr-meta"><span>${esc(r.request_type)}</span><em class="hr-status ${esc(r.status)}">${esc(label(r.status))}</em></div><h3>${esc(r.title)}</h3><p>${esc(name(r))} · ${esc(r.username)} · ${esc(r.designation)}</p><small>${r.application_number?esc(r.application_number)+' · ':''}Decided ${date(r.decided_at)}</small>${r.decision_remark?`<p class="hr-decision-excerpt">${esc(r.decision_remark)}</p>`:''}</div><button type="button" data-hr-open="${esc(r.id)}">View Decision →</button></article>`).join(''):'<div class="hr-empty"><strong>No matching decisions</strong><p>Approved, accepted and rejected requests will appear here after a decision is recorded.</p></div>';
  }
  function renderNotifications() {
-  const rows=notifications.filter(n=>$('#hrNotificationFilter').value!=='unread'||!n.is_read);
+  const pendingIds=new Set(records.filter(r=>r.status==='submitted').map(r=>r.id));
+  const rows=notifications.filter(n=>pendingIds.has(n.request_id)&&($('#hrNotificationFilter').value!=='unread'||!n.is_read));
   $('#hrNotifications').innerHTML=rows.length?rows.map(n=>`<article class="hr-card ${n.is_read?'':'hr-unread'}"><div class="hr-card-content"><div class="hr-meta"><span>${n.is_read?'Read':'New submission'}</span><small>${date(n.created_at)}</small></div><h3>${esc(n.title)}</h3><p>${esc(n.message)}</p></div><button type="button" data-hr-open="${esc(n.request_id)}">Open Request →</button></article>`).join(''):'<div class="hr-empty">No notifications to show.</div>';badge();
  }
  async function refresh() {
@@ -197,7 +209,7 @@
  document.addEventListener('click',e=>{
   const b=e.target.closest('[data-hr-open]');if(b&&!busy)open(b.dataset.hrOpen);
   if(e.target.closest('[data-hr-refresh]'))refresh();
-  if(e.target.closest('[data-ih-view="requests"],[data-ih-view="notifications"]'))refresh();
+  if(e.target.closest('[data-ih-view="requests"],[data-ih-view="decisions"],[data-ih-view="notifications"]'))refresh();
   if(e.target.id==='hrClose'||e.target===overlay)close();
   if(e.target.id==='hrEsignClose'||e.target.id==='hrEsignCloseBottom'||e.target===esignOverlay)closeEsign();
  });
@@ -216,7 +228,9 @@
   }
  });
  $('#hrSearch').addEventListener('input',render);
- $('#hrStatus').addEventListener('change',render);$('#hrType').addEventListener('change',render);
+ $('#hrType').addEventListener('change',render);
+ $('#hrDecisionSearch').addEventListener('input',render);
+ $('#hrDecisionStatus').addEventListener('change',render);$('#hrDecisionType').addEventListener('change',render);
  $('#hrNotificationFilter').addEventListener('change',renderNotifications);
  $('#hrReadAll').onclick=async()=>{try{await rpc('mark_institute_head_request_notifications_read');await refresh()}catch(e){error(e.message)}};
  const panel=$('#ihPanel');if(panel)new MutationObserver(()=>{if(!panel.hidden)refresh()}).observe(panel,{attributes:true,attributeFilter:['hidden']});
