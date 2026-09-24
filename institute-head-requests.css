@@ -70,6 +70,13 @@
 @media(max-width:720px){.hr-esign-seal-preview{transform:none;margin:0}.hr-letter-signature-row{gap:20px}}
 @media(max-width:380px){.hr-esign-preview{flex-wrap:wrap}.hr-esign-preview .hr-pending-seal{margin:0 auto}}
 
+/* Completed submissions are shown in the read-only Decisions archive. */
+.hr-archive .hr-heading p{max-width:660px;line-height:1.6}
+.hr-decision-card .hr-decision-excerpt{margin:12px 0 0;padding-top:10px;border-top:1px solid #e9edf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:680px}
+.hr-archive .hr-status.approved{background:#e6efff;color:#2456a2}
+.hr-archive .hr-status.accepted{background:#e5f4eb;color:#286a44}
+.hr-archive .hr-status.rejected{background:#fce8e7;color:#a43430}
+
 /* Request signature: compact document imprint, without the former circular seal. */
 .hr-esign-seal,.hr-recorded-seal>.hr-esign-seal,.hr-letter-principal-sign>.hr-letter-principal-seal>.hr-esign-seal{position:relative;display:flex;flex-direction:column;align-items:center;gap:5px;box-sizing:border-box;width:310px;max-width:100%;height:auto;min-height:0;flex:0 1 auto;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#20262c;overflow:visible;text-align:center}
 .hr-esign-seal:before,.hr-esign-seal:after{display:none}
