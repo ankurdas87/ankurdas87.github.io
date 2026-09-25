@@ -13,3 +13,11 @@
 /* Keep the saved Green Note signing action visibly active and acknowledge its click. */
 .ih-green-readonly #ihGreenEsign:not(:disabled){opacity:1!important;cursor:pointer!important}
 #ihGreenEsign.ih-click-gold{opacity:1!important;box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;transform:translateY(-1px)!important;transition:background .12s ease,box-shadow .12s ease!important}
+
+/* Isolate the recorded Green Note seal from the typography of its host panel.
+   These measurements and colours match the application decision signature. */
+.hr-esign-seal.gn-note-seal .hr-seal-label{background:#1a3149!important;color:#fff!important;letter-spacing:normal!important}
+.hr-esign-seal.gn-note-seal .hr-seal-label span{font:700 12px/1.1 'DM Sans',sans-serif!important;letter-spacing:normal!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+.hr-esign-seal.gn-note-seal .hr-seal-body strong{display:block!important;margin:0!important;font:700 20px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#20262c!important;-webkit-text-fill-color:#20262c!important;white-space:nowrap!important}
+.hr-esign-seal.gn-note-seal .hr-seal-body span{display:block!important;margin:0!important;font:700 15px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#000!important;-webkit-text-fill-color:#000!important;white-space:nowrap!important}
+.hr-esign-seal.gn-note-seal .hr-seal-body time{display:block!important;margin:0!important;font:700 12px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#20262c!important;-webkit-text-fill-color:#20262c!important;white-space:nowrap!important}
