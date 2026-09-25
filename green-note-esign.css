@@ -9,3 +9,7 @@
 .hr-seal-body strong{font:700 20px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif}
 .hr-seal-body span{font:700 15px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif;color:#000}
 .hr-seal-body time{font:700 12px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif}
+
+/* Keep the saved Green Note signing action visibly active and acknowledge its click. */
+.ih-green-readonly #ihGreenEsign:not(:disabled){opacity:1!important;cursor:pointer!important}
+#ihGreenEsign.ih-click-gold{opacity:1!important;box-shadow:0 0 0 2px #d4a84d,0 0 0 5px rgba(212,168,77,.24),0 0 24px rgba(212,168,77,.42)!important;border-color:#d4a84d!important;background:#d4a84d!important;color:#07131b!important;transform:translateY(-1px)!important;transition:background .12s ease,box-shadow .12s ease!important}
