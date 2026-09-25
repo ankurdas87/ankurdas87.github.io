@@ -17,7 +17,7 @@ const sendWs=$("#ihSendNoteWorkspace"),inboxWs=$("#ihInboxWorkspace"),sentWs=$("
 
 if(!nav||!reg||!dock||!sw||!yWs||!gWs)return;
 
-let section="all",type="yellow",yellowEditingId=null,yellowReadonly=false,greenViewingId=null,me=null,recipients=[],selectedSendId=null,deliveries={inbox:[],sent:[]},profiles=new Map(),activeDelivery=null,signStarting=false;
+let section="all",type="yellow",yellowEditingId=null,yellowReadonly=false,greenViewingId=null,me=null,recipients=[],selectedSendId=null,deliveries={inbox:[],sent:[]},profiles=new Map(),activeDelivery=null,signStarting=false,greenDraftRef=null,greenVerification=null,greenSourceYellowId=null;
 
 function resetViewport(){const panel=$("#ihPanel");const go=()=>{if(panel){panel.scrollTop=0;panel.scrollLeft=0}document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,70);setTimeout(go,180);setTimeout(go,320)}
 function statusToast(title,sub){if(!toast)return;toast.querySelector("strong").textContent="✓ "+title;toast.querySelector("span").textContent=sub||"Opening All Notes…";toast.hidden=false;clearTimeout(statusToast.t);statusToast.t=setTimeout(()=>toast.hidden=true,1500)}
@@ -28,7 +28,7 @@ function nextLocal(category){const year=new Date().getFullYear(),c=String(catego
 function updateLocalGreen(id,patch){const rows=read(GKEY),i=rows.findIndex(x=>x.id===id);if(i>=0){rows[i]={...rows[i],...patch,updatedAt:new Date().toISOString()};write(GKEY,rows);return rows[i]}return null}
 
 function freshYellow(){yellowEditingId=null;yellowReadonly=false;yWs.classList.remove("ih-yellow-readonly");if(yCat){yCat.disabled=false;yCat.value=""}if(ySub){ySub.readOnly=false;ySub.value=""}if(yEd){yEd.contentEditable="true";yEd.innerHTML=""}document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.disabled=false);if(ySave){ySave.hidden=false;ySave.disabled=false;ySave.textContent="Save Draft"}if(yConvert){yConvert.hidden=false;yConvert.disabled=false;yConvert.textContent="Convert to Green Note"}const lab=document.querySelector('label[for="ihYellowFiles"]');if(lab)lab.hidden=false;clearFiles(yFiles,yFileList);if(yState)yState.innerHTML="<b></b>Unsaved working draft"}
-function freshGreen(){greenViewingId=null;gWs.classList.remove("ih-green-readonly");if(gEsign)gEsign.hidden=false;const sealBox=gWs.querySelector(".ih-green-esign div");if(sealBox)sealBox.innerHTML="<small>AADHAAR-BASED E-SIGN</small><strong>Principal-cum-Secretary</strong><p>Complete the Green Note, then eSign to save and verify it.</p>";if(gWs)delete gWs.dataset.viewingId;if(gCat){gCat.disabled=false;gCat.value=""}if(gSub){gSub.readOnly=false;gSub.value=""}if(gEd){gEd.contentEditable="true";gEd.innerHTML=""}document.querySelectorAll("[data-green-cmd]").forEach(b=>b.disabled=false);if(gSave){gSave.hidden=false;gSave.disabled=false;gSave.textContent="Save Green Note"}if(gEsign)gEsign.disabled=false;const lab=document.querySelector('label[for="ihGreenFiles"]');if(lab)lab.hidden=false;clearFiles(gFiles,gFileList);if(gHead)gHead.textContent="OFFICIAL · PENDING ISSUE";if(gHint)gHint.textContent="Reserved preview · sequence is finalized with the official Green Note";if(gState)gState.innerHTML="<b></b>Official note not yet issued";previewGreen()}
+function freshGreen(){greenViewingId=null;greenDraftRef=crypto.randomUUID();greenVerification=null;greenSourceYellowId=null;gWs.classList.remove("ih-green-readonly");if(gEsign){gEsign.hidden=false;gEsign.textContent="eSign with Aadhaar"}const sealBox=gWs.querySelector(".ih-green-esign div");if(sealBox)sealBox.innerHTML="<small>AADHAAR-BASED E-SIGN</small><strong>Principal-cum-Secretary</strong><p>Verify your email before the final Save Green Note.</p>";if(gWs)delete gWs.dataset.viewingId;if(gCat){gCat.disabled=false;gCat.value=""}if(gSub){gSub.readOnly=false;gSub.value=""}if(gEd){gEd.contentEditable="true";gEd.innerHTML=""}document.querySelectorAll("[data-green-cmd]").forEach(b=>b.disabled=false);if(gSave){gSave.hidden=false;gSave.disabled=false;gSave.textContent="Save Green Note"}if(gEsign)gEsign.disabled=false;const lab=document.querySelector('label[for="ihGreenFiles"]');if(lab)lab.hidden=false;clearFiles(gFiles,gFileList);if(gHead)gHead.textContent="OFFICIAL · PENDING ISSUE";if(gHint)gHint.textContent="Reserved preview · sequence is finalized with the official Green Note";if(gState)gState.innerHTML="<b></b>Official note not yet issued";previewGreen()}
 function previewGreen(){if(greenViewingId||!gNum)return;gNum.textContent=nextLocal(gCat?.value).noteNo}
 function lockGreen(){gWs.classList.add("ih-green-readonly");if(gCat)gCat.disabled=true;if(gSub)gSub.readOnly=true;if(gEd)gEd.contentEditable="false";document.querySelectorAll("[data-green-cmd]").forEach(b=>b.disabled=true);if(gSave)gSave.hidden=true;if(gEsign)gEsign.disabled=!greenViewingId;const lab=document.querySelector('label[for="ihGreenFiles"]');if(lab)lab.hidden=true}
 function lockYellow(){yellowReadonly=true;yWs.classList.add("ih-yellow-readonly");if(yCat)yCat.disabled=true;if(ySub)ySub.readOnly=true;if(yEd)yEd.contentEditable="false";document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.disabled=true);if(ySave)ySave.hidden=true;if(yConvert)yConvert.hidden=true;const lab=document.querySelector('label[for="ihYellowFiles"]');if(lab)lab.hidden=true}
@@ -94,22 +94,40 @@ async function saveYellow(){
  if(d){d.category=v.category;d.subject=v.subject;d.body=v.body;d.updatedAt=now}else{d={id:"YD-"+Date.now(),type:"yellow",status:"draft",...v,createdAt:now,updatedAt:now,convertedToGreenId:null};rows.push(d)}
  write(YKEY,rows);localStorage.removeItem("blc_ih_yellow_draft");freshYellow();renderAll();setSection("all");statusToast("Yellow Note saved successfully")
 }
-async function saveGreen(signAfter=false){
+async function saveGreen(){
  if(greenViewingId)return;const v=validate(gCat,gSub,gEd,gState);if(!v)return;
- if(gSave){gSave.disabled=true;gSave.textContent="Saving…"}if(gState)gState.innerHTML="<b></b>Saving official Green Note securely…";
- const remote=await createDbGreen(v,null);const meta=remote||nextLocal(v.category),now=new Date().toISOString();
- if(signAfter&&!remote){if(gSave){gSave.disabled=false;gSave.textContent="Save Green Note"}if(gState)gState.innerHTML="<b></b>Could not save the Green Note for signing. Please try again.";return}
- const d={id:"GN-"+Date.now(),type:"green",status:"locked",creatorUsername:"BLC@Principal",category:v.category,subject:v.subject,body:v.body,year:meta.year,sequence:meta.sequence,noteNo:meta.noteNo,dbId:meta.dbId||null,dbCategory:meta.dbCategory||toDb[v.category]||"general_office",sourceYellowId:null,convertedFromYellow:false,createdAt:now,updatedAt:now,lockedAt:now};
- const rows=read(GKEY);rows.push(d);write(GKEY,rows);localStorage.removeItem("blc_ih_green_draft");renderAll();if(signAfter){openGreen(d.id);return d}freshGreen();setSection("all");statusToast("Green Note saved successfully")
+ if(!greenVerification||Date.now()>=greenVerification.expiresAt){
+  greenVerification=null;if(gState)gState.innerHTML="<b></b>Complete the email eSign before saving this Green Note.";
+  gEsign?.classList.add("ih-click-gold");setTimeout(()=>gEsign?.classList.remove("ih-click-gold"),300);setTimeout(()=>gEsign?.click(),90);return;
+ }
+ if(gSave){gSave.disabled=true;gSave.textContent="Saving…"}if(gEsign)gEsign.disabled=true;
+ if(gState)gState.innerHTML="<b></b>Finalising and signing the official Green Note…";
+ let remote=null;
+ try{
+  const y=greenSourceYellowId?read(YKEY).find(x=>x.id===greenSourceYellowId):null;
+  let sourceDbId=y?.dbId||null;
+  if(y&&!sourceDbId){sourceDbId=await createDbYellow(y);if(!sourceDbId)throw Error('Could not save the source Yellow draft.');y.dbId=sourceDbId;const ys=read(YKEY);const index=ys.findIndex(x=>x.id===y.id);if(index>=0){ys[index]=y;write(YKEY,ys)}}
+  remote=await createDbGreen(v,sourceDbId);
+  if(!remote)throw Error('Could not save the Green Note. Please try again.');
+  const c=sb();const {error}=await c.rpc('sign_green_note_draft',{p_note_id:remote.dbId,p_challenge_id:greenVerification.id,p_draft_ref:greenDraftRef});
+  if(error)throw error;
+  const now=new Date().toISOString();
+  const d={id:"GN-"+Date.now(),type:"green",status:"locked",creatorUsername:"BLC@Principal",category:v.category,subject:v.subject,body:v.body,year:remote.year,sequence:remote.sequence,noteNo:remote.noteNo,dbId:remote.dbId,dbCategory:remote.dbCategory,sourceYellowId:y?.id||null,sourceYellowDbId:sourceDbId,convertedFromYellow:!!y,createdAt:now,updatedAt:now,lockedAt:now};
+  const rows=read(GKEY);rows.push(d);write(GKEY,rows);
+  if(y){const ys=read(YKEY);const index=ys.findIndex(x=>x.id===y.id);if(index>=0){ys[index]={...ys[index],convertedToGreenId:d.id,status:"converted",updatedAt:now};write(YKEY,ys)}}
+  localStorage.removeItem("blc_ih_green_draft");freshGreen();renderAll();setSection("all");statusToast("Green Note signed and saved successfully");
+ }catch(err){
+  if(remote?.dbId)await sb()?.from('staff_notes').delete().eq('id',remote.dbId);
+  if(gState)gState.innerHTML="<b></b>Green Note was not saved: "+esc(err.message||"Please try again.");
+  if(/expired/i.test(err.message||''))greenVerification=null;
+  if(gSave){gSave.disabled=false;gSave.textContent="Save Green Note"}if(gEsign)gEsign.disabled=false;
+ }
 }
 async function convertYellow(){
  const v=validate(yCat,ySub,yEd,yState);if(!v||yellowReadonly)return;
  if(yConvert){yConvert.disabled=true;yConvert.textContent="Converting…"}const ys=read(YKEY),now=new Date().toISOString();let y=yellowEditingId?ys.find(x=>x.id===yellowEditingId):null;
  if(!y){y={id:"YD-"+Date.now(),type:"yellow",status:"draft",...v,createdAt:now,updatedAt:now,convertedToGreenId:null};ys.push(y)}else{y.category=v.category;y.subject=v.subject;y.body=v.body;y.updatedAt=now}
- const sourceDbId=y.dbId||await createDbYellow(v);if(sourceDbId)y.dbId=sourceDbId;
- const remote=await createDbGreen(v,sourceDbId||null);const meta=remote||nextLocal(v.category);
- const g={id:"GN-"+Date.now(),type:"green",status:"locked",creatorUsername:"BLC@Principal",category:v.category,subject:v.subject,body:v.body,year:meta.year,sequence:meta.sequence,noteNo:meta.noteNo,dbId:meta.dbId||null,dbCategory:meta.dbCategory||toDb[v.category]||"general_office",sourceYellowId:y.id,sourceYellowDbId:sourceDbId||null,convertedFromYellow:true,createdAt:now,updatedAt:now,lockedAt:now};
- const gs=read(GKEY);gs.push(g);write(GKEY,gs);y.convertedToGreenId=g.id;y.status="converted";y.updatedAt=now;write(YKEY,ys);freshYellow();renderAll();setSection("all");statusToast("Yellow Note converted to Green successfully")
+ write(YKEY,ys);setType("green",false);greenSourceYellowId=y.id;gCat.value=v.category;gSub.value=v.subject;gEd.innerHTML=v.body;previewGreen();if(gState)gState.innerHTML="<b></b>Converted from Yellow draft · edit, verify eSign, then save as Green Note";
 }
 
 function openYellow(id){
@@ -214,7 +232,17 @@ async function openForward(id){
 document.querySelectorAll(".ih-yellow-toolbar [data-cmd]").forEach(b=>b.addEventListener("click",()=>{if(yellowReadonly)return;yEd?.focus();document.execCommand(b.dataset.cmd,false,null)}));
 document.querySelectorAll("[data-green-cmd]").forEach(b=>b.addEventListener("click",()=>{if(greenViewingId)return;gEd?.focus();document.execCommand(b.dataset.greenCmd,false,null)}));
 yFiles?.addEventListener("change",()=>fileNames(yFiles,yFileList));gFiles?.addEventListener("change",()=>fileNames(gFiles,gFileList));gCat?.addEventListener("change",previewGreen);
-ySave?.addEventListener("click",saveYellow);gSave?.addEventListener("click",()=>saveGreen());yConvert?.addEventListener("click",convertYellow);yCancel?.addEventListener("click",()=>setSection("all"));gCancel?.addEventListener("click",()=>setSection("all"));gEsign?.addEventListener("click",async()=>{if(signStarting||gEsign.disabled)return;signStarting=true;gEsign.classList.add("ih-click-gold");setTimeout(()=>gEsign.classList.remove("ih-click-gold"),250);gEsign.disabled=true;try{const n=greenViewingId?read(GKEY).find(x=>x.id===greenViewingId):await saveGreen(true);if(!n)return;const id=await ensureDbGreen(n);setTimeout(()=>window.BLCGreenNoteESign.open(id,()=>showPrincipalSeal({...n,dbId:id})),120)}catch(e){if(gState)gState.textContent=e.message;if(!greenViewingId&&gSave){gSave.disabled=false;gSave.textContent="Save Green Note"}}finally{signStarting=false;gEsign.disabled=false}});
+ySave?.addEventListener("click",saveYellow);gSave?.addEventListener("click",()=>saveGreen());yConvert?.addEventListener("click",convertYellow);yCancel?.addEventListener("click",()=>setSection("all"));gCancel?.addEventListener("click",()=>setSection("all"));gEsign?.addEventListener("click",async()=>{
+ if(signStarting||gEsign.disabled)return;signStarting=true;gEsign.classList.add("ih-click-gold");setTimeout(()=>gEsign.classList.remove("ih-click-gold"),250);
+ try{
+  if(greenViewingId){const n=read(GKEY).find(x=>x.id===greenViewingId);if(!n)return;const id=await ensureDbGreen(n);setTimeout(()=>window.BLCGreenNoteESign.open(id,()=>showPrincipalSeal({...n,dbId:id})),120)}
+  else{if(!validate(gCat,gSub,gEd,gState))return;const ref=greenDraftRef;setTimeout(()=>window.BLCGreenNoteESign.openDraft(ref,verified=>{
+    if(ref!==greenDraftRef)return;greenVerification=verified;gEsign.textContent="Email Verified · Reverify";
+    const box=gWs.querySelector('.ih-green-esign div');if(box)box.innerHTML='<small>AADHAAR-BASED E-SIGN</small><strong>Email verified</strong><p>You may continue editing. The signature is finalised when you save.</p>';
+    if(gState)gState.innerHTML="<b></b>Email verified · you may keep editing until Save Green Note";
+   }),120)}
+ }catch(e){if(gState)gState.textContent=e.message}finally{signStarting=false}
+});
 
 nav.addEventListener("click",e=>{const b=e.target.closest("[data-note-section]");if(b)setSection(b.dataset.noteSection)});
 dock.addEventListener("click",e=>{const b=e.target.closest("[data-note-jump]");if(b)setSection(b.dataset.noteJump)});

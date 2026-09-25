@@ -7,9 +7,62 @@ function seal(n){if(!n?.note_esign_at)return '<span class="gn-esign-pending">Awa
 async function fetchNote(id){const c=client();if(!c)throw Error('Secure session is not available.');const {data,error}=await c.from('staff_notes').select('id,note_type,note_esign_name,note_esign_designation,note_esign_at,note_esign_method').eq('id',id).single();if(error)throw error;return data}
 function modal(){let el=document.querySelector('#greenNoteEsignModal');if(el)return el;el=document.createElement('div');el.id='greenNoteEsignModal';el.className='gn-esign-modal';el.hidden=true;el.innerHTML='<div class="gn-esign-dialog" role="dialog" aria-modal="true" aria-labelledby="gnEsignTitle"><button class="gn-esign-close" type="button" aria-label="Close">×</button><div class="gn-esign-kicker">GREEN NOTE · OFFICIAL SIGNATURE</div><h2 id="gnEsignTitle">Aadhaar / UID Authentication</h2><p>Enter your 12-digit number, then confirm with the code sent to your registered email.</p><div class="gn-esign-step-one"><label for="gnAadhaar">12-digit number</label><input id="gnAadhaar" type="text" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="Enter 12-digit number"><button class="gn-esign-send" type="button">Send email code</button></div><div class="gn-esign-step-two" hidden><label for="gnOtp">Code sent to your registered email</label><input id="gnOtp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6-digit code"><button class="gn-esign-verify" type="button">Verify & Sign Green Note</button><button class="gn-esign-resend" type="button">Send new code</button></div><small class="gn-esign-feedback" aria-live="polite"></small></div>';document.body.appendChild(el);el.querySelector('.gn-esign-close').onclick=()=>{el.hidden=true};el.addEventListener('click',e=>{if(e.target===el)el.hidden=true});return el}
 let busy=false;
-async function open(id,onSuccess){if(busy||!id)return;let note;try{note=await fetchNote(id)}catch(e){alert('Could not load the Green Note: '+e.message);return}if(note.note_type!=='green')return;if(note.note_esign_at){onSuccess?.(note);return}const el=modal(),c=client(),info=el.querySelector('.gn-esign-feedback');let challenge=null,email=null;el.hidden=false;el.querySelector('.gn-esign-step-one').hidden=false;el.querySelector('.gn-esign-step-two').hidden=true;el.querySelector('#gnAadhaar').value='';el.querySelector('#gnOtp').value='';info.textContent='';el.querySelector('#gnAadhaar').focus();const set=m=>info.textContent=m;
+async function open(id,onSuccess){if(busy||!id)return;let note;try{note=await fetchNote(id)}catch(e){alert('Could not load the Green Note: '+e.message);return}if(note.note_type!=='green')return;if(note.note_esign_at){onSuccess?.(note);return}const el=modal(),c=client(),info=el.querySelector('.gn-esign-feedback');let challenge=null,email=null;el.hidden=false;el.querySelector('.gn-esign-step-one').hidden=false;el.querySelector('.gn-esign-step-two').hidden=true;el.querySelector('.gn-esign-verify').textContent='Verify & Sign Green Note';el.querySelector('#gnAadhaar').value='';el.querySelector('#gnOtp').value='';info.textContent='';el.querySelector('#gnAadhaar').focus();const set=m=>info.textContent=m;
 const send=async()=>{if(busy)return;const digits=el.querySelector('#gnAadhaar').value.trim();if(!/^\d{12}$/.test(digits)){set('Enter exactly 12 digits.');return}busy=true;set('Sending a code to your portal email…');try{const {data:{user},error:authErr}=await c.auth.getUser();if(authErr||!user?.email)throw Error('Sign in with an account that has an email address.');email=user.email;const {data,error}=await c.rpc('begin_green_note_signature',{p_note_id:id});if(error)throw error;challenge=data;const sent=await c.auth.signInWithOtp({email,options:{shouldCreateUser:false}});if(sent.error)throw sent.error;el.querySelector('.gn-esign-step-one').hidden=true;el.querySelector('.gn-esign-step-two').hidden=false;set('A six-digit code has been sent to '+email+'. It expires in 10 minutes.');el.querySelector('#gnOtp').focus()}catch(e){set(e.message||'The code could not be sent.')}finally{busy=false}};
 el.querySelector('.gn-esign-send').onclick=send;el.querySelector('.gn-esign-resend').onclick=()=>{el.querySelector('.gn-esign-step-one').hidden=false;el.querySelector('.gn-esign-step-two').hidden=true;send()};el.querySelector('.gn-esign-verify').onclick=async()=>{if(busy)return;const code=el.querySelector('#gnOtp').value.trim();if(!/^\d{6}$/.test(code)){set('Enter the six-digit email code.');return}busy=true;set('Verifying your code and signing the note…');try{const verified=await c.auth.verifyOtp({email,token:code,type:'email'});if(verified.error)throw verified.error;const confirmed=await c.rpc('confirm_green_note_signature',{p_challenge_id:challenge});if(confirmed.error)throw confirmed.error;const result=await c.rpc('sign_green_note',{p_note_id:id,p_challenge_id:challenge});if(result.error)throw result.error;const signed=await fetchNote(id);el.hidden=true;onSuccess?.(signed);window.dispatchEvent(new CustomEvent('blc-green-note-signed',{detail:{noteId:id,note:signed}}));alert('Aadhaar eSign authentication completed successfully.')}catch(e){set(e.message||'Signature verification failed.')}finally{busy=false}};
 }
-window.BLCGreenNoteESign={open,seal,fetchNote};
+async function openDraft(draftRef,onSuccess){
+ if(busy||!draftRef)return;
+ const c=client(),el=modal(),info=el.querySelector('.gn-esign-feedback');
+ if(!c){alert('Secure session is unavailable. Please sign in again.');return}
+ let challenge=null,email=null,started=0;
+ el.hidden=false;
+ el.querySelector('.gn-esign-step-one').hidden=false;
+ el.querySelector('.gn-esign-step-two').hidden=true;
+ el.querySelector('.gn-esign-verify').textContent='Verify Email & Continue Editing';
+ el.querySelector('#gnAadhaar').value='';el.querySelector('#gnOtp').value='';
+ info.textContent='';el.querySelector('#gnAadhaar').focus();
+ const set=m=>info.textContent=m;
+ const send=async()=>{
+  if(busy)return;
+  if(!/^\d{12}$/.test(el.querySelector('#gnAadhaar').value.trim())){
+   set('Enter exactly 12 digits.');return;
+  }
+  busy=true;set('Sending a code to your portal email…');
+  try{
+   const {data:{user},error:authError}=await c.auth.getUser();
+   if(authError||!user?.email)throw Error('Sign in with an account that has an email address.');
+   email=user.email;started=Date.now();
+   const {data,error}=await c.rpc('begin_green_note_draft_signature',{p_draft_ref:draftRef});
+   if(error)throw error;challenge=data;
+   const sent=await c.auth.signInWithOtp({email,options:{shouldCreateUser:false}});
+   if(sent.error)throw sent.error;
+   el.querySelector('.gn-esign-step-one').hidden=true;
+   el.querySelector('.gn-esign-step-two').hidden=false;
+   set('A six-digit code has been sent to '+email+'. It expires in 10 minutes.');
+   el.querySelector('#gnOtp').focus();
+  }catch(e){set(e.message||'The code could not be sent.')}finally{busy=false}
+ };
+ el.querySelector('.gn-esign-send').onclick=send;
+ el.querySelector('.gn-esign-resend').onclick=()=>{
+  el.querySelector('.gn-esign-step-one').hidden=false;
+  el.querySelector('.gn-esign-step-two').hidden=true;send();
+ };
+ el.querySelector('.gn-esign-verify').onclick=async()=>{
+  if(busy)return;
+  const code=el.querySelector('#gnOtp').value.trim();
+  if(!/^\d{6}$/.test(code)){set('Enter the six-digit email code.');return}
+  busy=true;set('Verifying your email…');
+  try{
+   const verified=await c.auth.verifyOtp({email,token:code,type:'email'});
+   if(verified.error)throw verified.error;
+   const confirmed=await c.rpc('confirm_green_note_draft_signature',{p_challenge_id:challenge});
+   if(confirmed.error)throw confirmed.error;
+   el.hidden=true;
+   onSuccess?.({id:challenge,expiresAt:started+10*60*1000});
+   alert('Aadhaar eSign authentication completed successfully. You can keep editing until you save the Green Note.');
+  }catch(e){set(e.message||'Email verification failed.')}finally{busy=false}
+ };
+}
+window.BLCGreenNoteESign={open,openDraft,seal,fetchNote};
 })();

@@ -21,3 +21,8 @@
 .hr-esign-seal.gn-note-seal .hr-seal-body strong{display:block!important;margin:0!important;font:700 20px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#20262c!important;-webkit-text-fill-color:#20262c!important;white-space:nowrap!important}
 .hr-esign-seal.gn-note-seal .hr-seal-body span{display:block!important;margin:0!important;font:700 15px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#000!important;-webkit-text-fill-color:#000!important;white-space:nowrap!important}
 .hr-esign-seal.gn-note-seal .hr-seal-body time{display:block!important;margin:0!important;font:700 12px/1.1 'Roboto Condensed','Arial Narrow','DM Sans',sans-serif!important;letter-spacing:normal!important;color:#20262c!important;-webkit-text-fill-color:#20262c!important;white-space:nowrap!important}
+
+/* The Staff Note sheet originally disabled pointer events on its placeholder. */
+.note-sheet.green .note-signature{pointer-events:auto!important}
+.note-signature .gn-esign-action{display:inline-flex;align-items:center;justify-content:center;margin-top:9px;padding:8px 11px;border:1px solid #2d7048;border-radius:5px;background:#f5faf6;color:#16442a;font:700 10px/1.2 'DM Sans',sans-serif;cursor:pointer}
+.note-signature .gn-esign-action[hidden]{display:none!important}

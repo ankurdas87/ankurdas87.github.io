@@ -30,9 +30,9 @@ if(!document.querySelector('script[data-blc-upload-limits]')){const u=document.c
 if(!document.querySelector('script[data-blc-qualifications]')){const q=document.createElement('script');q.src='staff-qualifications.js';q.defer=true;q.dataset.blcQualifications='1';document.head.appendChild(q);}
 if(!document.querySelector('script[data-blc-profile-editor]')){const p=document.createElement('script');p.src='staff-profile-editor.js';p.defer=true;p.dataset.blcProfileEditor='1';document.head.appendChild(p);}
 if(!document.querySelector('script[data-blc-note-navigation]')){const v=document.createElement('script');v.src='staff-note-navigation.js?v=20260918e';v.defer=true;v.dataset.blcNoteNavigation='1';document.head.appendChild(v);}
-if(!document.querySelector('script[data-blc-notes]')){const n=document.createElement('script');n.src='staff-notes.js?v=20260925-green-esign';n.defer=true;n.dataset.blcNotes='1';document.head.appendChild(n);}
+if(!document.querySelector('script[data-blc-notes]')){const n=document.createElement('script');n.src='staff-notes.js?v=20260925-final-sign';n.defer=true;n.dataset.blcNotes='1';document.head.appendChild(n);}
 if(!document.querySelector('script[data-blc-note-register]')){const r=document.createElement('script');r.src='staff-note-register.js';r.defer=true;r.dataset.blcNoteRegister='1';document.head.appendChild(r);}
-if(!document.querySelector('script[data-blc-green-note-editor]')){const g=document.createElement('script');g.src='staff-green-note-editor.js';g.defer=true;g.dataset.blcGreenNoteEditor='1';document.head.appendChild(g);}
+
 if(!document.querySelector('script[data-blc-send-note]')){const s=document.createElement('script');s.src='staff-send-note.js?v=20260925-green-esign';s.defer=true;s.dataset.blcSendNote='1';document.head.appendChild(s);}
 if(!document.querySelector('script[data-blc-note-correspondence]')){const x=document.createElement('script');x.src='staff-note-correspondence.js?v=20260925-green-esign';x.defer=true;x.dataset.blcNoteCorrespondence='1';document.head.appendChild(x);}
 if(!document.querySelector('script[data-blc-requests]')){const q=document.createElement('script');q.src='staff-requests.js?v=20260924-banded-stamp-v3';q.defer=true;q.dataset.blcRequests='1';document.head.appendChild(q);}
