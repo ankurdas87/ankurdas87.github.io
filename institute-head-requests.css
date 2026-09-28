@@ -123,3 +123,5 @@
 .hr-staff-digital strong{font:700 17px/1.2 'Arial Narrow',Arial,sans-serif;color:#111}
 .hr-staff-digital small,.hr-staff-digital time{font:600 10px/1.2 Arial,sans-serif;color:#111}
 .hr-legacy-staff-sign{font:600 16px/1.2 Arial,sans-serif;color:#252525;margin-bottom:10px}
+
+.hr-tools input{min-width:320px;min-height:46px;padding:12px 15px;font-size:14px}.hr-tools input:focus{outline:2px solid rgba(173,132,61,.3);border-color:#b99a5d}@media(max-width:620px){.hr-tools input{min-width:0;width:100%}}
