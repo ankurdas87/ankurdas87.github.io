@@ -38,8 +38,8 @@ function lockYellow(){yellowReadonly=true;yWs.classList.add("ih-yellow-readonly"
 function renderAll(){
  const gs=read(GKEY),ys=read(YKEY),gmap=new Map(gs.map(g=>[g.id,g]));
  const rows=[...gs.map(x=>({...x,_kind:"green"})),...ys.map(x=>({...x,_kind:"yellow"}))].sort((a,b)=>String(b.updatedAt||b.createdAt).localeCompare(String(a.updatedAt||a.createdAt)));
- count.textContent=rows.length+" "+(rows.length===1?"NOTE":"NOTES");empty.hidden=!!rows.length;list.hidden=!rows.length;
- list.innerHTML=rows.map(n=>{
+ count.textContent=rows.length+" "+(rows.length===1?"NOTE":"NOTES");const q=$("#ihAllNotesSearch")?.value||"",visible=window.BLCRecordSearch.filter(rows,q,n=>n.noteNo,n=>[n.subject,n.category,n._kind]);empty.hidden=!!visible.length;list.hidden=!visible.length;empty.innerHTML=q&&rows.length?'<strong>No matching notes</strong><p>Try another Note No., subject or category.</p>':'<strong>No notes saved yet</strong><p>Create a Yellow Note and save it as a draft. It will appear here automatically.</p>';
+ list.innerHTML=visible.map(n=>{
    if(n._kind==="green")return '<div class="ih-register-row ih-register-row-green"><span class="ih-note-id">'+esc(n.noteNo)+'</span><span>GREEN · '+(n.signedAt?'SIGNED':'SAVED')+'</span><strong>'+esc(n.subject)+'</strong><span>'+esc(n.category)+' · '+new Date(n.updatedAt||n.createdAt).toLocaleDateString()+'</span><button type="button" data-view-green="'+esc(n.id)+'">'+(n.signedAt?'VIEW':'OPEN / EDIT')+'</button></div>';
    const linked=n.convertedToGreenId?gmap.get(n.convertedToGreenId):null;
    const tag=linked?"YELLOW · CONVERTED":"YELLOW · DRAFT";
@@ -169,7 +169,7 @@ function noteOf(r){return Array.isArray(r?.note)?r.note[0]:r?.note}
 function otherProfile(r,mode){const id=mode==="inbox"?r.sender_id:r.recipient_id;return profiles.get(String(id))||null}
 function renderCorrespondence(mode){
  const rows=deliveries[mode]||[],root=mode==="inbox"?inboxWs:sentWs,listEl=mode==="inbox"?$("#ihInboxList"):$("#ihSentList"),q=(mode==="inbox"?$("#ihInboxSearch"):$("#ihSentSearch"))?.value.trim().toLowerCase()||"",filter=mode==="inbox"?($("#ihInboxFilter")?.value||"all"):"all";
- const filtered=rows.filter(r=>{const n=noteOf(r),p=otherProfile(r,mode),unread=!r.read_at&&r.status!=="read";if(filter==="unread"&&!unread)return false;if(filter==="read"&&unread)return false;return !q||[n?.note_number,n?.subject,labels[n?.category]||n?.category,profileName(p),p?.username,r.message].join(" ").toLowerCase().includes(q)});
+ const filtered=window.BLCRecordSearch.filter(rows.filter(r=>{const unread=!r.read_at&&r.status!=="read";return(filter!=="unread"||unread)&&(filter!=="read"||!unread)}),q,r=>noteOf(r)?.note_number,r=>{const n=noteOf(r),p=otherProfile(r,mode);return[n?.subject,labels[n?.category]||n?.category,profileName(p),p?.username,r.message]});
  const summary=mode==="inbox"?$("#ihInboxSummary"):$("#ihSentSummary"),unread=mode==="inbox"?rows.filter(r=>!r.read_at&&r.status!=="read").length:0;
  if(summary)summary.innerHTML='<span>'+rows.length+' '+(mode==="inbox"?"Received":"Sent")+'</span>'+(mode==="inbox"?'<span>'+unread+' Unread</span><span>'+(rows.length-unread)+' Read</span>':"");
  if(!filtered.length){setCorrespondenceMarkup(mode,root,listEl,'<div class="ih-correspondence-empty"><strong>No '+(mode==="inbox"?"received":"sent")+' notes found</strong><span>'+(rows.length?"Try another search or filter.":mode==="inbox"?"Official notes sent to the Principal will appear here automatically.":"Notes dispatched from this office will appear here automatically.")+'</span></div>');return}
@@ -229,7 +229,7 @@ list.addEventListener("click",e=>{const y=e.target.closest("[data-open-yellow]")
 
 document.addEventListener("click",e=>{
  const fm=e.target.closest("[data-ih-find-mode]");if(fm){document.querySelectorAll("[data-ih-find-mode]").forEach(x=>x.classList.toggle("active",x===fm));document.querySelectorAll("[data-ih-find-pane]").forEach(x=>x.hidden=x.dataset.ihFindPane!==fm.dataset.ihFindMode)}
- if(e.target.id==="ihFindSendNote"){const raw=$("#ihSendNumber")?.value.trim().toUpperCase();const n=read(GKEY).find(x=>String(x.noteNo||"").toUpperCase()===raw);if(!raw)sendStatus("Enter a Note No. to find.","bad");else if(!n){attachSend(null);sendStatus("No saved Green Note was found with that Note No.","bad")}else attachSend(n.id)}
+ if(e.target.id==="ihFindSendNote"){const raw=$("#ihSendNumber")?.value.trim().toUpperCase();const n=read(GKEY).find(x=>String(x.noteNo||"").toUpperCase().replace(/[^A-Z0-9]/g,"")===raw.replace(/[^A-Z0-9]/g,""));if(!raw)sendStatus("Enter a Note No. to find.","bad");else if(!n){attachSend(null);sendStatus("No saved Green Note was found with that Note No.","bad")}else attachSend(n.id)}
  if(e.target.id==="ihRemoveSendNote")attachSend(null);
  const od=e.target.closest("[data-open-delivery]");if(od)openDelivery(od.dataset.openDelivery,od.dataset.mode);
  const full=e.target.closest("[data-open-full-note]");if(full)openFullNote(full.dataset.openFullNote,full.dataset.mode);
@@ -240,7 +240,7 @@ document.addEventListener("click",e=>{
 });
 $("#ihSendSelect")?.addEventListener("change",e=>attachSend(e.target.value));
 $("#ihSendForm")?.addEventListener("submit",submitSend);
-$("#ihInboxSearch")?.addEventListener("input",()=>renderCorrespondence("inbox"));$("#ihInboxFilter")?.addEventListener("change",()=>renderCorrespondence("inbox"));$("#ihSentSearch")?.addEventListener("input",()=>renderCorrespondence("sent"));
+$("#ihAllNotesSearch")?.addEventListener("input",renderAll);$("#ihInboxSearch")?.addEventListener("input",()=>renderCorrespondence("inbox"));$("#ihInboxFilter")?.addEventListener("change",()=>renderCorrespondence("inbox"));$("#ihSentSearch")?.addEventListener("input",()=>renderCorrespondence("sent"));
 
 freshYellow();freshGreen();renderAll();setSection("all");
 })();
