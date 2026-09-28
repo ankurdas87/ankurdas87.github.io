@@ -1,0 +1,12 @@
+.note-unread-badge{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:999px;font:800 11px/1 Arial,sans-serif;letter-spacing:0;text-align:center;white-space:nowrap;pointer-events:none;box-shadow:0 0 0 2px rgba(0,0,0,.13)}
+#staffPanel .notes-parent-link{position:relative}
+#staffPanel .notes-parent-link>.note-unread-badge{position:absolute;right:43px;top:50%;transform:translateY(-50%);background:#a38bff;color:#14102d}
+#staffPanel .notes-subnav-item{position:relative}
+#staffPanel .notes-subnav-item>.note-unread-badge{margin-left:auto;background:#a38bff;color:#14102d}
+#ihPanel .ref-nav [data-ih-view="notes"]{position:relative}
+#ihPanel .ref-nav [data-ih-view="notes"]>.note-unread-badge{position:absolute;top:1px;right:1px;min-width:16px;height:16px;padding:0 4px;background:#e8bf71;color:#10212b;font-size:9px}
+#ihPanel .ih-notes-actions [data-note-section="inbox"]{position:relative}
+#ihPanel .ih-notes-actions [data-note-section="inbox"]>.note-unread-badge{position:absolute;top:12px;right:12px;background:#e8bf71;color:#10212b}
+@media(max-width:800px){#ihPanel .ih-notes-actions [data-note-section="inbox"]>.note-unread-badge{top:5px;right:5px}}
+
+#staffPanel .notes-subnav-item>.note-unread-badge{width:auto!important;min-width:19px!important;opacity:1!important;flex:none!important}
