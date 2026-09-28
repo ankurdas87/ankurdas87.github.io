@@ -1,6 +1,6 @@
 (()=>{'use strict';
 const $=(s,r=document)=>r.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let sb=null, me=null, profile=null;
+let sb=null, me=null, profile=null, requestRows=[], applicationRows=[];
  function client(){if(sb)return sb;if(!window.supabase||typeof SUPABASE_URL==='undefined')return null;sb=(typeof supabaseClient!=='undefined'&&supabaseClient)?supabaseClient:window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);return sb}
  function signTime(value){if(!value)return '';const d=new Date(value);if(Number.isNaN(d.getTime()))return '';const p=Object.fromEntries(new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).formatToParts(d).map(({type,value})=>[type,value]));return `${p.day}-${p.month}-${p.year} ${p.hour}:${p.minute}:${p.second} ${p.dayPeriod.toUpperCase()} IST`}
  function decisionStamp(r){
@@ -39,8 +39,45 @@ async function stats(){const c=client();const [{count:r},{count:a},{count:p}]=aw
  c.from('staff_requests').select('*',{count:'exact',head:true}).eq('requested_by',me.id).eq('status','submitted')
  ]);$('#reqTotal').textContent=r||0;$('#appTotal').textContent=a||0;$('#reqPending').textContent=p||0}
 async function render(tab){if(!me&&!(await identity()))return;tab==='applications'?applications():requests()}
-async function requests(){const p=$('#reqPanel');p.innerHTML='<div class="req-loading">Loading requests…</div>';const {data,error}=await client().from('staff_requests').select('id,request_type,title,request_details,status,created_at,submitted_at').eq('requested_by',me.id).order('created_at',{ascending:false});if(error){p.innerHTML='<div class="req-empty">Requests could not be loaded.</div>';return}if(!data?.length){p.innerHTML='<div class="req-empty"><b>No requests yet</b><span>Create a request when you need the Institute Head’s approval.</span></div>';return}p.innerHTML='<div class="req-list">'+data.map(r=>`<article><div class="req-type">${esc(r.request_type)}</div><div class="req-row-main"><b>${esc(r.title)}</b><small>${esc(r.request_details)}</small><span>${new Date(r.submitted_at||r.created_at).toLocaleString('en-IN')}</span></div><em class="status ${esc(r.status)}">${esc(r.status)}</em><div class="req-row-actions"><button data-open-request="${r.id}" class="req-open">Open Request</button>${r.status==='draft'?'<button data-send-request="'+r.id+'" class="req-send">Send to Principal</button><button data-delete-request="'+r.id+'" class="req-delete">Delete</button>':''}</div></article>`).join('')+'</div>';p.querySelectorAll('[data-open-request]').forEach(b=>b.onclick=()=>openRequest(b.dataset.openRequest));p.querySelectorAll('[data-send-request]').forEach(b=>b.onclick=()=>sendRequest(b.dataset.sendRequest));p.querySelectorAll('[data-delete-request]').forEach(b=>b.onclick=()=>deleteRequest(b.dataset.deleteRequest))}
-async function applications(q=''){const p=$('#reqPanel');p.innerHTML='<div class="req-loading">Loading applications…</div>';const {data,error}=await client().from('staff_applications').select('*').eq('staff_id',me.id).order('created_at',{ascending:false});if(error){p.innerHTML='<div class="req-empty">Applications could not be loaded.</div>';return}const all=data||[],term=q.trim().toLowerCase(),rows=term?all.filter(a=>(a.application_number||'').toLowerCase().includes(term)||(a.application_title||'').toLowerCase().includes(term)||(a.status||'').toLowerCase().includes(term)):all;p.innerHTML='<div class="app-search"><span>⌕</span><input id="appSearch" value="'+esc(q)+'" placeholder="Search by Application No., title or status"></div>'+(rows.length?'<div class="app-list">'+rows.map(a=>`<article><div><span class="app-no">${esc(a.application_number||'DRAFT')}</span><h3>${esc(a.application_title)}</h3><p>${a.application_mode==='written'?'Written in Staff Portal':'Uploaded application'}</p></div><div><em class="status ${esc(a.status)}">${esc(a.status)}</em>${a.application_mode==='written'?'<button class="app-open" data-app="'+a.id+'">Open</button>':''}${a.status==='draft'?'<button class="req-delete" data-delete-app="'+a.id+'">Delete</button>':''}</div></article>`).join('')+'</div>':'<div class="req-empty"><b>No matching applications</b><span>Try another Application No. or title.</span></div>');const search=$('#appSearch');search.oninput=e=>{const term=e.target.value.toLowerCase().trim();p.querySelectorAll('.app-list article').forEach(card=>{const match=!term||card.textContent.toLowerCase().includes(term);card.style.display=match?'':'none'});const visible=[...p.querySelectorAll('.app-list article')].some(card=>card.style.display!=='none');let empty=$('#appSearchEmpty');if(!visible&&term){if(!empty){empty=document.createElement('div');empty.id='appSearchEmpty';empty.className='req-empty app-search-empty';empty.innerHTML='<b>No matching applications</b><span>Try another Application No., title or status.</span>';p.querySelector('.app-list')?.after(empty)}}else empty?.remove()};p.querySelectorAll('[data-app]').forEach(b=>b.onclick=()=>openApplication(b.dataset.app));p.querySelectorAll('[data-delete-app]').forEach(b=>b.onclick=()=>deleteApplication(b.dataset.deleteApp))}
+function renderRequestRows(){
+ const p=$('#reqPanel'),q=$('#reqSearch')?.value||'';
+ const rows=window.BLCRecordSearch.filter(requestRows,q,r=>r.application_number,r=>[r.title,r.request_details,r.request_type,r.status]);
+ const target=$('#reqResults');
+ target.innerHTML=rows.length?'<div class="req-list">'+rows.map(r=>`<article><div class="req-type">${esc(r.request_type)}</div><div class="req-row-main"><b>${esc(r.title)}</b>${r.application_number?`<span class="app-no">${esc(r.application_number)}</span>`:''}<small>${esc(r.request_details)}</small><span>${new Date(r.submitted_at||r.created_at).toLocaleString('en-IN')}</span></div><em class="status ${esc(r.status)}">${esc(r.status)}</em><div class="req-row-actions"><button data-open-request="${r.id}" class="req-open">Open Request</button>${r.status==='draft'?'<button data-send-request="'+r.id+'" class="req-send">Send to Principal</button><button data-delete-request="'+r.id+'" class="req-delete">Delete</button>':''}</div></article>`).join('')+'</div>':`<div class="req-empty"><b>${requestRows.length?'No matching requests':'No requests yet'}</b><span>${requestRows.length?'Try another Application No., title or request type.':'Create a request when you need the Institute Head’s approval.'}</span></div>`;
+ target.querySelectorAll('[data-open-request]').forEach(b=>b.onclick=()=>openRequest(b.dataset.openRequest));
+ target.querySelectorAll('[data-send-request]').forEach(b=>b.onclick=()=>sendRequest(b.dataset.sendRequest));
+ target.querySelectorAll('[data-delete-request]').forEach(b=>b.onclick=()=>deleteRequest(b.dataset.deleteRequest));
+}
+async function requests(){
+ const p=$('#reqPanel');p.innerHTML='<div class="req-loading">Loading requests…</div>';
+ const c=client();
+ const [{data,error},{data:apps, error:appError}]=await Promise.all([
+  c.from('staff_requests').select('id,request_type,application_id,title,request_details,status,created_at,submitted_at').eq('requested_by',me.id).order('created_at',{ascending:false}),
+  c.from('staff_applications').select('id,application_number').eq('staff_id',me.id)
+ ]);
+ if(error||appError){p.innerHTML='<div class="req-empty">Requests could not be loaded.</div>';return}
+ const numbers=new Map((apps||[]).map(a=>[a.id,a.application_number]));
+ requestRows=(data||[]).map(r=>({...r,application_number:numbers.get(r.application_id)||''}));
+ p.innerHTML='<div class="app-search"><span>⌕</span><input id="reqSearch" type="search" autocomplete="off" aria-label="Search my requests" placeholder="Search by Application No., title or request type"></div><div id="reqResults"></div>';
+ $('#reqSearch').addEventListener('input',renderRequestRows);
+ renderRequestRows();
+}
+function renderApplicationRows(){
+ const q=$('#appSearch')?.value||'',rows=window.BLCRecordSearch.filter(applicationRows,q,a=>a.application_number,a=>[a.application_title,a.status,a.application_mode]);
+ const target=$('#appResults');
+ target.innerHTML=rows.length?'<div class="app-list">'+rows.map(a=>`<article><div><span class="app-no">${esc(a.application_number||'DRAFT')}</span><h3>${esc(a.application_title)}</h3><p>${a.application_mode==='written'?'Written in Staff Portal':'Uploaded application'}</p></div><div><em class="status ${esc(a.status)}">${esc(a.status)}</em>${a.application_mode==='written'?'<button class="app-open" data-app="'+a.id+'">Open</button>':''}${a.status==='draft'?'<button class="req-delete" data-delete-app="'+a.id+'">Delete</button>':''}</div></article>`).join('')+'</div>':`<div class="req-empty"><b>${applicationRows.length?'No matching applications':'No applications yet'}</b><span>${applicationRows.length?'Try another Application No., title or status.':'Your saved applications will appear here.'}</span></div>`;
+ target.querySelectorAll('[data-app]').forEach(b=>b.onclick=()=>openApplication(b.dataset.app));
+ target.querySelectorAll('[data-delete-app]').forEach(b=>b.onclick=()=>deleteApplication(b.dataset.deleteApp));
+}
+async function applications(){
+ const p=$('#reqPanel');p.innerHTML='<div class="req-loading">Loading applications…</div>';
+ const {data,error}=await client().from('staff_applications').select('*').eq('staff_id',me.id).order('created_at',{ascending:false});
+ if(error){p.innerHTML='<div class="req-empty">Applications could not be loaded.</div>';return}
+ applicationRows=data||[];
+ p.innerHTML='<div class="app-search"><span>⌕</span><input id="appSearch" type="search" autocomplete="off" aria-label="Search applications" placeholder="Search by Application No., title or status"></div><div id="appResults"></div>';
+ $('#appSearch').addEventListener('input',renderApplicationRows);
+ renderApplicationRows();
+}
 function writer(draft=null){
  let saved={};try{saved=JSON.parse(draft?.application_content||'{}')}catch{}
  const name=[profile?.first_name,profile?.last_name].filter(Boolean).join(' ')||'Staff Member';
