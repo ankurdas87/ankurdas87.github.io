@@ -19,7 +19,7 @@ if(!nav||!reg||!dock||!sw||!yWs||!gWs)return;
 
 let section="all",type="yellow",yellowEditingId=null,yellowReadonly=false,greenViewingId=null,me=null,recipients=[],selectedSendId=null,deliveries={inbox:[],sent:[]},profiles=new Map(),activeDelivery=null;
 
-function resetViewport(){const panel=$("#ihPanel");const go=()=>{if(panel){panel.scrollTop=0;panel.scrollLeft=0}document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,70);setTimeout(go,180);setTimeout(go,320)}
+function resetViewport(target){const panel=$("#ihPanel");const go=()=>{if(panel){panel.scrollTop=target&&!target.hidden?Math.max(0,panel.scrollTop+target.getBoundingClientRect().top-panel.getBoundingClientRect().top-252):0;panel.scrollLeft=0}document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,70);setTimeout(go,180);setTimeout(go,320)}
 function statusToast(title,sub){if(!toast)return;toast.querySelector("strong").textContent="✓ "+title;toast.querySelector("span").textContent=sub||"Opening All Notes…";toast.hidden=false;clearTimeout(statusToast.t);statusToast.t=setTimeout(()=>toast.hidden=true,1500)}
 function clearFiles(input,box){if(input)input.value="";if(box){box.textContent="";box.hidden=true}}
 function fileNames(input,box){if(!input||!box)return;const ar=[...input.files];box.hidden=!ar.length;box.textContent=ar.map(f=>f.name).join(" · ")}
@@ -65,7 +65,7 @@ function setSection(next){
  if(section==="send")loadSend();
  if(section==="inbox")loadCorrespondence("inbox");
  if(section==="sent")loadCorrespondence("sent");
- resetViewport()
+ resetViewport(section==="sent"?sentWs:section==="inbox"?inboxWs:null)
 }
 
 async function authUser(){if(me)return me;const c=sb();if(!c)return null;const {data:{user}}=await c.auth.getUser();me=user||null;return me}
