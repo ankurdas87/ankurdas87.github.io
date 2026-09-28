@@ -1082,3 +1082,7 @@ body:has(#ihPanel:not([hidden]))>.ih-login-back{display:none!important}
 .ih-green-readonly .ih-green-attachments label[for="ihGreenFiles"]{display:none!important}
 .ih-green-readonly #ihGreenEsign{opacity:.45!important;cursor:not-allowed!important}
 @media(max-width:900px){.ih-register-row-green,.ih-register-row-yellow{grid-template-columns:1fr 1fr!important}.ih-register-row-green .ih-note-id{white-space:normal!important}.ih-register-row-green strong,.ih-register-row-yellow strong{grid-column:1/-1!important}}
+
+/* Authenticated portal content must begin at the top of its scroll container.
+   The legacy .ih-panel flex centering clipped the top half of tall views. */
+#ihPanel.ih-dashboard:not([hidden]){display:block!important}
