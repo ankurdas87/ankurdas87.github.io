@@ -19,7 +19,8 @@ if(!nav||!reg||!dock||!sw||!yWs||!gWs)return;
 
 let section="all",type="yellow",yellowEditingId=null,yellowReadonly=false,greenViewingId=null,me=null,recipients=[],selectedSendId=null,deliveries={inbox:[],sent:[]},profiles=new Map(),activeDelivery=null;
 
-function resetViewport(target){const panel=$("#ihPanel");if(panel)panel.style.overflowAnchor=target===sentWs?"none":"";const go=()=>{if(panel){panel.scrollTop=target&&!target.hidden?Math.max(0,panel.scrollTop+target.getBoundingClientRect().top-panel.getBoundingClientRect().top-252):0;panel.scrollLeft=0}document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,70);setTimeout(go,180);setTimeout(go,320)}
+function alignNotesNavigation(){const panel=$("#ihPanel"),head=$(".ih-correspondence-console-head");if(!panel||!head)return;panel.scrollTop=Math.max(0,panel.scrollTop+head.getBoundingClientRect().bottom-panel.getBoundingClientRect().top-144)}
+function resetViewport(target){const panel=$("#ihPanel");if(panel)panel.style.overflowAnchor=target?"none":"";const go=()=>{if(panel){if(target&&!target.hidden)alignNotesNavigation();else panel.scrollTop=0;panel.scrollLeft=0}document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0)};go();requestAnimationFrame(()=>{go();requestAnimationFrame(go)});setTimeout(go,70);setTimeout(go,180);setTimeout(go,320)}
 function statusToast(title,sub){if(!toast)return;toast.querySelector("strong").textContent="✓ "+title;toast.querySelector("span").textContent=sub||"Opening All Notes…";toast.hidden=false;clearTimeout(statusToast.t);statusToast.t=setTimeout(()=>toast.hidden=true,1500)}
 function clearFiles(input,box){if(input)input.value="";if(box){box.textContent="";box.hidden=true}}
 function fileNames(input,box){if(!input||!box)return;const ar=[...input.files];box.hidden=!ar.length;box.textContent=ar.map(f=>f.name).join(" · ")}
@@ -155,16 +156,13 @@ async function submitSend(e){
 
 function profileLine(p){if(!p)return"—";return profileName(p)+(p.username?" · "+p.username:"")+(p.designation?" · "+p.designation:"")}
 async function loadProfiles(){const c=sb();if(!c)return;const r=await c.rpc("get_staff_correspondence_profiles");profiles=new Map();(r.data||[]).forEach(p=>profiles.set(String(p.id),p))}
-function setCorrespondenceMarkup(mode,root,listEl,html){
- const fixed=mode==="sent"?[root.querySelector(".ih-head-module-head"),root.querySelector(".ih-correspondence-tools")].filter(Boolean):[];
- fixed.forEach(node=>node.remove());listEl.innerHTML=html;if(fixed.length)listEl.prepend(...fixed)
-}
+function setCorrespondenceMarkup(mode,root,listEl,html){listEl.innerHTML=html}
 async function loadCorrespondence(mode){
  const root=mode==="inbox"?inboxWs:sentWs,listEl=mode==="inbox"?$("#ihInboxList"):$("#ihSentList");if(!root||!listEl)return;setCorrespondenceMarkup(mode,root,listEl,'<div class="ih-correspondence-empty"><strong>Loading correspondence…</strong></div>');
  const c=sb(),u=await authUser();if(!c||!u){setCorrespondenceMarkup(mode,root,listEl,'<div class="ih-correspondence-empty"><strong>Secure session unavailable</strong></div>');return}
  const field=mode==="inbox"?"recipient_id":"sender_id";const r=await c.from("staff_note_deliveries").select("id,note_id,sender_id,recipient_id,message,status,sent_at,read_at,note:staff_notes(id,note_number,subject,category,note_content,source_yellow_note_id,note_esign_name,note_esign_designation,note_esign_at,note_esign_method)").eq(field,u.id).order("sent_at",{ascending:false});
  if(r.error){setCorrespondenceMarkup(mode,root,listEl,'<div class="ih-correspondence-empty"><strong>Correspondence could not be loaded</strong><span>'+esc(r.error.message)+'</span></div>');return}
- deliveries[mode]=r.data||[];await loadProfiles();renderCorrespondence(mode);if(mode==='sent'&&section==='sent'){const align=()=>{if(section!=='sent')return;const panel=$("#ihPanel"),head=sentWs.querySelector('.ih-head-module-head');if(panel&&head)panel.scrollTop=Math.max(0,panel.scrollTop+head.getBoundingClientRect().top-panel.getBoundingClientRect().top-252)};requestAnimationFrame(align);setTimeout(align,380)}
+ deliveries[mode]=r.data||[];await loadProfiles();renderCorrespondence(mode);if((mode==='sent'||mode==='inbox')&&section===mode){const align=()=>{if(section===mode)alignNotesNavigation()};requestAnimationFrame(align);setTimeout(align,380)}
 }
 function noteOf(r){return Array.isArray(r?.note)?r.note[0]:r?.note}
 function otherProfile(r,mode){const id=mode==="inbox"?r.sender_id:r.recipient_id;return profiles.get(String(id))||null}
